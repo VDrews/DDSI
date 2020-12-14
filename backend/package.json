@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/VDrews/DDSI/issues"
   },
-  "homepage": "https://github.com/VDrews/DDSI#readme"
+  "homepage": "https://github.com/VDrews/DDSI#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
