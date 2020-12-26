@@ -44,11 +44,13 @@ CREATE TABLE Analitica (
   PRIMARY KEY (ID, nombre)
 );
 
-
+-- NOTE: Cantidad en almacén, estado y cant. afectada separados.
 CREATE TABLE Inventario (
   codigo_alm INT(13) NOT NULL,
   EAN_producto INT(13) NOT NULL,
-  estado_cant_afectada VARCHAR(255),
+  cantidad INT(4),
+  estado VARCHAR(255),
+  cant_afectada INT (3),
   FOREIGN KEY (codigo_alm) REFERENCES Almacen(codigo),
   FOREIGN KEY (EAN_producto) REFERENCES Producto(EAN_producto),
   PRIMARY KEY (codigo_alm, EAN_producto)
