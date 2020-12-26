@@ -50,7 +50,6 @@ insert into Anuncio(EAN_producto, nombre, descuento) values
         (SELECT nombre FROM Campanya ORDER BY RAND() LIMIT 1), 
         50
     );
-    
 
 insert into Almacen(direccion) values
     ('C/Prueba 1, 28000 Madrí'),
@@ -64,7 +63,6 @@ insert into Almacen(direccion) values
     ('C/Prueba 9, 28000 Madrí'),
     ('C/Prueba 10, 28000 Madrí');
     
-
 insert into Analitica (ID, nombre, tipo, payload) values
     (2, (SELECT nombre FROM Campanya ORDER BY RAND() LIMIT 1), 'NoMeSeElTipo', 'Niideadepayloads'),
     (3, (SELECT nombre FROM Campanya ORDER BY RAND() LIMIT 1), 'NoMeSeElTipo', 'Niideadepayloads'),
@@ -79,6 +77,7 @@ insert into Analitica (ID, nombre, tipo, payload) values
 
 
 insert into Inventario (codigo_alm, EAN_producto, estado_cant_afectada) values
+    (2, 82151, '2 reservados');
     (1, 82151, '2 reservados'),
     (2, 70336, '1 defectuosos'),
     (3, 99901, '3 reservados'),
