@@ -18,7 +18,7 @@ app.use(bodyParser.json())
 var cors = require('cors');
 
 app.use(cors());
-app.use( bodyParser.json() ); 
+app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var mysql = require('mysql');
@@ -32,6 +32,13 @@ var connection = mysql.createConnection({
 });
 
 connection.connect();
+
+
+//
+// ────────────────────────────────────────────────────────── I ──────────
+//   :::::: M A R K E T I N G : :  :   :    :     :        :          :
+// ────────────────────────────────────────────────────────────────────
+//
 
 
 app.post('/campanya', (req, res) => {
@@ -49,7 +56,7 @@ app.post('/campanya', (req, res) => {
 app.post('/campanya/:nombre', (req, res) => {
   connection.query(marketing.asociarCampanya({
     ean: req.body.ean,
-    nombre: req.params.nombre, 
+    nombre: req.params.nombre,
     descuento: req.body.descuento
   }), function(err, rows, fields) {
     if (err) {
@@ -117,7 +124,13 @@ app.get('/analitica/:id', (req, res) => {
   });
 })
 
-//Inventario
+
+//
+// ────────────────────────────────────────────────────────── V ──────────
+//   :::::: A L M A C E N E S : :  :   :    :     :        :          :
+// ────────────────────────────────────────────────────────────────────
+//
+
 
 app.put('/producto/:ean', (req, res) => {
   connection.query(inventario.actualizarInventario({
@@ -146,36 +159,7 @@ app.post('/producto/:ean', (req, res) => {
   });
 })
 
-// RRHH 
-app.get('/empleado/:dni', (req, res) => {
-  console.log(req.params.dni)
-  connection.query(rrhh.consultarEmpleado({dni: req.params.dni}), function(err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404);
-    }
-    console.log(rows);
-    return res.send(rows[0]);
-  });
-})
 
-app.delete('/empleado', (req, res) => {
-  connection.query(rrhh.darBajaEmpleado(req.body), function(err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(412).send("No existe un empleado con ese dni");
-    }
-    console.log(rows);
-    connection.commit(function(err) {
-      if (err) { 
-        connection.rollback(function() {
-          return res.sendStatus(500);
-        });
-      }
-      return res.sendStatus(200);
-    });
-  });
-})
 
 app.put('/producto/:ean', (req, res) => {
   connection.query(inventario.defineEstado(req.body), function(err, rows, fields) {
@@ -198,6 +182,46 @@ app.post('/almacen', (req, res) => {
     return res.sendStatus(200);
   });
 })
+
+
+//
+// ──────────────────────────────────────────────────────────────────────── III ──────────
+//   :::::: R E C U R S O S   H U M A N O S : :  :   :    :     :        :          :
+// ──────────────────────────────────────────────────────────────────────────────────
+//
+
+
+
+app.get('/empleado/:dni', (req, res) => {
+  console.log(req.params.dni)
+  connection.query(rrhh.consultarEmpleado({dni: req.params.dni}), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404);
+    }
+    console.log(rows);
+    return res.send(rows[0]);
+  });
+})
+
+app.delete('/empleado', (req, res) => {
+  connection.query(rrhh.darBajaEmpleado(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412).send("No existe un empleado con ese dni");
+    }
+    console.log(rows);
+    connection.commit(function(err) {
+      if (err) {
+        connection.rollback(function() {
+          return res.sendStatus(500);
+        });
+      }
+      return res.sendStatus(200);
+    });
+  });
+})
+
 app.post('/empleado', (req, res) => {
   console.log(req.body)
   connection.beginTransaction(function(err) {
@@ -218,7 +242,7 @@ app.post('/empleado', (req, res) => {
           });
         }
         connection.commit(function(err) {
-          if (err) { 
+          if (err) {
             connection.rollback(function() {
               return res.sendStatus(500);
             });
@@ -248,6 +272,15 @@ app.put('/empleado', (req, res) => {
     })
   })
 })
+
+
+
+//
+// ────────────────────────────────────────────────────────── II ──────────
+//   :::::: L O G I S T I C A : :  :   :    :     :        :          :
+// ────────────────────────────────────────────────────────────────────
+//
+
 
 
 
