@@ -7,7 +7,7 @@ const port = 8000
 const marketing = require('./sql/marketing')
 const inventario = require('./sql/inventario')
 const rrhh = require('./sql/rrhh')
-
+const logistica = require('./sql/logisitca')
 
 const app=express()
 
@@ -28,7 +28,7 @@ var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'frontend',
   password : 'DDSI2020',
-  database: 'DDSI'
+  database : 'DDSI'
 });
 
 connection.connect();
