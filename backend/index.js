@@ -204,7 +204,7 @@ app.delete('/producto', (req, res) => {
 
   app.delete('/producto/:ean', (req, res) => {
     connection.query(inventario.eliminarStock({
-      ean=req.params.ean,
+      ean: req.params.ean,
       ...req.body
     }), function(err, rows, fields){
       if (err) {
