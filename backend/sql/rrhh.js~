@@ -25,4 +25,4 @@ let consultarEmpleado = function({dni}) {
 	return `select dni, nombre, apellidos, numero, vigente, sueldo from Empleado NATURAL JOIN Contrato where dni = ${dni}`
 }
 
-module.exports = {contratarEmpleado, crearContrato, darBajaEmpleado, modificarEmpleado, modificarContrato, consultarEmpleado}
+module.exports = {contratarEmpleado, darBajaEmpleado, modificarEmpleado, consultarEmpleado}
