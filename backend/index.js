@@ -116,6 +116,24 @@ app.get('/analitica/:id', (req, res) => {
   });
 })
 
+//Inventario
+
+app.put('/producto/:ean', (req, res) => {
+  connection.query(inventario.actualizarInventario(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No existe producto en el almacen. Crealo antes");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
+
+app.post('/producto/:ean', (req, res) => {
+  connection.query(inventario.newInventario(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412).send("Ya existe producto. Actualizar");
 // RRHH 
 app.get('/empleado/:dni', (req, res) => {
   console.log(req.params.dni)
@@ -147,6 +165,27 @@ app.delete('/empleado', (req, res) => {
   });
 })
 
+app.put('/producto/:ean', (req, res) => {
+  connection.query(inventario.defineEstado(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No existe producto en el almacen");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
+
+app.post('/almacen', (req, res) => {
+  connection.query(inventario.addAlmacen(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412).send("Ya existe almacen con este codigo");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
 app.post('/empleado', (req, res) => {
   console.log(req.body)
   connection.beginTransaction(function(err) {
@@ -174,6 +213,25 @@ app.post('/empleado', (req, res) => {
           }
           return res.sendStatus(200);
         });
+      })
+    })
+  })
+})
+
+app.put('/empleado', (req, res) => {
+  connection.beginTransaction(function(err) {
+    connection.query(modificarEmpleado(req.body), function(err, rows, fields){
+      if (err) {
+        connection.rollback(function() {
+          return res.sendStatus(412);
+        });
+      }
+      connection.query(modificarContrato(req.body), function(err, rows, fields){
+        if (err) {
+          connection.rollback(function() {
+            return res.sendStatus(412);
+          });
+        }
       })
     })
   })
