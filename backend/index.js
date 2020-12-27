@@ -5,6 +5,8 @@ const bodyParser=require('body-parser')
 const port = 8000
 
 const marketing = require('./sql/marketing')
+const rrhh = require('./sql/rrhh')
+
 
 const app=express()
 
@@ -19,6 +21,7 @@ app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var mysql = require('mysql');
+const { contratarEmpleado, crearContrato } = require('./sql/rrhh')
 
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -111,6 +114,49 @@ app.get('/analitica/:id', (req, res) => {
     console.log(rows);
     return res.send(rows[0]);
   });
+})
+
+// RRHH 
+app.get('/empleado/:dni', (req, res) => {
+  console.log(req.params.dni)
+  connection.query(rrhh.consultarEmpleado({dni: req.params.dni}), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404);
+    }
+    console.log(rows);
+    return res.send(rows[0]);
+  });
+})
+
+app.delete('/empleado', (req, res) => {
+  connection.query(rrhh.darBajaEmpleado(req.body.dni), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412).send("No existe un empleado con ese dni");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
+
+app.post('/empleado', (req, res) => {
+  connection.beginTransaction(function(err) {
+    connection.query(contratarEmpleado(req.body), function(err, rows, fields){
+      if (err) {
+        connection.rollback(function() {
+          return res.sendStatus(412);
+        });
+      }
+      connection.query(crearContrato(req.body), function(err, rows, fields){
+        if (err) {
+          connection.rollback(function() {
+            return res.sendStatus(412);
+          });
+        }
+      })
+    })
+  })
 })
 
 

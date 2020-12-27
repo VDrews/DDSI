@@ -1,4 +1,3 @@
-
 let contratarEmpleado = function({dni, nombre, apellidos}) {
 	return `insert into Empleado (dni, nombre, apellidos) values (${dni}, '${nombre}', '${apellidos}');`
 }
@@ -6,7 +5,6 @@ let contratarEmpleado = function({dni, nombre, apellidos}) {
 let crearContrato = function({dni, sueldo}) {
 	return `insert into Contrato (dni, fecha, vigente, sueldo) values (${dni}, Now(), true, ${sueldo});`
 }
-
 
 let darBajaEmpleado = function({dni}) {
 	return `update Contrato set vigente = false where dni = ${dni};`
