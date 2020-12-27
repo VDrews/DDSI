@@ -7,6 +7,7 @@ const port = 8000
 const marketing = require('./sql/marketing')
 const inventario = require('./sql/inventario')
 const rrhh = require('./sql/rrhh')
+const contabilidad = require('./sql/contabilidad')
 
 
 const app=express()
@@ -273,6 +274,49 @@ app.put('/empleado', (req, res) => {
   })
 })
 
+
+//
+// ────────────────────────────────────────────────────────── IV ──────────
+//   :::::: C O N T A B I L I D A D : :  :   :    :     :        :          :
+// ────────────────────────────────────────────────────────────────────
+//
+
+
+app.post('/transaccion', (req, res) => {
+  connection.query(contabilidad.anotarIngresoGasto(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412);  
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
+
+
+app.get('/transaccion/:nombre_usuario', (req, res) => {
+  console.log(req.params.nombre_usuario)
+  connection.query(contabilidad.consultarIngresoGasto({nombre_usuario: req.params.nombre_usuario}), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404);
+    }
+    console.log(rows);
+    return res.send(rows[0]);
+  });
+})
+
+
+app.put('/transaccion/:codigo_tr', (req, res) => {
+  connection.query(contabilidad.modificarIngresoGasto(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No existe dicha transacción");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
 
 
 //
