@@ -5,6 +5,7 @@ const bodyParser=require('body-parser')
 const port = 8000
 
 const marketing = require('./sql/marketing')
+const inventario = require('./sql/inventario')
 const rrhh = require('./sql/rrhh')
 
 
@@ -119,7 +120,10 @@ app.get('/analitica/:id', (req, res) => {
 //Inventario
 
 app.put('/producto/:ean', (req, res) => {
-  connection.query(inventario.actualizarInventario(req.body), function(err, rows, fields) {
+  connection.query(inventario.actualizarInventario({
+    ean: req.params.ean,
+    ...req.body
+  }), function(err, rows, fields) {
     if (err) {
       console.log(err)
       return res.sendStatus(404).send("No existe producto en el almacen. Crealo antes");
@@ -130,10 +134,18 @@ app.put('/producto/:ean', (req, res) => {
 })
 
 app.post('/producto/:ean', (req, res) => {
-  connection.query(inventario.newInventario(req.body), function(err, rows, fields) {
+  connection.query(inventario.newInventario({
+    ean: req.params.ean,
+    ...req.body
+  }), function(err, rows, fields) {
     if (err) {
       console.log(err)
       return res.sendStatus(412).send("Ya existe producto. Actualizar");
+    }
+    return res.sendStatus(200);
+  });
+})
+
 // RRHH 
 app.get('/empleado/:dni', (req, res) => {
   console.log(req.params.dni)

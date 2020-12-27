@@ -76,13 +76,13 @@ insert into Analitica (ID, nombre, tipo, payload) values
     (10, (SELECT nombre FROM Campanya ORDER BY RAND() LIMIT 1), 'NoMeSeElTipo', 'Niideadepayloads');
 
 
-insert into Inventario (codigo_alm, EAN_producto, estado_cant_afectada) values
-    (2, 82151, '2 reservados');
-    (1, 82151, '2 reservados'),
-    (2, 70336, '1 defectuosos'),
-    (3, 99901, '3 reservados'),
-    (4, 49107, '1 defectuosos'),
-    (5, 77840, '999 reservados');
+insert into Inventario (codigo_alm, EAN_producto, cantidad, estado, cant_afectada) values
+    (2, 82151, 2, 'reservados', 0),
+    (1, 82151, 2, 'reservados', 0),
+    (2, 70336, 1, 'defectuosos', 0),
+    (3, 99901, 3, 'reservados', 0),
+    (4, 49107, 1, 'defectuosos', 0),
+    (5, 77840, 999, 'reservados', 0);
 
 
 insert into Paquete (transportista) values
@@ -372,11 +372,11 @@ insert into Generacion (codigo_tr, codigo_fac) values
     );
 
 insert into Contrato(DNI, turno, fecha, vigente, sueldo) values
-    -- ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), DATE_ADD(Now(), interval 1 DAY), Now(), true, 2000),
-    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), DATE_ADD(Now(), interval 2 DAY), Now(), true, 1200),
-    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), DATE_ADD(Now(), interval 3 DAY), Now(), true, 900),
-    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), DATE_ADD(Now(), interval 4 DAY), Now(), true, 1300),
-    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), DATE_ADD(Now(), interval 5 DAY), Now(), true, 1700);
+    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), 'L-V 16:30-19:30', Now(), true, 2000),
+    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), 'L-V 16:30-19:30', Now(), true, 1200),
+    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), 'L-V 16:30-19:30', Now(), true, 900),
+    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), 'L-V 16:30-19:30', Now(), true, 1300),
+    ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), 'L-V 16:30-19:30', Now(), true, 1700);
 
 insert into Empleado(DNI, nombre, apellidos) values
     (39726794, 'Pepe', 'Rodrigo'),

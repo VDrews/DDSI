@@ -44,6 +44,8 @@ CREATE TABLE Analitica (
   PRIMARY KEY (ID, nombre)
 );
 
+DROP TABLE Inventario;
+
 -- NOTE: Cantidad en almacén, estado y cant. afectada separados.
 CREATE TABLE Inventario (
   codigo_alm INT(13) NOT NULL,
@@ -170,11 +172,10 @@ CREATE TABLE Empleado(
   apellidos VARCHAR(60) NOT NULL
 );
 
-
 CREATE TABLE Contrato(
   DNI INT(9) NOT NULL,
   numero INT(2) AUTO_INCREMENT,
-  turno DATE,
+  turno VARCHAR(255),
   fecha DATETIME NOT NULL DEFAULT NOW(),
   vigente BOOLEAN DEFAULT true,
   sueldo DECIMAL(10, 2) NOT NULL,

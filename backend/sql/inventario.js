@@ -1,5 +1,5 @@
 let actualizarInventario = function({ean, almacen, cantidad}) {
-  return `update Inventario set cantidad=cantidad+${cantidad} where ean_producto=${ean} and cod_almacen=${almacen};`
+  return `update Inventario set cantidad=cantidad+${cantidad} where ean_producto=${ean} and codigo_alm=${almacen};`
 }
 
 let addAlmacen = function ({direccion}) {
@@ -18,4 +18,4 @@ let newInventario = function({almacen, ean, cantidad}) {
 
 
 
-module.exports = {actualizarInventario, addAlmacen, defineEstado, newInventario, selectInventarioAlmacen}
+module.exports = {actualizarInventario, addAlmacen, defineEstado, newInventario}
