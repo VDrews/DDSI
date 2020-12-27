@@ -21,13 +21,33 @@ let modificarIngresoGasto = function(codigo_tr, tipo, cantidad) {
 
 // select?
 let generarFactura = function(codigo_tr) {
-	return (`insert into Generacion (codigo_tr) values (${codigo_tr});`; `select tipo, cantidad from Transacción where codigo_tr = ${codigo_tr}`)
+	return `insert into Generacion (codigo_tr) values (${codigo_tr});`
 }
+
+
+`insert into Factura cod_factura values NULL`
+//Falta saber cómo consigo el cod_facutra!!?
+`insert into Generacion (cod_factura, codigo_tr) values (${cod_factura}, ${codigo_tr})`
 
 
 
 `select tipo, cantidad from Transacción where codigo_tr = ${codigo_tr}`
+`select codigo_fac from Generacion where codigo_tr = ${codigo_tr}`
+`select nombre_usuario from envio where Id in (select id_paquete from CompraVenta where cod_factura in (select codigo_factura from Generacion where codigo_tr = ${codigo_tr}))`
 
 
 
-module.exports = {anotarIngresoGasto, consultarIngresoGasto, modificarIngresoGasto}
+
+`select tipo, cantidad, cod_factura, nombre_usuario from Transaccion Natural Join 
+(select codigo_fac, nombre_usuario, codigo_tr from Generacion Natural Join 
+(select nombre_usuario, codigo_fac from Envio Natural Join 
+(select id_paquete, cod_factura from CompraVenta where cod_factura in 
+(select codigo_factura from Generacion where codigo_tr = ${codigo_tr}))))`
+
+
+/*
+`select tipo, cantidad, nombre_usuario, cod_factura from Transaccion Natural Join 
+( select nombre_usuario, cod_factura, codigo_tr from Generacion Natural Join 
+( select nombre_usuario, cod_factura from Compraventa Natural Join (select nombre_usuario, ID from Envio) where cod_factura = ${cod_factura}) ))`
+*/
+module.exports = {anotarIngresoGasto, consultarIngresoGasto, modificarIngresoGasto, generarFactura}

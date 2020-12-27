@@ -8,6 +8,8 @@ const marketing = require('./sql/marketing')
 const inventario = require('./sql/inventario')
 const rrhh = require('./sql/rrhh')
 const logistica = require('./sql/logisitca')
+const contabilidad = require('./sql/contabilidad')
+
 
 const app=express()
 
@@ -183,6 +185,45 @@ app.post('/almacen', (req, res) => {
   });
 })
 
+app.delete('/producto', (req, res) => {
+  connection.query(inventario.dropProducto(req.body), function(err, rows, fields){
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("Producto no encontrado");
+    }
+      console.log(rows);
+      connection.commit(function(err) {
+        if (err) {
+          connection.rollback(function() {
+            return res.sendStatus(500);
+          });
+        }
+        return res.sendStatus(200);
+      });
+    });
+  })
+
+  app.delete('/producto/:ean', (req, res) => {
+    connection.query(inventario.eliminarStock({
+      ean: req.params.ean,
+      ...req.body
+    }), function(err, rows, fields){
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404).send("Producto no encontrado");
+      }
+        console.log(rows);
+        connection.commit(function(err) {
+          if (err) {
+            connection.rollback(function() {
+              return res.sendStatus(500);
+            });
+          }
+          return res.sendStatus(200);
+        });
+      });
+    })
+
 
 //
 // ──────────────────────────────────────────────────────────────────────── III ──────────
@@ -273,6 +314,49 @@ app.put('/empleado', (req, res) => {
   })
 })
 
+
+//
+// ────────────────────────────────────────────────────────── IV ──────────
+//   :::::: C O N T A B I L I D A D : :  :   :    :     :        :          :
+// ────────────────────────────────────────────────────────────────────
+//
+
+
+app.post('/transaccion', (req, res) => {
+  connection.query(contabilidad.anotarIngresoGasto(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412);
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
+
+
+app.get('/transaccion/:nombre_usuario', (req, res) => {
+  console.log(req.params.nombre_usuario)
+  connection.query(contabilidad.consultarIngresoGasto({nombre_usuario: req.params.nombre_usuario}), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404);
+    }
+    console.log(rows);
+    return res.send(rows[0]);
+  });
+})
+
+
+app.put('/transaccion/:codigo_tr', (req, res) => {
+  connection.query(contabilidad.modificarIngresoGasto(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No existe dicha transacción");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
 
 
 //
