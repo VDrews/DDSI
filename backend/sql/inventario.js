@@ -16,6 +16,14 @@ let newInventario = function({almacen, ean, cantidad}) {
           (${almacen}, ${ean}, ${cantidad});`
 }
 
+let dropProducto = function({ean}){
+  return `delete from Producto where ean_producto=${ean};`
+}
+
+let eliminarStock = function({ean, almacen}){
+  return `delete from Inventario where ean_producto=${ean} and codigo_alm=${almacen};`
+}
 
 
-module.exports = {actualizarInventario, addAlmacen, defineEstado, newInventario}
+
+module.exports = {actualizarInventario, addAlmacen, defineEstado, newInventario, dropProducto, eliminarStock}

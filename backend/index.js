@@ -184,6 +184,45 @@ app.post('/almacen', (req, res) => {
   });
 })
 
+app.delete('/producto', (req, res) => {
+  connection.query(inventario.dropProducto(req.body), function(err, rows, fields){
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("Producto no encontrado");
+    }
+      console.log(rows);
+      connection.commit(function(err) {
+        if (err) {
+          connection.rollback(function() {
+            return res.sendStatus(500);
+          });
+        }
+        return res.sendStatus(200);
+      });
+    });
+  })
+
+  app.delete('/producto/:ean', (req, res) => {
+    connection.query(inventario.eliminarStock({
+      ean=req.params.ean,
+      ...req.body
+    }), function(err, rows, fields){
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404).send("Producto no encontrado");
+      }
+        console.log(rows);
+        connection.commit(function(err) {
+          if (err) {
+            connection.rollback(function() {
+              return res.sendStatus(500);
+            });
+          }
+          return res.sendStatus(200);
+        });
+      });
+    })
+
 
 //
 // ──────────────────────────────────────────────────────────────────────── III ──────────
