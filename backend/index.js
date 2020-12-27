@@ -116,6 +116,24 @@ app.get('/analitica/:id', (req, res) => {
   });
 })
 
+//Inventario
+
+app.put('/producto/:ean', (req, res) => {
+  connection.query(inventario.actualizarInventario(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No existe producto en el almacen. Crealo antes");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
+
+app.post('/producto/:ean', (req, res) => {
+  connection.query(inventario.newInventario(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412).send("Ya existe producto. Actualizar");
 // RRHH 
 app.get('/empleado/:dni', (req, res) => {
   console.log(req.params.dni)
@@ -130,20 +148,53 @@ app.get('/empleado/:dni', (req, res) => {
 })
 
 app.delete('/empleado', (req, res) => {
-  connection.query(rrhh.darBajaEmpleado(req.body.dni), function(err, rows, fields) {
+  connection.query(rrhh.darBajaEmpleado(req.body), function(err, rows, fields) {
     if (err) {
       console.log(err)
       return res.sendStatus(412).send("No existe un empleado con ese dni");
+    }
+    console.log(rows);
+    connection.commit(function(err) {
+      if (err) { 
+        connection.rollback(function() {
+          return res.sendStatus(500);
+        });
+      }
+      return res.sendStatus(200);
+    });
+  });
+})
+
+app.put('/producto/:ean', (req, res) => {
+  connection.query(inventario.defineEstado(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No existe producto en el almacen");
     }
     console.log(rows);
     return res.sendStatus(200);
   });
 })
 
+app.post('/almacen', (req, res) => {
+  connection.query(inventario.addAlmacen(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(412).send("Ya existe almacen con este codigo");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
 app.post('/empleado', (req, res) => {
+  console.log(req.body)
   connection.beginTransaction(function(err) {
+    if (err) {
+      res.sendStatus(500)
+    }
     connection.query(contratarEmpleado(req.body), function(err, rows, fields){
       if (err) {
+        console.log(err)
         connection.rollback(function() {
           return res.sendStatus(412);
         });
@@ -154,6 +205,14 @@ app.post('/empleado', (req, res) => {
             return res.sendStatus(412);
           });
         }
+        connection.commit(function(err) {
+          if (err) { 
+            connection.rollback(function() {
+              return res.sendStatus(500);
+            });
+          }
+          return res.sendStatus(200);
+        });
       })
     })
   })
