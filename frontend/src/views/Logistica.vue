@@ -7,6 +7,7 @@
         <v-text-field v-model="RP_2_1.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
         <v-text-field v-model="RP_2_1.almacen" placeholder="Almacén en el que guardar" outlined></v-text-field>
         <v-alert v-if="success.RP_2_1" text type="success">El producto se ha creado con éxito</v-alert>
+        <v-alert v-if="error.RP_2_1" text type="error">Error de algún tipo</v-alert>
         <v-btn @click="anyadirProducto" color="primary" dark block>Añadir</v-btn>
 
 
@@ -16,6 +17,7 @@
         <v-text-field v-model="EPeA_2_2.cantidad" placeholder="cantidad" type="number" outlined></v-text-field>
         <v-text-field v-model="EPeA_2_2.almacen_llegada" placeholder="Almacén de llegada" outlined></v-text-field>
         <v-alert v-if="success.EPeA_2_2" text type="success">Se ha movido el inventario con éxito</v-alert>
+        <v-alert v-if="error.EPeA_2_2" text type="error">Error de algún tipo</v-alert>
         <v-btn @click="enviarEntreAlmacenes" color="primary" dark block>Enviar</v-btn>
 
 
@@ -23,6 +25,7 @@
         <v-text-field v-model="ET_2_5.ID_paquete" placeholder="ID del paquete" outlined></v-text-field>
         <v-text-field v-model="ET_2_5.transportista" placeholder="Transportista" outlined></v-text-field>
         <v-alert v-if="success.ET_2_5" text type="success">Se ha cambiado el transportista con éxito</v-alert>
+        <v-alert v-if="error.ET_2_5" text type="error">Error de algún tipo</v-alert>
         <v-btn @click="cambiarTrans" color="primary" dark block>Actualizar transportista</v-btn>
 
 
@@ -32,6 +35,7 @@
         <v-text-field v-model="CP_2_6.cantidad" placeholder="cantidad" type="number" outlined></v-text-field>
         <v-text-field v-model="CP_2_6.transportista" placeholder="Transportista" outlined></v-text-field>
         <v-alert v-if="success.CP_2_6" text type="success">El producto ha sido comprado</v-alert>
+        <v-alert v-if="error.CP_2_6" text type="error">Error de algún tipo</v-alert>
         <v-btn @click="comprarProd" color="primary" dark block>Comprar</v-btn>
     </div>
 </template>
@@ -84,7 +88,7 @@ export default {
 
     methods: {
         async RecibirProducto() {
-         /*    this.success.RP_2_1 = false
+            this.success.RP_2_1 = false
             this.error.RP_2_1 = false
 
             try {
@@ -92,11 +96,19 @@ export default {
                 this.success.RP_2_1 = true
             } catch (err) {
                 this.error.RP_2_1 = true
-            } */
+            }
         },
 
         async EnviarProductoEntreAlmacenes() {
+            this.success.EPeA_2_2 = false
+            this.error.EPeA_2_2 = false
 
+            try {
+                await axios.post('http://localhost:8000/logistica', this.EPeA_2_2)
+                this.success.EPeA_2_2 = true
+            } catch (err) {
+                this.error.EPeA_2_2 = true
+            }
         },
 
         async ElegirTrasnportista() {
@@ -112,7 +124,15 @@ export default {
         },
 
         async ComprarProducto() {
+            this.success.CP_2_6 = false
+            this.error.CP_2_6 = false
 
+            try {
+                await axios.post('http://localhost:8000/logistica', this.CP_2_6)
+                this.success.CP_2_6 = true
+            } catch (err) {
+                this.error.CP_2_6 = true
+            }
         }
     }
 }
