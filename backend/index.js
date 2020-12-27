@@ -159,6 +159,25 @@ app.post('/empleado', (req, res) => {
   })
 })
 
+app.put('/empleado', (req, res) => {
+  connection.beginTransaction(function(err) {
+    connection.query(modificarEmpleado(req.body), function(err, rows, fields){
+      if (err) {
+        connection.rollback(function() {
+          return res.sendStatus(412);
+        });
+      }
+      connection.query(modificarContrato(req.body), function(err, rows, fields){
+        if (err) {
+          connection.rollback(function() {
+            return res.sendStatus(412);
+          });
+        }
+      })
+    })
+  })
+})
+
 
 
 app.listen(port, () => {
