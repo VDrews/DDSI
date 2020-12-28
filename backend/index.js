@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 var cors = require('cors');
 
 app.use(cors());
-app.use( bodyParser.json() ); 
+app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var mysql = require('mysql');
@@ -54,7 +54,7 @@ app.post('/campanya', (req, res) => {
 app.post('/campanya/:nombre', (req, res) => {
   connection.query(marketing.asociarCampanya({
     ean: req.body.ean,
-    nombre: req.params.nombre, 
+    nombre: req.params.nombre,
     descuento: req.body.descuento
   }), function(err, rows, fields) {
     if (err) {
@@ -153,7 +153,7 @@ app.post('/producto/:ean', (req, res) => {
   });
 })
 
-// RRHH 
+// RRHH
 app.get('/empleado/:dni', (req, res) => {
   console.log(req.params.dni)
   connection.query(rrhh.consultarEmpleado({dni: req.params.dni}), function(err, rows, fields) {
@@ -175,7 +175,7 @@ app.delete('/empleado/:dni', (req, res) => {
     }
     console.log(rows);
     connection.commit(function(err) {
-      if (err) { 
+      if (err) {
         connection.rollback(function() {
           return res.sendStatus(500);
         });
@@ -226,7 +226,7 @@ app.post('/empleado', (req, res) => {
           });
         }
         connection.commit(function(err) {
-          if (err) { 
+          if (err) {
             connection.rollback(function() {
               return res.sendStatus(500);
             });
@@ -257,7 +257,33 @@ app.put('/empleado', (req, res) => {
   })
 })
 
+
+//
+// ────────────────────────────────────────────────────────── II ──────────
+//   :::::: L O G I S T I C A : :  :   :    :     :        :          :
+// ────────────────────────────────────────────────────────────────────
+//
+
+app.put('/logistica/:ID_paquete', (req, res) => {
+  connection.query(logsitica.elegirTransportista_2_5 ({
+    transportista: req.params.transportista,
+    ID_paquete: req.params.ID_paquete
+  }), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No se ha podido cambiar el transportista")
+      // FIXME             ^^^^^ ¿si falla es porque no lo encuentra?
+    }
+
+    console.log(rows)
+    return res.sendStatus(200).send("Transportista actualizado con éxito")
+  });
+})
+
+
 // app.use(serveStatic(__dirname + "/frontend/dist"));
+
+
 
 app.listen(port, () => {
   console.log(`Backend funcionando en http://localhost:${port}`)
