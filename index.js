@@ -382,7 +382,7 @@ app.get('/api/factura/:cod_factura', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.1 ─────
 //
 
-app.post('/api/logistica/recibir', (req, res) => {
+app.post('/logistica/recibir', (req, res) => {
   /*
     Pasos:
       1. Insertar el nuevo producto en la base de datos. Hacerlo mediante insertarProducto_2_1.
@@ -449,7 +449,7 @@ app.post('/api/logistica/recibir', (req, res) => {
   },
 */
 
-app.post('/api/logistica/almacenes', (req, res) => {
+app.post('/logistica/almacenes', (req, res) => {
   /*
     Pasos:
       1. Restar `cantidad` en la relación inventario con el almacen_partida. Usar las funciones de Chema.
@@ -460,10 +460,11 @@ app.post('/api/logistica/almacenes', (req, res) => {
         3.3 Insertar en la relación contenido (insertarContenido2_2(ID_paquete, EAN_producto, cantidad))
   */
 
+  // 1
   connection.query(inventario.actualizarInventario({
-    ean: req.body.almacen_partida, 
-    codigo_alm: req.body.almacen_partida, 
-    cantidad: -req.body.cantidad
+    ean       : req.body.EAN,
+    codigo_alm: req.body.almacen_partida,
+    cantidad  : -req.body.cantidad
   }), function(err, rows, fields) {
     if (err) {
       console.log(err)
@@ -472,12 +473,71 @@ app.post('/api/logistica/almacenes', (req, res) => {
       });
     }
 
+    // 2
     connection.query(inventario.actualizarInventario({
-      ean: req.body.almacen_partida, 
-      codigo_alm: req.body.almacen_partida, 
-      cantidad: -req.body.cantidad
+      ean       : req.body.EAN,
+      codigo_alm: req.body.almacen_llegada,
+      cantidad  : req.body.cantidad
+    }), function(err, rows, fields) {
+      if (err) {
+        console.log(err)
+        connection.rollback(function () {
+          return res.sendStatus(412);
+        });
+      }
 
-    }))
+      //3.1
+      connection.query(logistica.insertarPaquete({
+        transportista: "Envíos internos"
+      }), function (err, rows, fields) {
+        if (err) {
+          console.log(err)
+          connection.rollback(function () {
+            return res.sendSatus(412);
+          });
+        }
+
+        connection.query(logistica.getIdPaquete(), function(err, rows, fields) {
+          let ID_paquete = rows[0]['LAST_INSERT_ID()'];
+
+          //3.2
+          connection.query(logistica.insertarDistribucion_2_2({
+            ID_paquete: ID_paquete,
+            cod_almacen: req.body.almacen_partida
+          }), function(err, rows, fields) {
+            if (err) {
+              console.log(err)
+              connection.rollback(function () {
+                return res.sendSatus(412);
+              });
+            }
+
+            //3.3
+            connection.query(logistica.insertarContenido({
+              ID_paquete: ID_paquete,
+              EAN_producto: req.body.EAN,
+              cantidad: req.body.cantidad
+            }), function(err, rows, fields) {
+              if (err) {
+                console.log(err)
+                connection.rollback(function () {
+                  return res.sendSatus(412);
+                });
+              }
+
+              connection.commit(function (err) {
+                if (err) {
+                  connection.rollback(function () {
+                    return res.sendStatus(500);
+                  });
+                }
+                return res.sendStatus(200);
+              });
+            })
+          })
+        })
+      })
+    })
   })
 })
 
@@ -485,7 +545,7 @@ app.post('/api/logistica/almacenes', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.5 ─────
 //
 
-app.put('/api/logistica/:ID_paquete', (req, res) => {
+app.put('/logistica/:ID_paquete', (req, res) => {
   /*
     Actualizar el parámetro transportista de la instancia pertinente de Paquete.
   */
@@ -508,7 +568,7 @@ app.put('/api/logistica/:ID_paquete', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.6 ─────
 //
 
-/* 
+/*
 
   CP_2_6: {
     cliente: "",
@@ -519,7 +579,7 @@ app.put('/api/logistica/:ID_paquete', (req, res) => {
 
 */
 
-app.post('/api/logistica/compra', (req, res) => {
+app.post('/logistica/compra', (req, res) => {
   /*
     Pasos:
       1. Gestionar el envío
@@ -544,6 +604,7 @@ app.post('/api/logistica/compra', (req, res) => {
           return res.sendStatus(412);
         });
       }
+
       connection.query(logistica.getIdPaquete(), function (err, rows, fields) {
         let ID_paquete = rows[0]['LAST_INSERT_ID()'];
 

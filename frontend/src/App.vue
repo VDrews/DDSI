@@ -2,7 +2,10 @@
   <v-app>
 
     <v-navigation-drawer app>
-      <h1 class="ma-6" style="font-weight: 800; cursor: pointer;" @click="$router.push({path: '/'})">APETEPORICA</h1>
+      <v-layout class="my-6 mx-4" style="cursor: pointer;" align-center @click="$router.push({path: '/'})">
+        <img src="./assets/apeteporica.png" alt="Apeteporica" style="width: 40px; height: 40px; margin-right: 8px">
+        <h1 style="font-weight: 800;">APETEPORICA</h1>
+      </v-layout>
       <v-list-item @click="$router.push({ path: '/contabilidad' })">
         <v-list-item-avatar>
           <v-icon> mdi-cash-multiple </v-icon>
