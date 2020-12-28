@@ -269,13 +269,57 @@ app.put('/empleado', (req, res) => {
 //
 
 app.post('/logistica/recibir', (req, res) => {
-  connection.log(req.body)
   /*
     Pasos:
       1. Insertar el nuevo producto en la base de datos. Hacerlo mediante insertarProducto_2_1.
         1.1 NOTE para ello necesitaré un EAN_producto. Cuidado con esto.
       2. Insertar en algún almacén. Usar newInventario de Chema.
   */
+
+  connection.beginTransaction(function(err) {
+    if (err) {
+      return res.status(500)
+    }
+
+    connection.log(req.body)
+    EAN_generado = -1           // FIXME hace falta generar un EAN
+
+    connection.query(logistica.insertarProducto_2_1({
+      EAN_prod: EAN_generado,
+      nombre_prod: req.body.nombre_producto,
+      fabricante: req.body.fabricante,
+      precio: req.body.precio
+    }), function(err, rows, fields) {
+      if (err) {
+        console.log(err)
+        connection.rollback(function() {
+          return res.status(500).send("No se ha podido insertar el producto");
+        })
+      }
+
+      // Producto insertado. Meter ahora en el inventario.
+      connection.query(inventario.newInventario({
+        codigo_alm: req.body.almacen,
+        ean: EAN_generado,
+        cantidad: req.body.cantidad
+      }), function(err, rows, field) {
+        if (err) {
+          connection.rollback(function() {
+            return res.status(500);
+          })
+        }
+
+        connection.commit(function(err) {
+          if (err) {
+            connection.rollback(function() {
+              return res.status(500)
+            })
+          }
+          return res.sendStatus(200)
+        })
+      })
+    })
+  })
 })
 
 //
