@@ -12,7 +12,6 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Dar de baja</div>
     <v-text-field v-model="baja.dni" placeholder="DNI" outlined></v-text-field>
-    <v-text-field v-model="baja.numero" placeholder="Número Contrato" outlined></v-text-field>
     <v-alert v-if="success.baja" text type="success">Se ha dado de baja correctamente</v-alert>
     <v-alert v-if="error.baja" text type="error">Error al dar de baja al empleado</v-alert>
     <v-btn @click="darDeBaja" color="primary" dark block>Dar de Baja</v-btn>
@@ -30,7 +29,7 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar un empleado</div>
     <v-text-field v-model="dniEmpleadoConsultar" placeholder="DNI del Empleado" outlined></v-text-field>
-    <v-btn @click="consultarEmpleado" color="primary" dark block>Consultar</v-btn>
+    <v-btn @click="consultar" color="primary" dark block>Consultar</v-btn>
     <v-alert v-if="error.consultarEmpleado" text type="error">No existe un empleado con este DNI</v-alert>
     <v-simple-table v-if="empleado">
       <template v-slot:default>
@@ -111,7 +110,8 @@ export default {
       this.success.baja = false
       this.error.baja = false
       try {
-        await axios.delete('http://localhost:8000/empleado', this.dniEmpleadoBaja)
+        console.log(this.baja.dni)
+        await axios.delete(`http://localhost:8000/empleado/${this.baja.dni}`)
         this.success.baja = true
 
       } catch (err) {
@@ -123,6 +123,7 @@ export default {
       this.error.consultarEmpleado = false
       try {
         this.empleado = (await axios.get(`http://localhost:8000/empleado/${this.dniEmpleadoConsultar}`)).data
+        console.log(this.empleado)
 
       } catch(err) {
         this.error.consultarEmpleado = true

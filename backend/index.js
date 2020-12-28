@@ -2,7 +2,10 @@
 
 const express=require('express')
 const bodyParser=require('body-parser')
+const path = require('path')
 const port = 8000
+var serveStatic = require('serve-static');
+
 
 const marketing = require('./sql/marketing')
 const inventario = require('./sql/inventario')
@@ -18,7 +21,7 @@ app.use(bodyParser.json())
 var cors = require('cors');
 
 app.use(cors());
-app.use( bodyParser.json() );
+app.use( bodyParser.json() ); 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var mysql = require('mysql');
@@ -34,18 +37,11 @@ var connection = mysql.createConnection({
 connection.connect();
 
 
-//
-// ────────────────────────────────────────────────────────── I ──────────
-//   :::::: M A R K E T I N G : :  :   :    :     :        :          :
-// ────────────────────────────────────────────────────────────────────
-//
-
-
 app.post('/campanya', (req, res) => {
   connection.query(marketing.crearCampanya(req.body), function(err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(412).send("Ya existe una campaña con este ID");
+      return res.status(412).send("Ya existe una campaña con este ID");
     }
     console.log(rows);
     return res.sendStatus(200);
@@ -56,12 +52,12 @@ app.post('/campanya', (req, res) => {
 app.post('/campanya/:nombre', (req, res) => {
   connection.query(marketing.asociarCampanya({
     ean: req.body.ean,
-    nombre: req.params.nombre,
+    nombre: req.params.nombre, 
     descuento: req.body.descuento
   }), function(err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(412).send("El producto o la campanya no existen");
+      return res.status(412).send("El producto o la campanya no existen");
     }
     console.log(rows);
     return res.sendStatus(200);
@@ -83,7 +79,7 @@ app.post('/producto', (req, res) => {
   connection.query(marketing.crearProducto(req.body), function(err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(412).send("Ya existe un producto con este ID");
+      return res.status(412).send("Ya existe un producto con este ID");
     }
     console.log(rows);
     return res.sendStatus(200);
@@ -91,6 +87,7 @@ app.post('/producto', (req, res) => {
 })
 
 app.get('/producto/:ean', (req, res) => {
+  console.log(req.body)
   connection.query(marketing.consultarProducto({ean: req.params.ean}), function(err, rows, fields) {
     if (err) {
       console.log(err)
@@ -102,10 +99,10 @@ app.get('/producto/:ean', (req, res) => {
 })
 
 app.post('/analitica', (req, res) => {
-  connection.query(marketing.crearAnalitica(req.body), function(err, rows, fields) {
+  connection.query(marketing.crearAnalitica(req.body.dni), function(err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(412).send("Ya existe un producto con este ID");
+      return res.status(412).send("Ya existe un producto con este ID");
     }
     console.log(rows);
     return res.sendStatus(200);
@@ -124,13 +121,7 @@ app.get('/analitica/:id', (req, res) => {
   });
 })
 
-
-//
-// ────────────────────────────────────────────────────────── V ──────────
-//   :::::: A L M A C E N E S : :  :   :    :     :        :          :
-// ────────────────────────────────────────────────────────────────────
-//
-
+//Inventario
 
 app.put('/producto/:ean', (req, res) => {
   connection.query(inventario.actualizarInventario({
@@ -139,7 +130,7 @@ app.put('/producto/:ean', (req, res) => {
   }), function(err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(404).send("No existe producto en el almacen. Crealo antes");
+      return res.status(404).send("No existe producto en el almacen. Crealo antes");
     }
     console.log(rows);
     return res.sendStatus(200);
@@ -147,51 +138,20 @@ app.put('/producto/:ean', (req, res) => {
 })
 
 app.post('/producto/:ean', (req, res) => {
+  console.log(req.body)
   connection.query(inventario.newInventario({
     ean: req.params.ean,
     ...req.body
   }), function(err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(412).send("Ya existe producto. Actualizar");
+      return res.status(412).send("Ya existe producto. Actualizar");
     }
     return res.sendStatus(200);
   });
 })
 
-
-
-app.put('/producto/:ean', (req, res) => {
-  connection.query(inventario.defineEstado(req.body), function(err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404).send("No existe producto en el almacen");
-    }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
-})
-
-app.post('/almacen', (req, res) => {
-  connection.query(inventario.addAlmacen(req.body), function(err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(412).send("Ya existe almacen con este codigo");
-    }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
-})
-
-
-//
-// ──────────────────────────────────────────────────────────────────────── III ──────────
-//   :::::: R E C U R S O S   H U M A N O S : :  :   :    :     :        :          :
-// ──────────────────────────────────────────────────────────────────────────────────
-//
-
-
-
+// RRHH 
 app.get('/empleado/:dni', (req, res) => {
   console.log(req.params.dni)
   connection.query(rrhh.consultarEmpleado({dni: req.params.dni}), function(err, rows, fields) {
@@ -204,15 +164,16 @@ app.get('/empleado/:dni', (req, res) => {
   });
 })
 
-app.delete('/empleado', (req, res) => {
-  connection.query(rrhh.darBajaEmpleado(req.body), function(err, rows, fields) {
+app.delete('/empleado/:dni', (req, res) => {
+  console.log(req.params)
+  connection.query(rrhh.darBajaEmpleado(req.params), function(err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(412).send("No existe un empleado con ese dni");
+      return res.status(412).send("No existe un empleado con ese dni");
     }
     console.log(rows);
     connection.commit(function(err) {
-      if (err) {
+      if (err) { 
         connection.rollback(function() {
           return res.sendStatus(500);
         });
@@ -222,11 +183,32 @@ app.delete('/empleado', (req, res) => {
   });
 })
 
+app.put('/producto/:ean', (req, res) => {
+  connection.query(inventario.defineEstado(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.status(404).send("No existe producto en el almacen");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
+
+app.post('/almacen', (req, res) => {
+  connection.query(inventario.addAlmacen(req.body), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.status(412).send("Ya existe almacen con este codigo");
+    }
+    console.log(rows);
+    return res.sendStatus(200);
+  });
+})
 app.post('/empleado', (req, res) => {
   console.log(req.body)
   connection.beginTransaction(function(err) {
     if (err) {
-      res.sendStatus(500)
+      return res.sendStatus(500)
     }
     connection.query(contratarEmpleado(req.body), function(err, rows, fields){
       if (err) {
@@ -242,7 +224,7 @@ app.post('/empleado', (req, res) => {
           });
         }
         connection.commit(function(err) {
-          if (err) {
+          if (err) { 
             connection.rollback(function() {
               return res.sendStatus(500);
             });
@@ -273,22 +255,15 @@ app.put('/empleado', (req, res) => {
   })
 })
 
-
-
-//
-// ────────────────────────────────────────────────────────── II ──────────
-//   :::::: L O G I S T I C A : :  :   :    :     :        :          :
-// ────────────────────────────────────────────────────────────────────
-//
-
-
-
+// app.use(serveStatic(__dirname + "/frontend/dist"));
 
 app.listen(port, () => {
   console.log(`Backend funcionando en http://localhost:${port}`)
 })
 
-
+process.on('error', function(err){
+    console.log(err);
+});
 
 process.on('exit', function() {
   connection.end();
