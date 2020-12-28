@@ -7,12 +7,12 @@ let sinVariable = `CREATE TABLE WHERE ***`
 
 
 // EAN producto? Lo generamos aleatoriamente o nos lo cuajamos sobre la marcha?
-let insertarAlmacen_2_1 = function ({codigo_alm, EAN_prod, unidades}) {
+/* let insertarAlmacen_2_1 = function ({codigo_alm, EAN_prod, unidades}) {
   return `insert into Inventario (codigo_alm, EAN_producto, estado_cant_afectada) values
     (${codigo_alm}, ${EAN_prod}, ${unidades});`
 
 }
-
+ */
 let insertarProducto_2_1 = function({EAN_prod, nombre_prod, fabricante, precio}) {
   return `insert into Producto (EAN_producto, nombre, fabricante, precio) values
     (${EAN_prod}, ${nombre_prod}, ${fabricante}, ${precio});`
@@ -70,9 +70,9 @@ let insertarContenido_2_6 = function ({ID_paquete, nombre_producto, cantidad}) {
     (${ID_paquete}, (select EAN_producto from Producto where nombre = ${nombre_producto}), ${cantidad});`
 }
 
-let insertarCompraVenta_2_6 = function ({codigo_factura, nombre_prudcto, }) {
+let insertarCompraVenta_2_6 = function ({codigo_factura, nombre_producto, }) {
   return `insert into CompraVenta (cod_factura, ID_paquete, tipo) values
-      (${codigo_factura}, (select EAN_producto from Producto where nombre = ${nombre_prudcto}), 'Venta');`
+      (${codigo_factura}, (select EAN_producto from Producto where nombre = ${nombre_producto}), 'Venta');`
 }
 
 /*
@@ -88,7 +88,7 @@ let insertarCompraVenta_2_6 = function ({codigo_factura, nombre_prudcto, }) {
 
 
 module.exports = {
-  insertarAlmacen_2_1, insertarProducto_2_1,
+  insertarProducto_2_1,
   insertarDistribucion_2_2, insertarContenido_2_2,
   elegirTransportista_2_5,
   insertarCompraVenta_2_6, insertarContenido_2_6, insertarEnvio_2_6, insertarPaquete

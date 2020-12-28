@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 var cors = require('cors');
 
 app.use(cors());
-app.use( bodyParser.json() ); 
+app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var mysql = require('mysql');
@@ -54,7 +54,7 @@ app.post('/campanya', (req, res) => {
 app.post('/campanya/:nombre', (req, res) => {
   connection.query(marketing.asociarCampanya({
     ean: req.body.ean,
-    nombre: req.params.nombre, 
+    nombre: req.params.nombre,
     descuento: req.body.descuento
   }), function(err, rows, fields) {
     if (err) {
@@ -153,7 +153,7 @@ app.post('/producto/:ean', (req, res) => {
   });
 })
 
-// RRHH 
+// RRHH
 app.get('/empleado/:dni', (req, res) => {
   console.log(req.params.dni)
   connection.query(rrhh.consultarEmpleado({dni: req.params.dni}), function(err, rows, fields) {
@@ -175,7 +175,7 @@ app.delete('/empleado/:dni', (req, res) => {
     }
     console.log(rows);
     connection.commit(function(err) {
-      if (err) { 
+      if (err) {
         connection.rollback(function() {
           return res.sendStatus(500);
         });
@@ -276,7 +276,7 @@ app.post('/empleado', (req, res) => {
           });
         }
         connection.commit(function(err) {
-          if (err) { 
+          if (err) {
             connection.rollback(function() {
               return res.sendStatus(500);
             });
@@ -307,7 +307,134 @@ app.put('/empleado', (req, res) => {
   })
 })
 
+
+//
+// ────────────────────────────────────────────────────────── II ──────────
+//   :::::: L O G I S T I C A : :  :   :    :     :        :          :
+// ────────────────────────────────────────────────────────────────────
+//
+
+//
+// ────────────────────────────────────────────────────────────────────── 2.1 ─────
+//
+
+app.post('/logistica/recibir', (req, res) => {
+  /*
+    Pasos:
+      1. Insertar el nuevo producto en la base de datos. Hacerlo mediante insertarProducto_2_1.
+        1.1 NOTE para ello necesitaré un EAN_producto. Cuidado con esto.
+      2. Insertar en algún almacén. Usar newInventario de Chema.
+  */
+
+  connection.beginTransaction(function(err) {
+    if (err) {
+      return res.status(500)
+    }
+
+    connection.log(req.body)
+    EAN_generado = -1           // FIXME hace falta generar un EAN
+
+    connection.query(logistica.insertarProducto_2_1({
+      EAN_prod: EAN_generado,
+      nombre_prod: req.body.nombre_producto,
+      fabricante: req.body.fabricante,
+      precio: req.body.precio
+    }), function(err, rows, fields) {
+      if (err) {
+        console.log(err)
+        connection.rollback(function() {
+          return res.status(500).send("No se ha podido insertar el producto");
+        })
+      }
+
+      // Producto insertado. Meter ahora en el inventario.
+      connection.query(inventario.newInventario({
+        codigo_alm: req.body.almacen,
+        ean: EAN_generado,
+        cantidad: req.body.cantidad
+      }), function(err, rows, field) {
+        if (err) {
+          connection.rollback(function() {
+            return res.status(500);
+          })
+        }
+
+        connection.commit(function(err) {
+          if (err) {
+            connection.rollback(function() {
+              return res.status(500)
+            })
+          }
+          return res.sendStatus(200)
+        })
+      })
+    })
+  })
+})
+
+//
+// ────────────────────────────────────────────────────────────────────── 2.2 ─────
+//
+
+app.post('/logistica/almacenes', (req, res) => {
+  connection.log(body)
+  /*
+    Pasos:
+      1. Restar `cantidad` en la relación inventario con el almacen_partida. Usar las funciones de Chema.
+      2. Sumar `cantidad` en la relación inventario con el almacen_llegada. Usar las funciones de Chema.
+      3. Gestionar el envío:
+        3.1 Crear un paquete con nuestro producto (función insertarPaquete(transportista)) (Sacar el último ID)
+        3.2 Añadir la distribución del paquete (insertarDisrtibucion_2_2(ID_paquete, almacen_partida))
+        3.3 Insertar en la relación contenido (insertarContenido2_2(ID_paquete, EAN_producto, cantidad))
+  */
+})
+
+//
+// ────────────────────────────────────────────────────────────────────── 2.5 ─────
+//
+
+app.put('/logistica/:ID_paquete', (req, res) => {
+  /*
+    Actualizar el parámetro transportista de la instancia pertinente de Paquete.
+  */
+  connection.query(logsitica.elegirTransportista_2_5 ({
+    transportista: req.params.transportista,
+    ID_paquete: req.params.ID_paquete
+  }), function(err, rows, fields) {
+    if (err) {
+      console.log(err)
+      return res.sendStatus(404).send("No se ha podido cambiar el transportista")
+      // FIXME             ^^^^^ ¿si falla es porque no lo encuentra?
+    }
+
+    console.log(rows)
+    return res.sendStatus(200).send("Transportista actualizado con éxito")
+  });
+})
+
+//
+// ────────────────────────────────────────────────────────────────────── 2.6 ─────
+//
+
+app.post('logistica/compra', (req, res) => {
+  /*
+    Pasos:
+      1. Gestionar el envío
+        1.1 Insertar el paquete (insertarPaquete(transportista)) (Sacar el último ID)
+        1.2 Meter en la relación de envio (insertarEnvio_2_6(ID_paquete, nombre_usuario))
+        1.3 Meter en la relación con el producto (insertarContenido_2_6(ID_paquete, nombre_producto, cantidad))
+      2. Crear la factura
+        2.1 Crear la factura y sacar su último ID (¿Quizás Adri tenga una función?)
+        2.2 Meter en la relación compraventa (insertarCompraventa_2_6(codigo_factura, nombre_producto))
+  */
+})
+
+// ────────────────────────────────────────────────────────────────────────────────
+
+
 // app.use(serveStatic(__dirname + "/frontend/dist"));
+
+
 
 app.listen(port, () => {
   console.log(`Backend funcionando en http://localhost:${port}`)
