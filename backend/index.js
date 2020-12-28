@@ -449,10 +449,11 @@ app.post('/logistica/almacenes', (req, res) => {
         3.3 Insertar en la relación contenido (insertarContenido2_2(ID_paquete, EAN_producto, cantidad))
   */
 
+  // 1
   connection.query(inventario.actualizarInventario({
-    ean: req.body.almacen_partida, 
-    codigo_alm: req.body.almacen_partida, 
-    cantidad: -req.body.cantidad
+    ean       : req.body.EAN,
+    codigo_alm: req.body.almacen_partida,
+    cantidad  : -req.body.cantidad
   }), function(err, rows, fields) {
     if (err) {
       console.log(err)
@@ -461,12 +462,71 @@ app.post('/logistica/almacenes', (req, res) => {
       });
     }
 
+    // 2
     connection.query(inventario.actualizarInventario({
-      ean: req.body.almacen_partida, 
-      codigo_alm: req.body.almacen_partida, 
-      cantidad: -req.body.cantidad
+      ean       : req.body.EAN,
+      codigo_alm: req.body.almacen_llegada,
+      cantidad  : req.body.cantidad
+    }), function(err, rows, fields) {
+      if (err) {
+        console.log(err)
+        connection.rollback(function () {
+          return res.sendStatus(412);
+        });
+      }
 
-    }))
+      //3.1
+      connection.query(logistica.insertarPaquete({
+        transportista: "Envíos internos"
+      }), function (err, rows, fields) {
+        if (err) {
+          console.log(err)
+          connection.rollback(function () {
+            return res.sendSatus(412);
+          });
+        }
+
+        connection.query(logistica.getIdPaquete(), function(err, rows, fields) {
+          let ID_paquete = rows[0]['LAST_INSERT_ID()'];
+
+          //3.2
+          connection.query(logistica.insertarDistribucion_2_2({
+            ID_paquete: ID_paquete,
+            cod_almacen: req.body.almacen_partida
+          }), function(err, rows, fields) {
+            if (err) {
+              console.log(err)
+              connection.rollback(function () {
+                return res.sendSatus(412);
+              });
+            }
+
+            //3.3
+            connection.query(logistica.insertarContenido({
+              ID_paquete: ID_paquete,
+              EAN_producto: req.body.EAN,
+              cantidad: req.body.cantidad
+            }), function(err, rows, fields) {
+              if (err) {
+                console.log(err)
+                connection.rollback(function () {
+                  return res.sendSatus(412);
+                });
+              }
+
+              connection.commit(function (err) {
+                if (err) {
+                  connection.rollback(function () {
+                    return res.sendStatus(500);
+                  });
+                }
+                return res.sendStatus(200);
+              });
+            })
+          })
+        })
+      })
+    })
   })
 })
 
@@ -497,7 +557,7 @@ app.put('/logistica/:ID_paquete', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.6 ─────
 //
 
-/* 
+/*
 
   CP_2_6: {
     cliente: "",
@@ -524,7 +584,7 @@ app.post('/logistica/compra', (req, res) => {
       return res.sendStatus(500)
     }
     //1.1
-    connection.query(logistica.insertarPaquete({
+{    connection.query(logistica.insertarPaquete({
       transportista: req.body.transportista
     }), function (err, rows, fields) {
       if (err) {
@@ -533,6 +593,7 @@ app.post('/logistica/compra', (req, res) => {
           return res.sendStatus(412);
         });
       }
+
       connection.query(logistica.getIdPaquete(), function (err, rows, fields) {
         let ID_paquete = rows[0]['LAST_INSERT_ID()'];
 
