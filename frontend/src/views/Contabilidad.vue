@@ -60,7 +60,7 @@
 
 <script>
 import axios from 'axios'
-const url = process.env.PRODUCTION ? `https://apeteporica.herokuapp.com` : 'http://localhost:8080'
+const url = `https://apeteporica.herokuapp.com`  
 
 export default {
   data: () => ({
