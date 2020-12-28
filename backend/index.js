@@ -322,7 +322,7 @@ app.put('/empleado', (req, res) => {
 //
 
 
-app.post('/transaccion', (req, res) => {
+app.post('/ingreso', (req, res) => {
   connection.query(contabilidad.anotarIngresoGasto(req.body), function(err, rows, fields) {
     if (err) {
       console.log(err)
@@ -334,7 +334,7 @@ app.post('/transaccion', (req, res) => {
 })
 
 
-app.get('/transaccion/:nombre_usuario', (req, res) => {
+app.get('/ingreso/:nombre_usuario', (req, res) => {
   console.log(req.params.nombre_usuario)
   connection.query(contabilidad.consultarIngresoGasto({nombre_usuario: req.params.nombre_usuario}), function(err, rows, fields) {
     if (err) {
@@ -347,8 +347,8 @@ app.get('/transaccion/:nombre_usuario', (req, res) => {
 })
 
 
-app.put('/transaccion/:codigo_tr', (req, res) => {
-  connection.query(contabilidad.modificarIngresoGasto(req.body), function(err, rows, fields) {
+app.put('/ingreso/:codigo_tr', (req, res) => {
+  connection.query(contabilidad.modificarIngresoGasto({codigo_tr: req.params.codigo_tr, ...req.body}), function(err, rows, fields) {
     if (err) {
       console.log(err)
       return res.sendStatus(404).send("No existe dicha transacción");
