@@ -8,7 +8,7 @@
         <v-text-field v-model="RP_2_1.almacen" placeholder="Almacén en el que guardar" outlined></v-text-field>
         <v-alert v-if="success.RP_2_1" text type="success">El producto se ha creado con éxito</v-alert>
         <v-alert v-if="error.RP_2_1" text type="error">Error de algún tipo</v-alert>
-        <v-btn @click="anyadirProducto" color="primary" dark block>Añadir</v-btn>
+        <v-btn @click="RecibirProducto" color="primary" dark block>Añadir</v-btn>
 
 
         <div class="display-1 font-weight-bold mt-6 mb-2"> Enviar producto entre almacenes (2.2) </div>
@@ -18,7 +18,7 @@
         <v-text-field v-model="EPeA_2_2.almacen_llegada" placeholder="Almacén de llegada" outlined></v-text-field>
         <v-alert v-if="success.EPeA_2_2" text type="success">Se ha movido el inventario con éxito</v-alert>
         <v-alert v-if="error.EPeA_2_2" text type="error">Error de algún tipo</v-alert>
-        <v-btn @click="enviarEntreAlmacenes" color="primary" dark block>Enviar</v-btn>
+        <v-btn @click="EnviarProductoEntreAlmacenes" color="primary" dark block>Enviar</v-btn>
 
 
         <div class="display-1 font-weight-bold mt-6 mb-2"> Elegir transportista (2.5) </div>
@@ -26,7 +26,7 @@
         <v-text-field v-model="ET_2_5.transportista" placeholder="Transportista" outlined></v-text-field>
         <v-alert v-if="success.ET_2_5" text type="success">Se ha cambiado el transportista con éxito</v-alert>
         <v-alert v-if="error.ET_2_5" text type="error">Error de algún tipo</v-alert>
-        <v-btn @click="cambiarTrans" color="primary" dark block>Actualizar transportista</v-btn>
+        <v-btn @click="ElegirTrasnportista" color="primary" dark block>Actualizar transportista</v-btn>
 
 
         <div class="display-1 font-weight-bold mt-6 mb-2"> Comprar producto (2.6) </div>
@@ -36,7 +36,7 @@
         <v-text-field v-model="CP_2_6.transportista" placeholder="Transportista" outlined></v-text-field>
         <v-alert v-if="success.CP_2_6" text type="success">El producto ha sido comprado</v-alert>
         <v-alert v-if="error.CP_2_6" text type="error">Error de algún tipo</v-alert>
-        <v-btn @click="comprarProd" color="primary" dark block>Comprar</v-btn>
+        <v-btn @click="ComprarProducto" color="primary" dark block>Comprar</v-btn>
     </div>
 </template>
 
@@ -116,7 +116,7 @@ export default {
             this.error.ET_2_5 = false
 
             try {
-                await axios.put('http://localhost:8000/logistica', this.ET_2_5)
+                await axios.put(`http://localhost:8000/logistica/${this.ET_2_5.ID_paquete}`, this.ET_2_5)
                 this.success.ET_2_5 = true
             } catch (err) {
                 this.error.ET_2_5 = true
