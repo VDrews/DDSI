@@ -1,16 +1,16 @@
 <template>
-  <div id="marketing">
+  <div id="contabilidad">
     <div class="display-1 font-weight-bold mt-6 mb-2">Anotar Ingreso</div>
     <v-text-field v-model="nuevoIngreso.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
-    <v-text-field v-model="nuevoIngreso.tipo" placeholder="Tipo" outlined></v-text-field>
-    <v-alert v-if="success.ingreso" text type="success">Se ha anotado el ingreso con éxito</v-alert>
-    <v-alert v-if="error.ingreso" text type="error">No se ha podido anotar el ingreso</v-alert>
+    <v-select v-model="nuevoIngreso.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
+    <v-alert v-if="success.anotarIngreso" text type="success">Se ha anotado el ingreso con éxito</v-alert>
+    <v-alert v-if="error.anotarIngreso" text type="error">No se ha podido anotar el ingreso</v-alert>
     <v-btn @click="anotarIngreso" color="primary" dark block>Anotar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Modificar Ingreso</div>
     <v-text-field v-model="ingresoModificado.codigo" placeholder="Codigo" type="number" outlined></v-text-field>
     <v-text-field v-model="ingresoModificado.cantidad" placeholder="Cantidad" outlined></v-text-field>
-    <v-text-field v-model="ingresoModificado.tipo" placeholder="Tipo" outlined></v-text-field>
+    <v-select v-model="ingresoModificado.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
     <v-alert v-if="success.modificarIngreso" text type="success">El ingreso ha sido modificado con éxito</v-alert>
     <v-alert v-if="error.modificarIngreso" text type="error">No existe el ingreso con el código indicado</v-alert>
     <v-btn @click="modificarIngreso" color="primary" dark block>Crear</v-btn>
@@ -45,44 +45,29 @@
     </v-simple-table>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Ingreso</div>
-    <v-text-field v-model="codigoIngreso" placeholder="Codigo" type="number" outlined></v-text-field>
+    <v-text-field v-model="codigoIngreso" placeholder="Nombre de Usuario" outlined></v-text-field>
     <v-btn @click="consultarIngreso" color="primary" dark block>Consultar</v-btn>
     <v-alert v-if="error.consultarIngreso" text type="error">No existe un ingreso con este código</v-alert>
-    <v-simple-table v-if="ingreso">
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">
-              Ingreso
-            </th>
-            <th class="text-left">
-              Valor
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(value, name) in ingreso"
-            :key="name"
-          >
-            <td>{{name}}</td>
-            <td>{{value}}</td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
+    <v-list>
+      <v-list-item v-for="(ingreso, i) in ingresos" :key="i">
+        <v-list-item-title>{{ingreso.cantidad}}</v-list-item-title>
+        <v-list-item-action>{{ingreso.tipo}}</v-list-item-action>
+      </v-list-item>
+    </v-list>
 
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+const port = process.env.PORT || 8080
 export default {
   data: () => ({
     nuevoIngreso: {
       tipo: "",
       cantidad: null,
     },
+    tiposIngreso: ['Ingreso', 'Gasto'],
     codigoIngreso: null,
     codigoFactura: null,
     ingresoModificado: {
@@ -90,7 +75,7 @@ export default {
       tipo: "",
       cantidad: null,
     },
-    ingreso: null,
+    ingresos: [],
 
     factura: null,
 
@@ -113,7 +98,7 @@ export default {
       this.error.anotarIngreso = false
 
       try {
-        await axios.post('http://localhost:8000/ingreso', this.campanya)
+        await axios.post(`http://localhost:${port}/api/ingreso`, this.nuevoIngreso)
         this.success.anotarIngreso = true
       }
       catch(err) {
@@ -125,7 +110,7 @@ export default {
       this.success.modificarIngreso = false
       this.error.modificarIngreso = false
       try {
-        await axios.put('http://localhost:8000/ingreso', this.nuevoProducto)
+        await axios.put(`http://localhost:${port}/api/ingreso/${this.ingresoModificado.codigo}`, this.ingresoModificado)
         this.success.modificarIngreso = true
 
       } catch (err) {
@@ -136,7 +121,7 @@ export default {
     async consultarIngreso() {
       this.error.consultarIngreso = false
       try {
-        this.ingreso = (await axios.get(`http://localhost:8000/producto/${this.codigoIngreso}`)).data
+        this.ingresos = (await axios.get(`http://localhost:${port}/api/ingreso/${this.codigoIngreso}`)).data
 
       } catch(err) {
         this.error.consultarIngreso = true
@@ -149,7 +134,7 @@ export default {
       console.log(this.codigoFactura)
       this.error.consultarFactura = false
       try {
-        this.factura = (await axios.get(`http://localhost:8000/factura/${this.codigoFactura}`)).data
+        this.factura = (await axios.get(`http://localhost:${port}/api/factura/${this.codigoFactura}`)).data
 
       } catch(err) {
         this.error.consultarFactura = true

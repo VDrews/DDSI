@@ -12,11 +12,11 @@ let darBajaEmpleado = function({dni}) {
 
 
 let modificarEmpleado = function({dni, nombre, apellidos}) {
-	return `update Empleado set nombre = '${nombre}', apellidos = '${apellidos} where dni = ${dni};`
+	return `update Empleado set nombre = '${nombre}', apellidos = '${apellidos}' where dni = ${dni};`
 }
 
-let modificarContrato = function({dni, sueldo, numero}) {
-	return `update Contrato set sueldo = ${sueldo} where (dni = ${dni} and numero = ${numero} and vigente = true);`
+let modificarContrato = function({dni, sueldo, turno, numero}) {
+	return `update Contrato set sueldo = ${sueldo}, turno = '${turno}' where (dni = ${dni} and numero = ${numero} and vigente = true);`
 }
 
 let consultarEmpleado = function({dni}) {

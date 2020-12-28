@@ -60,6 +60,7 @@
 
 <script>
 import axios from 'axios'
+const port = process.env.PORT || 8080
 export default {
   data: () => ({
     nuevoEmpleado: {
@@ -98,7 +99,7 @@ export default {
       this.error.contratarEmpleado = false
 
       try {
-        await axios.post('http://localhost:8000/empleado', this.nuevoEmpleado)
+        await axios.post(`http://localhost:${port}/api/empleado`, this.nuevoEmpleado)
         this.success.contratarEmpleado = true
       }
       catch(err) {
@@ -111,7 +112,7 @@ export default {
       this.error.baja = false
       try {
         console.log(this.baja.dni)
-        await axios.delete(`http://localhost:8000/empleado/${this.baja.dni}`)
+        await axios.delete(`http://localhost:${port}/api/empleado/${this.baja.dni}`)
         this.success.baja = true
 
       } catch (err) {
@@ -122,7 +123,7 @@ export default {
     async consultar() {
       this.error.consultarEmpleado = false
       try {
-        this.empleado = (await axios.get(`http://localhost:8000/empleado/${this.dniEmpleadoConsultar}`)).data
+        this.empleado = (await axios.get(`http://localhost:${port}/api/empleado/${this.dniEmpleadoConsultar}`)).data
         console.log(this.empleado)
 
       } catch(err) {
@@ -131,16 +132,13 @@ export default {
       }
 
     },
-    // TODO Cambiar esto
+
     async modificar() {
       this.success.modificarEmpleado = false
       this.error.modificarEmpleado = false
 
       try {
-        await axios.post(`http://localhost:8000/campanya/${this.anuncio.nombre}`, {
-          ean: this.anuncio.ean, 
-          descuento: this.anuncio.descuento
-        })
+        await axios.put(`http://localhost:${port}/api/empleado/${this.empleadoModificar.dni}`, this.empleadoModificar)
         this.success.modificarEmpleado = true
       } catch(err) {
         this.error.modificarEmpleado = true

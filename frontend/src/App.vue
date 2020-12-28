@@ -3,34 +3,34 @@
 
     <v-navigation-drawer app>
       <h1 class="ma-6" style="font-weight: 800; cursor: pointer;" @click="$router.push({path: '/'})">APETEPORICA</h1>
-      <v-list-item @click="$router.push({ name: 'Contabilidad' })">
+      <v-list-item @click="$router.push({ path: '/contabilidad' })">
         <v-list-item-avatar>
           <v-icon> mdi-cash-multiple </v-icon>
         </v-list-item-avatar>
         <span>Contabilidad</span>
       </v-list-item>
-      <v-list-item @click="$router.push({ name: 'Inventario' })">
+      <v-list-item @click="$router.push({ path: '/inventario' })">
         <v-list-item-avatar>
           <v-icon> mdi-package-variant-closed </v-icon>
         </v-list-item-avatar>
         <span>Inventario</span>
       </v-list-item>
       </v-list-item>
-      <v-list-item @click="$router.push({ name: 'Logistica' })">
+      <v-list-item @click="$router.push({ path: '/logistica' })">
         <v-list-item-avatar>
           <v-icon> mdi-truck </v-icon>
         </v-list-item-avatar>
         <span>Logistica</span>
       </v-list-item>
       </v-list-item>
-      <v-list-item @click="$router.push({ name: 'Marketing' })">
+      <v-list-item @click="$router.push({ path: '/marketing' })">
         <v-list-item-avatar>
           <v-icon> mdi-label </v-icon>
         </v-list-item-avatar>
         <span>Marketing</span>
       </v-list-item>
       </v-list-item>
-      <v-list-item @click="$router.push({ name: 'RRHH' })">
+      <v-list-item @click="$router.push({ path: '/recursos-humanos' })">
         <v-list-item-avatar>
           <v-icon> mdi-account-multiple </v-icon>
         </v-list-item-avatar>

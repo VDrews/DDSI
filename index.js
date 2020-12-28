@@ -3,15 +3,15 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
-const port = 8000
-var serveStatic = require('serve-static');
+const port = process.env.PORT || 8080
+const history = require('connect-history-api-fallback');
 
 
-const marketing = require('./sql/marketing')
-const inventario = require('./sql/inventario')
-const rrhh = require('./sql/rrhh')
-const logistica = require('./sql/logistica')
-const contabilidad = require('./sql/contabilidad')
+const marketing = require('./backend/sql/marketing')
+const inventario = require('./backend/sql/inventario')
+const rrhh = require('./backend/sql/rrhh')
+const logistica = require('./backend/sql/logistica')
+const contabilidad = require('./backend/sql/contabilidad')
 
 
 const app = express()
@@ -49,6 +49,11 @@ const random_EAN = () => {
   return Math.round(num);
 };
 
+// app.use(history());
+app.use(express.static('frontend/dist'));
+app.get('/', (req, res) => {
+  res.sendFile('frontend/dist/index.html');
+});
 
 //
 // ────────────────────────────────────────────────────────── I ──────────
@@ -56,7 +61,7 @@ const random_EAN = () => {
 // ────────────────────────────────────────────────────────────────────
 //
 
-app.post('/campanya', (req, res) => {
+app.post('/api/campanya', (req, res) => {
   connection.query(marketing.crearCampanya(req.body), function (err, rows, fields) {
     if (err) {
       console.log(err)
@@ -68,7 +73,7 @@ app.post('/campanya', (req, res) => {
 })
 
 //Asociar campanya
-app.post('/campanya/:nombre', (req, res) => {
+app.post('/api/campanya/:nombre', (req, res) => {
   connection.query(marketing.asociarCampanya({
     ean: req.body.ean,
     nombre: req.params.nombre,
@@ -83,7 +88,7 @@ app.post('/campanya/:nombre', (req, res) => {
   });
 })
 
-app.get('/campanya/:nombre', (req, res) => {
+app.get('/api/campanya/:nombre', (req, res) => {
   connection.query(marketing.consultarCampanya({
     nombre: req.params.nombre
   }), function (err, rows, fields) {
@@ -96,7 +101,7 @@ app.get('/campanya/:nombre', (req, res) => {
   });
 })
 
-app.post('/producto', (req, res) => {
+app.post('/api/producto', (req, res) => {
   connection.query(marketing.crearProducto(req.body), function (err, rows, fields) {
     if (err) {
       console.log(err)
@@ -107,7 +112,7 @@ app.post('/producto', (req, res) => {
   });
 })
 
-app.get('/producto/:ean', (req, res) => {
+app.get('/api/producto/:ean', (req, res) => {
   console.log(req.body)
   connection.query(marketing.consultarProducto({
     ean: req.params.ean
@@ -121,7 +126,7 @@ app.get('/producto/:ean', (req, res) => {
   });
 })
 
-app.post('/analitica', (req, res) => {
+app.post('/api/analitica', (req, res) => {
   connection.query(marketing.crearAnalitica(req.body.dni), function (err, rows, fields) {
     if (err) {
       console.log(err)
@@ -132,7 +137,7 @@ app.post('/analitica', (req, res) => {
   });
 })
 
-app.get('/analitica/:id', (req, res) => {
+app.get('/api/analitica/:id', (req, res) => {
   console.log(req.params.id)
   connection.query(marketing.consultarAnalitica({
     id: req.params.id
@@ -152,7 +157,7 @@ app.get('/analitica/:id', (req, res) => {
 // ────────────────────────────────────────────────────────────────────
 //
 
-app.put('/producto/:ean', (req, res) => {
+app.put('/api/producto/:ean', (req, res) => {
   connection.query(inventario.actualizarInventario({
     ean: req.params.ean,
     ...req.body
@@ -166,7 +171,7 @@ app.put('/producto/:ean', (req, res) => {
   });
 })
 
-app.post('/producto/:ean', (req, res) => {
+app.post('/api/producto/:ean', (req, res) => {
   console.log(req.body)
   connection.query(inventario.newInventario({
     ean: req.params.ean,
@@ -180,7 +185,7 @@ app.post('/producto/:ean', (req, res) => {
   });
 })
 
-app.put('/producto/:ean', (req, res) => {
+app.put('/api/producto/:ean', (req, res) => {
   connection.query(inventario.defineEstado(req.body), function (err, rows, fields) {
     if (err) {
       console.log(err)
@@ -191,7 +196,7 @@ app.put('/producto/:ean', (req, res) => {
   });
 })
 
-app.post('/almacen', (req, res) => {
+app.post('/api/almacen', (req, res) => {
   connection.query(inventario.addAlmacen(req.body), function (err, rows, fields) {
     if (err) {
       console.log(err)
@@ -208,7 +213,7 @@ app.post('/almacen', (req, res) => {
 // ──────────────────────────────────────────────────────────────────────────────────
 //
 
-app.get('/empleado/:dni', (req, res) => {
+app.get('/api/empleado/:dni', (req, res) => {
   console.log(req.params.dni)
   connection.query(rrhh.consultarEmpleado({
     dni: req.params.dni
@@ -222,7 +227,7 @@ app.get('/empleado/:dni', (req, res) => {
   });
 })
 
-app.delete('/empleado/:dni', (req, res) => {
+app.delete('/api/empleado/:dni', (req, res) => {
   console.log(req.params)
   connection.query(rrhh.darBajaEmpleado(req.params), function (err, rows, fields) {
     if (err) {
@@ -241,7 +246,7 @@ app.delete('/empleado/:dni', (req, res) => {
   });
 })
 
-app.post('/empleado', (req, res) => {
+app.post('/api/empleado', (req, res) => {
   console.log(req.body)
   connection.beginTransaction(function (err) {
     if (err) {
@@ -273,7 +278,7 @@ app.post('/empleado', (req, res) => {
   })
 })
 
-app.put('/empleado/:dni', (req, res) => {
+app.put('/api/empleado/:dni', (req, res) => {
   connection.beginTransaction(function (err) {
     connection.query(rrhh.modificarEmpleado({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
       if (err) {
@@ -309,7 +314,7 @@ app.put('/empleado/:dni', (req, res) => {
 // ────────────────────────────────────────────────────────────────────
 //
 
-app.post('/ingreso', (req, res) => {
+app.post('/api/ingreso', (req, res) => {
   connection.query(contabilidad.anotarIngresoGasto(req.body), function (err, rows, fields) {
     if (err) {
       console.log(err)
@@ -321,7 +326,7 @@ app.post('/ingreso', (req, res) => {
 })
 
 
-app.get('/ingreso/:nombre_usuario', (req, res) => {
+app.get('/api/ingreso/:nombre_usuario', (req, res) => {
   console.log(req.params.nombre_usuario)
   connection.query(contabilidad.consultarIngresoGasto({
     nombre_usuario: req.params.nombre_usuario
@@ -336,7 +341,7 @@ app.get('/ingreso/:nombre_usuario', (req, res) => {
 })
 
 
-app.put('/ingreso/:codigo_tr', (req, res) => {
+app.put('/api/ingreso/:codigo_tr', (req, res) => {
   connection.query(contabilidad.modificarIngresoGasto({
     codigo_tr: req.params.codigo_tr,
     ...req.body
@@ -350,7 +355,7 @@ app.put('/ingreso/:codigo_tr', (req, res) => {
   });
 })
 
-app.get('/factura/:cod_factura', (req, res) => {
+app.get('/api/factura/:cod_factura', (req, res) => {
   connection.query(contabilidad.obtenerDatosFactura(req.params), function (err, rows, fields) {
     if (err) {
       console.log(err)
@@ -371,7 +376,7 @@ app.get('/factura/:cod_factura', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.1 ─────
 //
 
-app.post('/logistica/recibir', (req, res) => {
+app.post('/api/logistica/recibir', (req, res) => {
   /*
     Pasos:
       1. Insertar el nuevo producto en la base de datos. Hacerlo mediante insertarProducto_2_1.
@@ -438,7 +443,7 @@ app.post('/logistica/recibir', (req, res) => {
   },
 */
 
-app.post('/logistica/almacenes', (req, res) => {
+app.post('/api/logistica/almacenes', (req, res) => {
   /*
     Pasos:
       1. Restar `cantidad` en la relación inventario con el almacen_partida. Usar las funciones de Chema.
@@ -474,7 +479,7 @@ app.post('/logistica/almacenes', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.5 ─────
 //
 
-app.put('/logistica/:ID_paquete', (req, res) => {
+app.put('/api/logistica/:ID_paquete', (req, res) => {
   /*
     Actualizar el parámetro transportista de la instancia pertinente de Paquete.
   */
@@ -508,7 +513,7 @@ app.put('/logistica/:ID_paquete', (req, res) => {
 
 */
 
-app.post('/logistica/compra', (req, res) => {
+app.post('/api/logistica/compra', (req, res) => {
   /*
     Pasos:
       1. Gestionar el envío
@@ -601,11 +606,6 @@ app.post('/logistica/compra', (req, res) => {
 })
 
 // ────────────────────────────────────────────────────────────────────────────────
-
-
-// app.use(serveStatic(__dirname + "/frontend/dist"));
-
-
 
 app.listen(port, () => {
   console.log(`Backend funcionando en http://localhost:${port}`)
