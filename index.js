@@ -38,8 +38,14 @@ var mysql = require('mysql');
 //   password: 'DDSI2020',
 //   database: 'DDSI'
 // });
+var connection = mysql.createConnection({
+  host: 'eu-cdbr-west-03.cleardb.net',
+  user: 'b93f80375031dd',
+  password: 'f53dce90',
+  database: 'heroku_1e1951efc954bab'
+});
 
-// connection.connect();
+connection.connect();
 
 const random_EAN = () => {
   min = 0
@@ -616,5 +622,5 @@ process.on('error', function (err) {
 });
 
 process.on('exit', function () {
-  // connection.end();
+  connection.end();
 });

@@ -44,8 +44,6 @@ CREATE TABLE Analitica (
   PRIMARY KEY (ID, nombre)
 );
 
-DROP TABLE Inventario;
-
 -- NOTE: Cantidad en almacén, estado y cant. afectada separados.
 CREATE TABLE Inventario (
   codigo_alm INT(13) NOT NULL,

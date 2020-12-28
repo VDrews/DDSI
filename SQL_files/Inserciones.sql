@@ -77,12 +77,12 @@ insert into Analitica (ID, nombre, tipo, payload) values
 
 
 insert into Inventario (codigo_alm, EAN_producto, cantidad, estado, cant_afectada) values
-    (2, 82151, 2, 'reservados', 0),
+    (11, 82151, 2, 'reservados', 0),
     (1, 82151, 2, 'reservados', 0),
-    (2, 70336, 1, 'defectuosos', 0),
-    (3, 99901, 3, 'reservados', 0),
-    (4, 49107, 1, 'defectuosos', 0),
-    (5, 77840, 999, 'reservados', 0);
+    (21, 70336, 1, 'defectuosos', 0),
+    (31, 99901, 3, 'reservados', 0),
+    (41, 49107, 1, 'defectuosos', 0),
+    (51, 77840, 999, 'reservados', 0);
 
 
 insert into Paquete (transportista) values
@@ -126,7 +126,6 @@ insert into Contenido (ID_paquete, EAN_producto, cantidad) values
     );
 
 
--- FIXME están hablando Adri y Andrés
 insert into Factura values
     (null),
     (null),
@@ -145,7 +144,7 @@ insert into CompraVenta (cod_factura, ID_paquete, tipo) values
         (SELECT cod_factura FROM Factura ORDER BY RAND() LIMIT 1), 
         (SELECT ID_paquete FROM Paquete ORDER BY RAND() LIMIT 1), 
         'Compra'
-    ), 
+    ),
     (
         (SELECT cod_factura FROM Factura ORDER BY RAND() LIMIT 1), 
         (SELECT ID_paquete FROM Paquete ORDER BY RAND() LIMIT 1), 
@@ -353,7 +352,7 @@ insert into Generacion (codigo_tr, codigo_fac) values
     (
         (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1), 
         (SELECT cod_factura FROM Factura ORDER BY RAND() LIMIT 1)
-    ),;
+    ),
     (
         (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1), 
         (SELECT cod_factura FROM Factura ORDER BY RAND() LIMIT 1)
@@ -409,7 +408,7 @@ insert into Empleado(DNI, nombre, apellidos) values
     (75027165, 'El otro Andrés', 'Mayor'),
     (72508596, 'María', 'Caceres'),
     (85152596, 'Jose', 'Alcaraz'),
-    (76042897, 'Sergio', 'Ramos');
+    (76042897, 'Sergio', 'Ramos'),
     (17375217, 'Pepe Luis', 'Jordan');
 
 insert into Cobro (cod_nomina, DNI) values
@@ -442,7 +441,7 @@ insert into Emision (cod_nomina, IBAN) values
     ((SELECT cod_nomina FROM Nomina ORDER BY RAND() LIMIT 1), (SELECT IBAN FROM Cuenta_Empresa ORDER BY RAND() LIMIT 1));
 
 insert into Cargo (IBAN, codigo_tr) values
-    ((SELECT IBAN FROM Cuenta_Empresa ORDER BY RAND() LIMIT 1), (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1));
+    ((SELECT IBAN FROM Cuenta_Empresa ORDER BY RAND() LIMIT 1), (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1)),
     ((SELECT IBAN FROM Cuenta_Empresa ORDER BY RAND() LIMIT 1), (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1)),
     ((SELECT IBAN FROM Cuenta_Empresa ORDER BY RAND() LIMIT 1), (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1)),
     ((SELECT IBAN FROM Cuenta_Empresa ORDER BY RAND() LIMIT 1), (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1)),
