@@ -143,6 +143,7 @@ export default {
 
     },
     async consultarAnalitica() {
+      console.log(`${url}/api/analitica/${this.idAnalitica}`)
       this.error.consultarAnalitica = false
       try {
         this.analitica = (await axios.get(`${url}/api/analitica/${this.idAnalitica}`)).data
