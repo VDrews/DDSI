@@ -32,14 +32,14 @@ app.use(bodyParser.urlencoded({
 
 var mysql = require('mysql');
 
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'frontend',
-  password: 'DDSI2020',
-  database: 'DDSI'
-});
+// var connection = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'frontend',
+//   password: 'DDSI2020',
+//   database: 'DDSI'
+// });
 
-connection.connect();
+// connection.connect();
 
 const random_EAN = () => {
   min = 0
@@ -616,5 +616,5 @@ process.on('error', function (err) {
 });
 
 process.on('exit', function () {
-  connection.end();
+  // connection.end();
 });
