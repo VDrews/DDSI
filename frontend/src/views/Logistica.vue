@@ -42,7 +42,8 @@
 
 <script>
 import axios from 'axios'
-const port = process.env.PORT || 8080
+const url = process.env.PRODUCTION ? `https://apeteporica.herokuapp.com` : 'http://localhost:8080'
+
 export default {
     data: () => ({
         // Los nombres corresponden a los nombres de los métodos. Mirar los DIVs de template para mirar qué significan
@@ -93,7 +94,7 @@ export default {
             this.error.RP_2_1 = false
 
             try {
-                await axios.post(`http://localhost:${port}/api/logistica/recibir`, this.RP_2_1)
+                await axios.post(`${url}/api/logistica/recibir`, this.RP_2_1)
                 this.success.RP_2_1 = true
             } catch (err) {
                 this.error.RP_2_1 = true
@@ -105,7 +106,7 @@ export default {
             this.error.EPeA_2_2 = false
 
             try {
-                await axios.post(`http://localhost:${port}/api/logistica/almacenes`, this.EPeA_2_2)
+                await axios.post(`${url}/api/logistica/almacenes`, this.EPeA_2_2)
                 this.success.EPeA_2_2 = true
             } catch (err) {
                 this.error.EPeA_2_2 = true
@@ -117,7 +118,7 @@ export default {
             this.error.ET_2_5 = false
 
             try {
-                await axios.put(`http://localhost:${port}/api/logistica/${this.ET_2_5.ID_paquete}`, this.ET_2_5)
+                await axios.put(`${url}/api/logistica/${this.ET_2_5.ID_paquete}`, this.ET_2_5)
                 this.success.ET_2_5 = true
             } catch (err) {
                 this.error.ET_2_5 = true
@@ -129,7 +130,7 @@ export default {
             this.error.CP_2_6 = false
 
             try {
-                await axios.post(`http://localhost:${port}/api/logistica/compra`, this.CP_2_6)
+                await axios.post(`${url}/api/logistica/compra`, this.CP_2_6)
                 this.success.CP_2_6 = true
             } catch (err) {
                 this.error.CP_2_6 = true

@@ -40,7 +40,8 @@
 
 <script>
 import axios from 'axios'
-const port = process.env.PORT || 8080
+const url = process.env.PRODUCTION ? `https://apeteporica.herokuapp.com` : 'http://localhost:8080'
+
 export default {
   data: () => ({
     eanProductoEliminado: null,
@@ -79,7 +80,7 @@ export default {
       this.success.crearProducto = false
       this.error.crearProducto = false
       try {
-        await axios.post(`http://localhost:${port}/api/producto`, this.nuevoProducto)
+        await axios.post(`${url}/api/producto`, this.nuevoProducto)
         this.success.crearProducto = true
 
       } catch (err) {
@@ -92,7 +93,7 @@ export default {
       this.error.cambiarCantidad = false
       console.log(this.cambioCantidad)
       try {
-        await axios.put(`http://localhost:${port}/api/producto/${this.cambioCantidad.ean}`, this.cambioCantidad)
+        await axios.put(`${url}/api/producto/${this.cambioCantidad.ean}`, this.cambioCantidad)
         this.success.cambiarCantidad = true
 
       } catch (err) {
@@ -104,7 +105,7 @@ export default {
       this.success.eliminarProducto = false
       this.error.eliminarProducto = false
       try {
-        await axios.delete(`http://localhost:${port}/api/producto/${this.eanProductoEliminado}`)
+        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`)
         this.success.eliminarProducto = true
 
       } catch (err) {
@@ -115,7 +116,7 @@ export default {
     async consultarProducto() {
       this.error.consultarProducto = false
       try {
-        this.productos = (await axios.get(`http://localhost:${port}/api/producto/${this.eanProductoConsultado}`)).data
+        this.productos = (await axios.get(`${url}/api/producto/${this.eanProductoConsultado}`)).data
 
       } catch(err) {
         this.error.consultarProducto = true

@@ -61,7 +61,8 @@
 
 <script>
 import axios from 'axios'
-const port = process.env.PORT || 8080
+
+const url = process.env.PRODUCTION ? `https://apeteporica.herokuapp.com` : 'http://localhost:8080'
 export default {
   data: () => ({
     campanya: {
@@ -105,7 +106,7 @@ export default {
       this.error.crearCampanya = false
 
       try {
-        await axios.post(`http://localhost:${port}/api/campanya`, this.campanya)
+        await axios.post(`${url}/api/campanya`, this.campanya)
         this.success.crearCampanya = true
       }
       catch(err) {
@@ -118,7 +119,7 @@ export default {
       this.error.asociarCampanya = false
 
       try {
-        await axios.post(`http://localhost:${port}/api/campanya/${this.anuncio.nombre}`, {
+        await axios.post(`${url}/api/campanya/${this.anuncio.nombre}`, {
           ean: this.anuncio.ean, 
           descuento: this.anuncio.descuento
         })
@@ -132,7 +133,7 @@ export default {
       this.success.crearAnalitica = false
       this.error.crearAnalitica = false
       try {
-        await axios.post(`http://localhost:${port}/api/analitica`, this.nuevaAnalitica)
+        await axios.post(`${url}/api/analitica`, this.nuevaAnalitica)
         this.success.crearAnalitica = true
 
       } catch(err) {
@@ -144,7 +145,7 @@ export default {
     async consultarAnalitica() {
       this.error.consultarAnalitica = false
       try {
-        this.analitica = (await axios.get(`http://localhost:${port}/api/analitica/${this.idAnalitica}`)).data
+        this.analitica = (await axios.get(`${url}/api/analitica/${this.idAnalitica}`)).data
 
       } catch(err) {
         this.error.consultarAnalitica = true

@@ -60,7 +60,8 @@
 
 <script>
 import axios from 'axios'
-const port = process.env.PORT || 8080
+const url = process.env.PRODUCTION ? `https://apeteporica.herokuapp.com` : 'http://localhost:8080'
+
 export default {
   data: () => ({
     nuevoEmpleado: {
@@ -99,7 +100,7 @@ export default {
       this.error.contratarEmpleado = false
 
       try {
-        await axios.post(`http://localhost:${port}/api/empleado`, this.nuevoEmpleado)
+        await axios.post(`${url}/api/empleado`, this.nuevoEmpleado)
         this.success.contratarEmpleado = true
       }
       catch(err) {
@@ -112,7 +113,7 @@ export default {
       this.error.baja = false
       try {
         console.log(this.baja.dni)
-        await axios.delete(`http://localhost:${port}/api/empleado/${this.baja.dni}`)
+        await axios.delete(`${url}/api/empleado/${this.baja.dni}`)
         this.success.baja = true
 
       } catch (err) {
@@ -123,7 +124,7 @@ export default {
     async consultar() {
       this.error.consultarEmpleado = false
       try {
-        this.empleado = (await axios.get(`http://localhost:${port}/api/empleado/${this.dniEmpleadoConsultar}`)).data
+        this.empleado = (await axios.get(`${url}/api/empleado/${this.dniEmpleadoConsultar}`)).data
         console.log(this.empleado)
 
       } catch(err) {
@@ -138,7 +139,7 @@ export default {
       this.error.modificarEmpleado = false
 
       try {
-        await axios.put(`http://localhost:${port}/api/empleado/${this.empleadoModificar.dni}`, this.empleadoModificar)
+        await axios.put(`${url}/api/empleado/${this.empleadoModificar.dni}`, this.empleadoModificar)
         this.success.modificarEmpleado = true
       } catch(err) {
         this.error.modificarEmpleado = true

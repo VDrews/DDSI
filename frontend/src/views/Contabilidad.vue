@@ -60,7 +60,8 @@
 
 <script>
 import axios from 'axios'
-const port = process.env.PORT || 8080
+const url = process.env.PRODUCTION ? `https://apeteporica.herokuapp.com` : 'http://localhost:8080'
+
 export default {
   data: () => ({
     nuevoIngreso: {
@@ -98,7 +99,7 @@ export default {
       this.error.anotarIngreso = false
 
       try {
-        await axios.post(`http://localhost:${port}/api/ingreso`, this.nuevoIngreso)
+        await axios.post(`${url}/api/ingreso`, this.nuevoIngreso)
         this.success.anotarIngreso = true
       }
       catch(err) {
@@ -110,7 +111,7 @@ export default {
       this.success.modificarIngreso = false
       this.error.modificarIngreso = false
       try {
-        await axios.put(`http://localhost:${port}/api/ingreso/${this.ingresoModificado.codigo}`, this.ingresoModificado)
+        await axios.put(`${url}/api/ingreso/${this.ingresoModificado.codigo}`, this.ingresoModificado)
         this.success.modificarIngreso = true
 
       } catch (err) {
@@ -121,7 +122,7 @@ export default {
     async consultarIngreso() {
       this.error.consultarIngreso = false
       try {
-        this.ingresos = (await axios.get(`http://localhost:${port}/api/ingreso/${this.codigoIngreso}`)).data
+        this.ingresos = (await axios.get(`${url}/api/ingreso/${this.codigoIngreso}`)).data
 
       } catch(err) {
         this.error.consultarIngreso = true
@@ -134,7 +135,7 @@ export default {
       console.log(this.codigoFactura)
       this.error.consultarFactura = false
       try {
-        this.factura = (await axios.get(`http://localhost:${port}/api/factura/${this.codigoFactura}`)).data
+        this.factura = (await axios.get(`${url}/api/factura/${this.codigoFactura}`)).data
 
       } catch(err) {
         this.error.consultarFactura = true
