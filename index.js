@@ -52,7 +52,7 @@ const random_EAN = () => {
 // app.use(history());
 app.use(express.static('frontend/dist'));
 app.get('/', (req, res) => {
-  res.sendFile('frontend/dist/index.html');
+  res.sendFile(__dirname + '/frontend/dist/index.html');
 });
 
 //
