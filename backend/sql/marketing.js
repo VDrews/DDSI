@@ -16,6 +16,7 @@ let crearProducto = function({ean, nombre, fabricante, precio}) {
 }
 
 let consultarProducto = function({ean}) {
+  console.log(ean)
   return `select * from Inventario NATURAL JOIN Producto where EAN_producto = '${ean}'`
   // return `select * from Producto NATURAL JOIN  where EAN_producto = '${ean}'`
 }

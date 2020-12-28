@@ -1,19 +1,19 @@
-let actualizarInventario = function({ean, almacen, cantidad}) {
-  return `update Inventario set cantidad=cantidad+${cantidad} where ean_producto=${ean} and codigo_alm=${almacen};`
+let actualizarInventario = function({ean, codigo_alm, cantidad}) {
+  return `update Inventario set cantidad=cantidad+${cantidad} where ean_producto=${ean} and codigo_alm=${codigo_alm};`
 }
 
 let addAlmacen = function ({direccion}) {
   return `insert into Almacen (direccion) values ('${direccion}');`
 }
 
-let defineEstado = function ({ean, almacen, estado, cantafectada}){
+let defineEstado = function ({ean, codigo_alm, estado, cantafectada}){
   return `update Inventario set estado='${estado}' set cant_afectada=${cantafectada}
-          where ean_producto=${ean} and cod_almacen=${almacen};`
+          where ean_producto=${ean} and cod_almacen=${codigo_alm};`
 }
 
-let newInventario = function({almacen, ean, cantidad}) {
+let newInventario = function({codigo_alm, ean, cantidad}) {
   return `insert into Inventario (codigo_alm, ean_producto, cantidad) values
-          (${almacen}, ${ean}, ${cantidad});`
+          (${codigo_alm}, ${ean}, ${cantidad});`
 }
 
 let dropProducto = function({ean}){

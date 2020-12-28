@@ -12,7 +12,7 @@
     <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar cantidad en almacén</div>
     <v-text-field v-model="cambioCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
     <v-text-field v-model="cambioCantidad.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
-    <v-text-field v-model="cambioCantidad.codigo" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    <v-text-field v-model="cambioCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
     <v-alert v-if="success.cambiarCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
     <v-alert v-if="error.cambiarCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
     <v-btn @click="cambiarCantidad" color="primary" dark block>Cambiar</v-btn>
@@ -31,7 +31,7 @@
       <v-list-item v-for="(producto, i) in productos" :key="i" two-line>
         <v-list-item-title>{{producto.EAN_producto}} (Almacén {{producto.codigo_alm}})</v-list-item-title>
         <v-list-item-subtitle>{{producto.fabricante}} {{producto.nombre}} {{producto.estado_cant_afectada}}</v-list-item-subtitle>
-        <v-list-item-action>{{producto.precio}}€</v-list-item-action>
+        <v-list-item-action>{{producto.precio}}€ <i>{{producto.cantidad}} en stock</i></v-list-item-action>
       </v-list-item>
     </v-list>
 
@@ -53,7 +53,7 @@ export default {
     cambioCantidad: {
       ean: null,
       cantidad: null,
-      codigo: null,
+      codigo_alm: null,
     },
     productos: null,
 
@@ -89,6 +89,7 @@ export default {
     async cambiarCantidad() {
       this.success.cambiarCantidad = false
       this.error.cambiarCantidad = false
+      console.log(this.cambioCantidad)
       try {
         await axios.put(`http://localhost:8000/producto/${this.cambioCantidad.ean}`, this.cambioCantidad)
         this.success.cambiarCantidad = true

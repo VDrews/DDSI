@@ -23,7 +23,7 @@
     <v-text-field v-model="nuevaAnalitica.tipo" placeholder="Tipo" outlined></v-text-field>
     <v-text-field v-model="nuevaAnalitica.payload" placeholder="Payload" outlined></v-text-field>
     <v-alert v-if="success.crearAnalitica" text type="success">La analítica se ha creado con éxito</v-alert>
-    <v-alert v-if="error.crearAnalitica" text type="error">Ya existe una analítica con este id</v-alert>
+    <v-alert v-if="error.crearAnalitica" text type="error">Ya existe una analítica con este id o no existe la campaña con ese nombre</v-alert>
     <v-btn @click="crearAnalitica" color="primary" dark block>Crear</v-btn>
     
 
