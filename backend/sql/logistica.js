@@ -15,7 +15,7 @@ let sinVariable = `CREATE TABLE WHERE ***`
  */
 let insertarProducto_2_1 = function({EAN_prod, nombre_prod, fabricante, precio}) {
   return `insert into Producto (EAN_producto, nombre, fabricante, precio) values
-    (${EAN_prod}, ${nombre_prod}, ${fabricante}, ${precio});`
+    (${EAN_prod}, '${nombre_prod}', '${fabricante}', ${precio});`
 }
 
 
@@ -31,12 +31,12 @@ let insertarProducto_2_1 = function({EAN_prod, nombre_prod, fabricante, precio})
 */
 
 let insertarDistribucion_2_2 = function ({ID_paquete, cod_almacen}) {
-  return `insert into Distribucion (ID_paquete, fecha_envio, cod_almacen) values
-    (${ID_paquete}, Now(), ${cod_almacen});`
+  return `insert into Distribucion (ID_paquete, fecha_envio, fecha_llegada,cod_almacen) values
+    (${ID_paquete}, Now(), DATE_ADD(Now(), interval 3 DAY), ${cod_almacen});`
 }
 
 
-let insertarContenido_2_2 = function ({ID_paquete, EAN_producto, cantidad}) {
+let insertarContenido = function ({ID_paquete, EAN_producto, cantidad}) {
   return `insert into Contenido (ID_paquete, EAN_producto, cantidad) values
     (${ID_paquete}, ${EAN_producto}, ${cantidad});`
 }
@@ -48,7 +48,7 @@ let insertarContenido_2_2 = function ({ID_paquete, EAN_producto, cantidad}) {
 
 
 let elegirTransportista_2_5 = function ({transportista, ID_paquete}) {
-  return `update Paquete set transportista=${transportista} where ID_paquete=${ID_paquete};`
+  return `update Paquete set transportista='${transportista}' where ID_paquete=${ID_paquete};`
 }
 
 
@@ -58,21 +58,20 @@ let elegirTransportista_2_5 = function ({transportista, ID_paquete}) {
 
 
 let insertarPaquete = function ({transportista}) {
-  return `insert into Paquete (transportista) values (${transportista}); `
+  return `insert into Paquete (transportista) values ('${transportista}'); `
+}
+
+let getIdPaquete = function() {
+	return `SELECT LAST_INSERT_ID();`
 }
 
 let insertarEnvio_2_6 = function ({ID_paquete, nombre_usuario}) {
-  return `insert into Envio (ID, nombre_usuario, fecha_envio) values (${ID_paquete}, ${nombre_usuario}, Now());`
+  return `insert into Envio (ID, nombre_usuario, fecha_envio, fecha_llegada) values (${ID_paquete}, '${nombre_usuario}', Now(), DATE_ADD(Now(), interval 3 DAY));`
 }
 
-let insertarContenido_2_6 = function ({ID_paquete, nombre_producto, cantidad}) {
-  return `insert into Contenido (ID_paquete, EAN_producto, cantidad) values
-    (${ID_paquete}, (select EAN_producto from Producto where nombre = ${nombre_producto}), ${cantidad});`
-}
-
-let insertarCompraVenta_2_6 = function ({codigo_factura, nombre_producto, }) {
+let insertarCompraVenta_2_6 = function ({codigo_factura, ID_paquete}) {
   return `insert into CompraVenta (cod_factura, ID_paquete, tipo) values
-      (${codigo_factura}, (select EAN_producto from Producto where nombre = ${nombre_producto}), 'Venta');`
+      (${codigo_factura}, ${ID_paquete}, 'Venta');`
 }
 
 /*
@@ -82,13 +81,7 @@ let insertarCompraVenta_2_6 = function ({codigo_factura, nombre_producto, }) {
       `select LAST_INSERT_ID()`
     Lo devuelto es la clave requerida para el autoincrement.
 */
-let getIdPaquete= function() {
-	return `insert into Paquete (ID_paquete) values (ID_paquete);`
-}
 
-let getIdPaquete = function() {
-	return `SELECT LAST_INSERT_ID();`
-}
 
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -96,7 +89,10 @@ let getIdPaquete = function() {
 
 module.exports = {
   insertarProducto_2_1,
-  insertarDistribucion_2_2, insertarContenido_2_2,
+  insertarDistribucion_2_2, insertarContenido,
   elegirTransportista_2_5,
-  insertarCompraVenta_2_6, insertarContenido_2_6, insertarEnvio_2_6, insertarPaquete
+  insertarCompraVenta_2_6, insertarEnvio_2_6, insertarPaquete,
+
+  getIdPaquete,
 }
+ 

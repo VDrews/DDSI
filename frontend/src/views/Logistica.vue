@@ -31,7 +31,7 @@
 
         <div class="display-1 font-weight-bold mt-6 mb-2"> Comprar producto (2.6) </div>
         <v-text-field v-model="CP_2_6.cliente" placeholder="Cliente" outlined></v-text-field>
-        <v-text-field v-model="CP_2_6.producto" placeholder="Nombre del producto" outlined></v-text-field>
+        <v-text-field v-model="CP_2_6.EAN" placeholder="EAN del producto" outlined></v-text-field>
         <v-text-field v-model="CP_2_6.cantidad" placeholder="cantidad" type="number" outlined></v-text-field>
         <v-text-field v-model="CP_2_6.transportista" placeholder="Transportista" outlined></v-text-field>
         <v-alert v-if="success.CP_2_6" text type="success">El producto ha sido comprado</v-alert>
@@ -64,7 +64,7 @@ export default {
         },
         CP_2_6: {
             cliente: "",
-            nombre_producto: "",
+            EAN: "",
             cantidad: null,
             transportista: ""
         },

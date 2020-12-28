@@ -15,6 +15,35 @@
     <v-alert v-if="error.modificarIngreso" text type="error">No existe el ingreso con el código indicado</v-alert>
     <v-btn @click="modificarIngreso" color="primary" dark block>Crear</v-btn>
 
+
+    <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Factura</div>
+    <v-text-field v-model="codigoFactura" placeholder="Codigo Factura" type="number" outlined></v-text-field>
+    <v-btn @click="consultarFactura" color="primary" dark block>Consultar</v-btn>
+    <v-alert v-if="error.consultarFactura" text type="error">No existe una factura con este código</v-alert>
+    <v-simple-table v-if="factura">
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">
+              Factura
+            </th>
+            <th class="text-left">
+              Valor
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(value, name) in factura"
+            :key="name"
+          >
+            <td>{{name}}</td>
+            <td>{{value}}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Ingreso</div>
     <v-text-field v-model="codigoIngreso" placeholder="Codigo" type="number" outlined></v-text-field>
     <v-btn @click="consultarIngreso" color="primary" dark block>Consultar</v-btn>
@@ -55,12 +84,15 @@ export default {
       cantidad: null,
     },
     codigoIngreso: null,
+    codigoFactura: null,
     ingresoModificado: {
       codigo: null,
       tipo: "",
       cantidad: null,
     },
     ingreso: null,
+
+    factura: null,
 
     success: {
       anotarIngreso: false,
@@ -70,7 +102,8 @@ export default {
     error: {
       anotarIngreso: false,
       modificarIngreso: false,
-      consultarProducto: false
+      consultarProducto: false,
+      consultarFactura: false
     }
   }),
 
@@ -107,6 +140,19 @@ export default {
 
       } catch(err) {
         this.error.consultarIngreso = true
+
+      }
+
+    },
+
+    async consultarFactura() {
+      console.log(this.codigoFactura)
+      this.error.consultarFactura = false
+      try {
+        this.factura = (await axios.get(`http://localhost:8000/factura/${this.codigoFactura}`)).data
+
+      } catch(err) {
+        this.error.consultarFactura = true
 
       }
 

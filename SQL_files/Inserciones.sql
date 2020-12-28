@@ -381,16 +381,22 @@ insert into Contrato(DNI, turno, fecha, vigente, sueldo) values
 
 insert into Factura (cod_factura) values(NULL); 
 
+insert into Generacion (codigo_fac, codigo_tr) values (36, 10)
+
 select tipo, cantidad, codigo_fac, nombre_usuario from Transaccion Natural Join 
 (select codigo_fac, nombre_usuario, codigo_tr from Generacion Natural Join
 (select nombre_usuario, cod_factura from Envio Natural Join 
 (select id_paquete, cod_factura from CompraVenta where cod_factura = 
-					(select codigo_fac from Generacion where codigo_tr = 4)) AS envio) AS generacion) AS transaccion
+					(select codigo_fac from Generacion where codigo_tr = 10)) AS envio) AS generacion) AS transaccion
+
+insert into CompraVenta (cod_factura, ID_paquete, tipo) values
+      (35, 18, 'Venta');
 
 
-select nombre_usuario, cod_factura from Envio e Join 
-(select id_paquete, cod_factura from CompraVenta where cod_factura = 
-					(select codigo_fac from Generacion where codigo_tr = 4)) AS compra ON(e.ID = compra.id_paquete)
+select tipo, cantidad, codigo_fac, nombre_usuario from Transaccion Natural Join
+(select codigo_fac, nombre_usuario, codigo_tr from Generacion g Join
+(select nombre_usuario, cod_factura from Envio e Join 
+(select id_paquete, cod_factura from CompraVenta where cod_factura = 36) AS compra ON(e.ID = compra.id_paquete)) AS generacion ON (generacion.cod_factura = g.codigo_fac)) AS transaccion
 
 
 insert into Empleado(DNI, nombre, apellidos) values
