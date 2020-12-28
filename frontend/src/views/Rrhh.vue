@@ -131,6 +131,7 @@ export default {
       }
 
     },
+    // TODO Cambiar esto
     async modificar() {
       this.success.modificarEmpleado = false
       this.error.modificarEmpleado = false

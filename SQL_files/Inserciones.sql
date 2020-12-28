@@ -378,6 +378,21 @@ insert into Contrato(DNI, turno, fecha, vigente, sueldo) values
     ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), 'L-V 16:30-19:30', Now(), true, 1300),
     ((SELECT DNI FROM Empleado ORDER BY RAND() LIMIT 1), 'L-V 16:30-19:30', Now(), true, 1700);
 
+
+insert into Factura (cod_factura) values(NULL); 
+
+select tipo, cantidad, codigo_fac, nombre_usuario from Transaccion Natural Join 
+(select codigo_fac, nombre_usuario, codigo_tr from Generacion Natural Join
+(select nombre_usuario, cod_factura from Envio Natural Join 
+(select id_paquete, cod_factura from CompraVenta where cod_factura = 
+					(select codigo_fac from Generacion where codigo_tr = 4)) AS envio) AS generacion) AS transaccion
+
+
+select nombre_usuario, cod_factura from Envio e Join 
+(select id_paquete, cod_factura from CompraVenta where cod_factura = 
+					(select codigo_fac from Generacion where codigo_tr = 4)) AS compra ON(e.ID = compra.id_paquete)
+
+
 insert into Empleado(DNI, nombre, apellidos) values
     (39726794, 'Pepe', 'Rodrigo'),
     (50824462, 'Juan', 'Serrano'),

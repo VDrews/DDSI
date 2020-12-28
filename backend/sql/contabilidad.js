@@ -18,6 +18,27 @@ let consultarIngresoGasto = function(nombre_usuario) {
 let modificarIngresoGasto = function(codigo_tr, tipo, cantidad) {
 	return `update Transaccion set tipo = ${tipo}, cantidad = ${cantidad} where codigo_tr = ${codigo_tr};`
 }
+
+let crearFactura = function() {
+	return `insert into Factura (cod_factura) values(NULL);`
+}
+
+let getCodFactura = function() {
+	return `SELECT LAST_INSERT_ID();`
+}
+
+let conectarGeneracion = function({cod_factura, codigo_tr}) {
+	return `insert into Generacion (codigo_fac, codigo_tr) values (${cod_factura}, ${codigo_tr})`
+}
+
+let obtenerDatosFactura = function({codigo_tr}) {
+	return `select tipo, cantidad, cod_factura, nombre_usuario from Transaccion Natural Join 
+					(select codigo_fac, nombre_usuario, codigo_tr from Generacion Natural Join 
+					(select nombre_usuario, codigo_fac from Envio Natural Join 
+					(select id_paquete, cod_factura from CompraVenta where cod_factura in 
+					(select codigo_fac from Generacion where codigo_tr = ${codigo_tr}) AS generacionf) AS compraventa) AS envio) AS generacion`
+}
+
 /*
 // select?
 let generarFactura = function(codigo_tr) {
@@ -51,5 +72,4 @@ let generarFactura = function(codigo_tr) {
 ( select nombre_usuario, cod_factura from Compraventa Natural Join (select nombre_usuario, ID from Envio) where cod_factura = ${cod_factura}) ))`
 */
 
-*/
-module.exports = {anotarIngresoGasto, consultarIngresoGasto, modificarIngresoGasto}
+module.exports = {anotarIngresoGasto, consultarIngresoGasto, modificarIngresoGasto, crearFactura, getCodFactura, conectarGeneracion, obtenerDatosFactura}

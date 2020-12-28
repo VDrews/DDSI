@@ -206,6 +206,56 @@ app.post('/almacen', (req, res) => {
     return res.sendStatus(200);
   });
 })
+
+app.post('/factura', (req,res) => {
+
+    connection.beginTransaction(function(err) {
+      if (err) {
+        return res.sendStatus(500)
+      }
+
+      connection.query(contabilidad.crearFactura(), function(err, rows, fields) {
+        if (err) {
+          console.log(err)
+          connection.rollback(function() {
+            return res.sendStatus(412);
+          });
+        }
+        connection.query(contabilidad.getCodFactura(), function(err, rows, fields) {
+          let cod_factura = rows[0]['LAST_INSERT_ID()'];
+          let codigo_tr = req.body.codigo_tr
+          console.log(cod_factura)
+          connection.query(contabilidad.conectarGeneracion({
+            cod_factura, codigo_tr
+          }), function(err, rows, fields) {
+            if (err) {
+              console.log(err)
+              connection.rollback(function() {
+                return res.sendStatus(412);
+              });
+            }
+    
+            console.log("Generacion OK")
+    
+            connection.query(contabilidad.obtenerDatosFactura({codigo_tr}), function(err, rows, fields) {
+              if (err) {
+                console.log(err)
+                connection.rollback(function() {
+                  return res.sendStatus(412);
+                });
+              }
+              console.log("Obtener DATOS OK")
+              return res.status(200)
+            })
+    
+          })
+        })
+      })
+
+    })
+
+})
+
 app.post('/empleado', (req, res) => {
   console.log(req.body)
   connection.beginTransaction(function(err) {
