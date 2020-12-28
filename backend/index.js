@@ -264,7 +264,45 @@ app.put('/empleado', (req, res) => {
 // ────────────────────────────────────────────────────────────────────
 //
 
+//
+// ────────────────────────────────────────────────────────────────────── 2.1 ─────
+//
+
+app.post('/logistica/recibir', (req, res) => {
+  connection.log(req.body)
+  /*
+    Pasos:
+      1. Insertar el nuevo producto en la base de datos. Hacerlo mediante insertarProducto_2_1.
+        1.1 NOTE para ello necesitaré un EAN_producto. Cuidado con esto.
+      2. Insertar en algún almacén. Usar newInventario de Chema.
+  */
+})
+
+//
+// ────────────────────────────────────────────────────────────────────── 2.2 ─────
+//
+
+app.post('/logistica/almacenes', (req, res) => {
+  connection.log(body)
+  /*
+    Pasos:
+      1. Restar `cantidad` en la relación inventario con el almacen_partida. Usar las funciones de Chema.
+      2. Sumar `cantidad` en la relación inventario con el almacen_llegada. Usar las funciones de Chema.
+      3. Gestionar el envío:
+        3.1 Crear un paquete con nuestro producto (función insertarPaquete(transportista)) (Sacar el último ID)
+        3.2 Añadir la distribución del paquete (insertarDisrtibucion_2_2(ID_paquete, almacen_partida))
+        3.3 Insertar en la relación contenido (insertarContenido2_2(ID_paquete, EAN_producto, cantidad))
+  */
+})
+
+//
+// ────────────────────────────────────────────────────────────────────── 2.5 ─────
+//
+
 app.put('/logistica/:ID_paquete', (req, res) => {
+  /*
+    Actualizar el parámetro transportista de la instancia pertinente de Paquete.
+  */
   connection.query(logsitica.elegirTransportista_2_5 ({
     transportista: req.params.transportista,
     ID_paquete: req.params.ID_paquete
@@ -279,6 +317,25 @@ app.put('/logistica/:ID_paquete', (req, res) => {
     return res.sendStatus(200).send("Transportista actualizado con éxito")
   });
 })
+
+//
+// ────────────────────────────────────────────────────────────────────── 2.6 ─────
+//
+
+app.post('logistica/compra', (req, res) => {
+  /*
+    Pasos:
+      1. Gestionar el envío
+        1.1 Insertar el paquete (insertarPaquete(transportista)) (Sacar el último ID)
+        1.2 Meter en la relación de envio (insertarEnvio_2_6(ID_paquete, nombre_usuario))
+        1.3 Meter en la relación con el producto (insertarContenido_2_6(ID_paquete, nombre_producto, cantidad))
+      2. Crear la factura
+        2.1 Crear la factura y sacar su último ID (¿Quizás Adri tenga una función?)
+        2.2 Meter en la relación compraventa (insertarCompraventa_2_6(codigo_factura, nombre_producto))
+  */
+})
+
+// ────────────────────────────────────────────────────────────────────────────────
 
 
 // app.use(serveStatic(__dirname + "/frontend/dist"));

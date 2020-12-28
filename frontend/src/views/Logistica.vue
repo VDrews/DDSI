@@ -92,7 +92,7 @@ export default {
             this.error.RP_2_1 = false
 
             try {
-                await axios.post('http://localhost:8000/logistica', this.RP_2_1)
+                await axios.post('http://localhost:8000/logistica/recibir', this.RP_2_1)
                 this.success.RP_2_1 = true
             } catch (err) {
                 this.error.RP_2_1 = true
@@ -104,7 +104,7 @@ export default {
             this.error.EPeA_2_2 = false
 
             try {
-                await axios.post('http://localhost:8000/logistica', this.EPeA_2_2)
+                await axios.post('http://localhost:8000/logistica/almacenes', this.EPeA_2_2)
                 this.success.EPeA_2_2 = true
             } catch (err) {
                 this.error.EPeA_2_2 = true
@@ -128,7 +128,7 @@ export default {
             this.error.CP_2_6 = false
 
             try {
-                await axios.post('http://localhost:8000/logistica', this.CP_2_6)
+                await axios.post('http://localhost:8000/logistica/compra', this.CP_2_6)
                 this.success.CP_2_6 = true
             } catch (err) {
                 this.error.CP_2_6 = true
