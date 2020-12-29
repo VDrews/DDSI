@@ -6,8 +6,8 @@ let addAlmacen = function ({direccion}) {
   return `insert into Almacen (direccion) values ('${direccion}');`
 }
 
-let defineEstado = function ({ean, codigo_alm, estado, cantafectada}){
-  return `update Inventario set estado='${estado}' set cant_afectada=${cantafectada}
+let defineEstado = function ({ean, codigo_alm, estado, cantidad}){
+  return `update Inventario set estado='${estado}' set cant_afectada=${cantidad}
           where ean_producto=${ean} and cod_almacen=${codigo_alm};`
 }
 

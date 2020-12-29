@@ -212,7 +212,12 @@ app.post('/api/producto/:ean', (req, res) => {
 })
 
 app.put('/api/producto/:ean/:estado', (req, res) => {
-  connection.query(inventario.defineEstado(req.body), function (err, rows, fields) {
+  connection.query(inventario.defineEstado({
+    ean: req.params.ean,
+    codigo_alm: req.body.codigo_alm,
+    estado: req.params.estado,
+    cantidad: req.body.cantidad
+  }), function (err, rows, fields) {
     if (err) {
       console.log(err)
       return res.status(404).send("No existe producto en el almacen");
@@ -235,7 +240,7 @@ app.post('/api/almacen', (req, res) => {
 
 app.delete('/api/producto/:ean', (req, res)=>{
   console.log(req.body)
-  connection.query(inventario.dropProducto(req.body), function(err, rows, fields){
+  connection.query(inventario.dropProducto(req.params.ean), function(err, rows, fields){
     if (err) {
       console.log(err)
       return res.status(412).send("No existe ese producto");
