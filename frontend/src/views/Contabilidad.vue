@@ -54,7 +54,7 @@
       <v-text-field v-model="codigoIngreso" placeholder="Nombre de Usuario" outlined></v-text-field>
     </div>
     <v-btn @click="consultarIngreso" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
-    <v-alert v-if="error.consultarIngreso" text type="error">No existe un ingreso con este código</v-alert>
+    <v-alert v-if="error.consultarIngreso" text type="error">No existen ingresos de ese usuario</v-alert>
     <v-list>
       <v-list-item v-for="(ingreso, i) in ingresos" :key="i">
         <v-list-item-title>{{ingreso.cantidad}}</v-list-item-title>
