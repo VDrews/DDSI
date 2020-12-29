@@ -412,24 +412,20 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
   connection.query(contabilidad.consultarIngresoGasto({
     nombre_usuario: req.params.nombre_usuario
   }), function (err, rows, fields) {
-    if (rows.length == 0){
-      return res.status(404).send("No existe dicho nombre de usuario");
+    if (err) {
+      console.log(err)
+      return res.status(404).send("No existe el usuario");
     }
-    else{
-      if (err) {
-        console.log(err)
-        return res.sendStatus(404);
-      }
-      console.log(rows);
-      return res.send(rows);
-    }
+    
+    console.log(rows);
+    return res.send(rows);
   });
 })
 
 
-app.put('/ingreso/:codigo_tr', (req, res) => {
-  connection.query(contabilidad.comprobarIngresoGasto(req.params), function (err, rows, fields){
-    console.log("resultado: ", rows);
+app.put('/api/ingreso/:codigo_tr', (req, res) => {
+  connection.query(contabilidad.comprobarIngresoGasto(req.params.codigo_tr), function (err, rows, fields){
+    console.log(rows[0]);
     if (rows.length == 0){
       return res.status(404).send("No existe dicha transacción");
     }

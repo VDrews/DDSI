@@ -5,7 +5,7 @@ let anotarIngresoGasto =  function({tipo, cantidad}) {
 
 // La otra opción sería buscar por el cod_transacción y cambiar el requisito f.
 let consultarIngresoGasto = function({nombre_usuario}) {
-	return `select tipo, cantidad from Transaccion where codigo_tr in (select codigo_Tr from Generacion where codigo_fac in (select cod_factura from CompraVenta where ID_paquete in (select ID from Envio where nombre_usuario = '${nombre_usuario}')))  `
+	return `select tipo, cantidad from Transaccion where codigo_tr in (select codigo_Tr from Generacion where codigo_fac in (select cod_factura from CompraVenta where ID_paquete in (select ID from Envio where nombre_usuario = '${nombre_usuario}')))`
 } 
 
 let comprobarIngresoGasto = function({codigo_tr}) {
@@ -17,7 +17,7 @@ let modificarIngresoGasto = function({codigo_tr, tipo, cantidad}) {
 }
 
 let crearFactura = function() {
-	return `insert into Factura (cod_factura) values(NULL);`
+	return `insert into Factura (cod_factura) values (NULL);`
 }
 
 let getCodFactura = function() {
