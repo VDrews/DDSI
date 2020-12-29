@@ -2,7 +2,7 @@
   <div id="contabilidad">
     <div class="display-1 font-weight-bold mt-6 mb-2">Anotar Ingreso</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="nuevoIngreso.cantidad" placeholder="Cantidad" type="number" outlined suffix="unidades">></v-text-field>
+      <v-text-field v-model="nuevoIngreso.cantidad" placeholder="Cantidad" type="number" outlined suffix="€">></v-text-field>
       <v-select v-model="nuevoIngreso.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
     </div>
     <v-alert v-if="success.anotarIngreso" text type="success">Se ha anotado el ingreso con éxito</v-alert>
@@ -12,7 +12,7 @@
     <div class="display-1 font-weight-bold mt-6 mb-2">Modificar Ingreso</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="ingresoModificado.codigo" placeholder="Codigo" type="number" outlined></v-text-field>
-      <v-text-field v-model="ingresoModificado.cantidad" placeholder="Cantidad" outlined suffix="unidades">></v-text-field>
+      <v-text-field v-model="ingresoModificado.cantidad" placeholder="Cantidad" outlined suffix="€">></v-text-field>
       <v-select v-model="ingresoModificado.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
     </div>
     <v-alert v-if="success.modificarIngreso" text type="success">El ingreso ha sido modificado con éxito</v-alert>
