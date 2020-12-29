@@ -367,7 +367,7 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
 
 
 app.put('/ingreso/:codigo_tr', (req, res) => {
-  connection.query(contabilidad.consultarIngresoGasto(req.params), function (err, rows, fields){
+  connection.query(contabilidad.comprobarIngresoGasto(req.params), function (err, rows, fields){
     if (rows.length() == 0){
       return res.status(404).send("No existe dicha transacción");
     }
