@@ -412,13 +412,18 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
   connection.query(contabilidad.consultarIngresoGasto({
     nombre_usuario: req.params.nombre_usuario
   }), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.status(404).send("No existe el usuario");
+    if (rows.length == 0){
+      return res.status(404).send("No existe dicho nombre de usuario");
     }
+    else{
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404);
+      }
 
-    console.log(rows);
-    return res.send(rows);
+      console.log(rows);
+      return res.send(rows);
+    }
   });
 })
 
@@ -447,12 +452,17 @@ app.put('/api/ingreso/:codigo_tr', (req, res) => {
 
 app.get('/api/factura/:cod_factura', (req, res) => {
   connection.query(contabilidad.obtenerDatosFactura(req.params), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404);
+    if (rows.length == 0){
+      return res.status(404).send("No existe dicho código de factura");
     }
-    console.log(rows);
-    return res.send(rows[0]);
+    else{
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404);
+      }
+      console.log(rows);
+      return res.send(rows[0]);
+    }
   });
 })
 
