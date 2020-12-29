@@ -333,8 +333,8 @@ app.delete('/api/empleado/:dni', (req, res) => {
           });
         }
         return res.sendStatus(200);
+    })
     }
-    });
   });
 })
 
