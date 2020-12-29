@@ -1,24 +1,30 @@
 <template>
   <div id="contabilidad">
     <div class="display-1 font-weight-bold mt-6 mb-2">Anotar Ingreso</div>
-    <v-text-field v-model="nuevoIngreso.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
-    <v-select v-model="nuevoIngreso.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="nuevoIngreso.cantidad" placeholder="Cantidad" type="number" outlined suffix="unidades">></v-text-field>
+      <v-select v-model="nuevoIngreso.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
+    </div>
     <v-alert v-if="success.anotarIngreso" text type="success">Se ha anotado el ingreso con éxito</v-alert>
     <v-alert v-if="error.anotarIngreso" text type="error">No se ha podido anotar el ingreso</v-alert>
-    <v-btn @click="anotarIngreso" color="primary" dark block>Anotar</v-btn>
+    <v-btn @click="anotarIngreso" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Anotar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Modificar Ingreso</div>
-    <v-text-field v-model="ingresoModificado.codigo" placeholder="Codigo" type="number" outlined></v-text-field>
-    <v-text-field v-model="ingresoModificado.cantidad" placeholder="Cantidad" outlined></v-text-field>
-    <v-select v-model="ingresoModificado.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="ingresoModificado.codigo" placeholder="Codigo" type="number" outlined></v-text-field>
+      <v-text-field v-model="ingresoModificado.cantidad" placeholder="Cantidad" outlined suffix="unidades">></v-text-field>
+      <v-select v-model="ingresoModificado.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
+    </div>
     <v-alert v-if="success.modificarIngreso" text type="success">El ingreso ha sido modificado con éxito</v-alert>
     <v-alert v-if="error.modificarIngreso" text type="error">No existe el ingreso con el código indicado</v-alert>
-    <v-btn @click="modificarIngreso" color="primary" dark block>Crear</v-btn>
+    <v-btn @click="modificarIngreso" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
 
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Factura</div>
-    <v-text-field v-model="codigoFactura" placeholder="Codigo Factura" type="number" outlined></v-text-field>
-    <v-btn @click="consultarFactura" color="primary" dark block>Consultar</v-btn>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="codigoFactura" placeholder="Codigo Factura" type="number" outlined></v-text-field>
+    </div>
+    <v-btn @click="consultarFactura" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarFactura" text type="error">No existe una factura con este código</v-alert>
     <v-simple-table v-if="factura">
       <template v-slot:default>
@@ -45,8 +51,10 @@
     </v-simple-table>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Ingreso</div>
-    <v-text-field v-model="codigoIngreso" placeholder="Nombre de Usuario" outlined></v-text-field>
-    <v-btn @click="consultarIngreso" color="primary" dark block>Consultar</v-btn>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="codigoIngreso" placeholder="Nombre de Usuario" outlined></v-text-field>
+    </div>
+    <v-btn @click="consultarIngreso" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarIngreso" text type="error">No existe un ingreso con este código</v-alert>
     <v-list>
       <v-list-item v-for="(ingreso, i) in ingresos" :key="i">
@@ -60,7 +68,7 @@
 
 <script>
 import axios from 'axios'
-const url = `https://apeteporica.herokuapp.com`  
+const url = `https://apeteporica.herokuapp.com`
 
 export default {
   data: () => ({

@@ -1,35 +1,43 @@
 <template>
   <div id="marketing">
     <div class="display-1 font-weight-bold mt-6 mb-2">Contratar Empleado</div>
-    <v-text-field v-model="nuevoEmpleado.dni" placeholder="DNI" outlined></v-text-field>
-    <v-text-field v-model="nuevoEmpleado.nombre" placeholder="Nombre" outlined></v-text-field>
-    <v-text-field v-model="nuevoEmpleado.apellidos" placeholder="Apellidos" outlined></v-text-field>
-    <v-text-field v-model="nuevoEmpleado.turno" placeholder="Turno" outlined></v-text-field>
-    <v-text-field v-model="nuevoEmpleado.sueldo" placeholder="Sueldo" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="nuevoEmpleado.dni" placeholder="DNI" outlined></v-text-field>
+      <v-text-field v-model="nuevoEmpleado.nombre" placeholder="Nombre" outlined></v-text-field>
+      <v-text-field v-model="nuevoEmpleado.apellidos" placeholder="Apellidos" outlined></v-text-field>
+      <v-text-field v-model="nuevoEmpleado.turno" placeholder="Turno" outlined></v-text-field>
+      <v-text-field v-model="nuevoEmpleado.sueldo" placeholder="Sueldo" type="number" outlined suffix="€">></v-text-field>
+    </div>
     <v-alert v-if="success.contratarEmpleado" text type="success">Empleado creado con éxito</v-alert>
     <v-alert v-if="error.contratarEmpleado" text type="error">Ya existe un empleado con este DNI</v-alert>
-    <v-btn @click="contratar" color="primary" dark block>Contratar</v-btn>
+    <v-btn @click="contratar" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Contratar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Dar de baja</div>
-    <v-text-field v-model="baja.dni" placeholder="DNI" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="baja.dni" placeholder="DNI" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.baja" text type="success">Se ha dado de baja correctamente</v-alert>
     <v-alert v-if="error.baja" text type="error">Error al dar de baja al empleado</v-alert>
-    <v-btn @click="darDeBaja" color="primary" dark block>Dar de Baja</v-btn>
+    <v-btn @click="darDeBaja" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Dar de Baja</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Modificar Empleado</div>
-    <v-text-field v-model="empleadoModificar.dni" placeholder="DNI" outlined></v-text-field>
-    <v-text-field v-model="empleadoModificar.nombre" placeholder="Nombre" outlined></v-text-field>
-    <v-text-field v-model="empleadoModificar.apellidos" placeholder="Apellidos" outlined></v-text-field>
-    <v-text-field v-model="empleadoModificar.numero" placeholder="Numero de Contrato" outlined></v-text-field>
-    <v-text-field v-model="empleadoModificar.turno" placeholder="Turno" outlined></v-text-field>
-    <v-text-field v-model="empleadoModificar.sueldo" placeholder="Sueldo" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="empleadoModificar.dni" placeholder="DNI" outlined></v-text-field>
+      <v-text-field v-model="empleadoModificar.nombre" placeholder="Nombre" outlined></v-text-field>
+      <v-text-field v-model="empleadoModificar.apellidos" placeholder="Apellidos" outlined></v-text-field>
+      <v-text-field v-model="empleadoModificar.numero" placeholder="Número de Contrato" outlined></v-text-field>
+      <v-text-field v-model="empleadoModificar.turno" placeholder="Turno" outlined></v-text-field>
+      <v-text-field v-model="empleadoModificar.sueldo" placeholder="Sueldo" type="number" outlined suffix="€">></v-text-field>
+    </div>
     <v-alert v-if="success.modificarEmpleado" text type="success">Empleado creado con éxito</v-alert>
     <v-alert v-if="error.modificarEmpleado" text type="error">Ya existe un empleado con este DNI</v-alert>
-    <v-btn @click="modificar" color="primary" dark block>Modificar</v-btn>
+    <v-btn @click="modificar" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Modificar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar un empleado</div>
+    <div style="max-width: 900px; margin: 0 auto">
     <v-text-field v-model="dniEmpleadoConsultar" placeholder="DNI del Empleado" outlined></v-text-field>
-    <v-btn @click="consultar" color="primary" dark block>Consultar</v-btn>
+    </div>
+    <v-btn @click="consultar" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarEmpleado" text type="error">No existe un empleado con este DNI</v-alert>
     <v-simple-table v-if="empleado">
       <template v-slot:default>
@@ -60,15 +68,15 @@
 
 <script>
 import axios from 'axios'
-const url = `https://apeteporica.herokuapp.com`  
+const url = `https://apeteporica.herokuapp.com`
 
 export default {
   data: () => ({
     nuevoEmpleado: {
-      dni: "", 
-      nombre: "", 
-      apellidos: "", 
-      turno: "", 
+      dni: "",
+      nombre: "",
+      apellidos: "",
+      turno: "",
       sueldo: null
     },
     empleadoModificar: {},
