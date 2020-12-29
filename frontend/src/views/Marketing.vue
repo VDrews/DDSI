@@ -1,37 +1,45 @@
 <template>
   <div id="marketing">
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear campaña</div>
-    <v-text-field v-model="campanya.nombre" placeholder="Nombre" outlined></v-text-field>
-    <v-text-field v-model="campanya.coste" placeholder="Coste" type="number" outlined></v-text-field>
-    <v-text-field v-model="campanya.canales" placeholder="Canales" outlined></v-text-field>
-    <v-text-field v-model="campanya.media_url" placeholder="Media URL" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="campanya.nombre" placeholder="Nombre" outlined></v-text-field>
+      <v-text-field v-model="campanya.coste" placeholder="Coste" type="number" outlined suffix="€">></v-text-field>
+      <v-text-field v-model="campanya.canales" placeholder="Canales" outlined></v-text-field>
+      <v-text-field v-model="campanya.media_url" placeholder="Media URL" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.crearCampanya" text type="success">La campaña se ha creado con éxito</v-alert>
     <v-alert v-if="error.crearCampanya" text type="error">Ya existe una campaña con este nombre</v-alert>
-    <v-btn @click="crearCampanya" color="primary" dark block>Crear</v-btn>
+    <v-btn @click="crearCampanya" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Asociar una campaña a un producto</div>
-    <v-text-field v-model="anuncio.ean" placeholder="EAN" type="number" outlined></v-text-field>
-    <v-text-field v-model="anuncio.nombre" placeholder="Nombre" outlined></v-text-field>
-    <v-text-field v-model="anuncio.descuento" placeholder="Descuento" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="anuncio.ean" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="anuncio.nombre" placeholder="Nombre" outlined></v-text-field>
+      <v-text-field v-model="anuncio.descuento" placeholder="Descuento" type="number" outlined suffix="%">></v-text-field>
+    </div>
     <v-alert v-if="success.asociarCampanya" text type="success">La campaña se ha asociado con éxito</v-alert>
     <v-alert v-if="error.asociarCampanya" text type="error">La campaña o el producto no existen</v-alert>
-    <v-btn @click="asociarCampanya" color="primary" dark block>Asociar</v-btn>
+    <v-btn @click="asociarCampanya" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Asociar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear un evento analítico</div>
-    <v-text-field v-model="nuevaAnalitica.id" placeholder="ID" type="number" outlined></v-text-field>
-    <v-text-field v-model="nuevaAnalitica.nombre" placeholder="Nombre de Campaña" outlined></v-text-field>
-    <v-text-field v-model="nuevaAnalitica.tipo" placeholder="Tipo" outlined></v-text-field>
-    <v-text-field v-model="nuevaAnalitica.payload" placeholder="Payload" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="nuevaAnalitica.id" placeholder="ID" type="number" outlined></v-text-field>
+      <v-text-field v-model="nuevaAnalitica.nombre" placeholder="Nombre de Campaña" outlined></v-text-field>
+      <v-text-field v-model="nuevaAnalitica.tipo" placeholder="Tipo" outlined></v-text-field>
+      <v-text-field v-model="nuevaAnalitica.payload" placeholder="Payload" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.crearAnalitica" text type="success">La analítica se ha creado con éxito</v-alert>
     <v-alert v-if="error.crearAnalitica" text type="error">Ya existe una analítica con este id o no existe la campaña con ese nombre</v-alert>
-    <v-btn @click="crearAnalitica" color="primary" dark block>Crear</v-btn>
-    
+    <v-btn @click="crearAnalitica" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
+
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar analítica</div>
-    <v-text-field v-model="idAnalitica" placeholder="ID" type="number" outlined></v-text-field>
-    <v-btn @click="consultarAnalitica" color="primary" dark block>Consultar</v-btn>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="idAnalitica" placeholder="ID" type="number" outlined></v-text-field>
+    </div>
+    <v-btn @click="consultarAnalitica" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarAnalitica" text type="error">La analítica no existe</v-alert>
-    
+
     <v-simple-table v-if="analitica">
       <template v-slot:default>
         <thead>
@@ -62,7 +70,7 @@
 <script>
 import axios from 'axios'
 
-const url = `https://apeteporica.herokuapp.com`  
+const url = `https://apeteporica.herokuapp.com`
 export default {
   data: () => ({
     campanya: {
@@ -77,9 +85,9 @@ export default {
       descuento: null
     },
     nuevaAnalitica: {
-      id: null, 
-      nombre: "", 
-      tipo: "", 
+      id: null,
+      nombre: "",
+      tipo: "",
       payload: ""
     },
     idAnalitica: null,
@@ -120,7 +128,7 @@ export default {
 
       try {
         await axios.post(`${url}/api/campanya/${this.anuncio.nombre}`, {
-          ean: this.anuncio.ean, 
+          ean: this.anuncio.ean,
           descuento: this.anuncio.descuento
         })
         this.success.asociarCampanya = true
@@ -138,7 +146,7 @@ export default {
 
       } catch(err) {
         this.error.crearAnalitica = true
-        
+
       }
 
     },
@@ -150,7 +158,7 @@ export default {
 
       } catch(err) {
         this.error.consultarAnalitica = true
-        
+
       }
 
     },
