@@ -17,8 +17,7 @@
     </div>
     <v-alert v-if="success.modificarIngreso" text type="success">El ingreso ha sido modificado con éxito</v-alert>
     <v-alert v-if="error.modificarIngreso" text type="error">No existe el ingreso con el código indicado</v-alert>
-    <v-btn @click="modificarIngreso" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
-
+    <v-btn @click="modificarIngreso" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Modificar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Factura</div>
     <div style="max-width: 900px; margin: 0 auto">

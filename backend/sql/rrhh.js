@@ -20,7 +20,8 @@ let modificarContrato = function({dni, sueldo, turno, numero}) {
 }
 
 let consultarEmpleado = function({dni}) {
-	return `select * from Contrato NATURAL JOIN Empleado where DNI = ${dni}`
+	return `select dni, nombre, apellidos, sueldo, vigente from Contrato NATURAL JOIN Empleado where DNI = ${dni}`
 }
+
 
 module.exports = {contratarEmpleado, crearContrato, darBajaEmpleado, modificarEmpleado, modificarContrato, consultarEmpleado}

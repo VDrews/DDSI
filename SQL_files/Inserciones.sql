@@ -97,7 +97,6 @@ insert into Paquete (transportista) values
     ('Seur otra vez'),
     ('Correos de nuevo porque no se me ocurre nada');
 
-
 insert into Contenido (ID_paquete, EAN_producto, cantidad) values
     (
         (SELECT ID_paquete FROM Paquete ORDER BY RAND() LIMIT 1), 

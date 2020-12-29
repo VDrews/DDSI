@@ -44,14 +44,32 @@ var mysql = require('mysql');
 //   password: 'f53dce90',
 //   database: 'heroku_1e1951efc954bab'
 // });
-var connection = mysql.createConnection('mysql://b93f80375031dd:f53dce90@eu-cdbr-west-03.cleardb.net/heroku_1e1951efc954bab?reconnect=true');
+var connection
+function handleDisconnect() {
+  connection = mysql.createConnection('mysql://b93f80375031dd:f53dce90@eu-cdbr-west-03.cleardb.net/heroku_1e1951efc954bab?reconnect=true');
+  connection.connect(function(err) {              // The server is either down
+    if(err) {                                     // or restarting (takes a while sometimes).
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+    }                                     // to avoid a hot loop, and to allow our node script to
+  });                                     // process asynchronous requests in the meantime.
+                                          // If you're also serving http, display a 503 error.
+  connection.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect();                         // lost due to either server restart, or a
+    } else {                                      // connnection idle timeout (the wait_timeout
+      throw err;                                  // server variable configures this)
+    }
+  });
+}
 
-connection.connect();
+handleDisconnect();
 
 const random_EAN = () => {
-  min = 0
-  max = 2147000000
-  let num = Math.random() * (max - min) + min;
+  const min = 0
+  const max = 2147000000
+  const num = Math.random() * (max - min) + min;
 
   return Math.round(num);
 };
@@ -214,32 +232,12 @@ app.post('/api/almacen', (req, res) => {
   });
 })
 
-//
-// ──────────────────────────────────────────────────────────────────────── III ──────────
-//   :::::: R E C U R S O S   H U M A N O S : :  :   :    :     :        :          :
-// ──────────────────────────────────────────────────────────────────────────────────
-//
-
-app.get('/api/empleado/:dni', (req, res) => {
-  console.log(req.params.dni)
-  connection.query(rrhh.consultarEmpleado({
-    dni: req.params.dni
-  }), function (err, rows, fields) {
+app.delete('/api/producto/:ean', (req, res)=>{
+  console.log(req.body)
+  connection.query(inventario.dropProducto(req.params), function(err, rows, fields){
     if (err) {
       console.log(err)
-      return res.sendStatus(404);
-    }
-    console.log(rows);
-    return res.send(rows[0]);
-  });
-})
-
-app.delete('/api/empleado/:dni', (req, res) => {
-  console.log(req.params)
-  connection.query(rrhh.darBajaEmpleado(req.params), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.status(412).send("No existe un empleado con ese dni");
+      return res.status(412).send("No existe ese producto");
     }
     console.log(rows);
     connection.commit(function (err) {
@@ -252,6 +250,36 @@ app.delete('/api/empleado/:dni', (req, res) => {
     });
   });
 })
+
+
+app.delete('/api/producto/:ean/:almacen', (req, res)=>{
+  console.log(req.params)
+  connection.query(inventario.eliminarStock({
+    ean: req.params.ean,
+    almacen: req.params.almacen
+    }), function(err, rows, fields){
+    if (err) {
+      console.log(err)
+      return res.status(412).send("No existe ese producto");
+    }
+    console.log(rows);
+    connection.commit(function (err) {
+      if (err) {
+        connection.rollback(function () {
+          return res.sendStatus(500);
+        });
+      }
+      return res.sendStatus(200);
+    });
+  });
+})
+
+
+//
+// ──────────────────────────────────────────────────────────────────────── III ──────────
+//   :::::: R E C U R S O S   H U M A N O S : :  :   :    :     :        :          :
+// ──────────────────────────────────────────────────────────────────────────────────
+//
 
 app.post('/api/empleado', (req, res) => {
   console.log(req.body)
@@ -285,6 +313,32 @@ app.post('/api/empleado', (req, res) => {
   })
 })
 
+
+app.delete('/api/empleado/:dni', (req, res) => {
+  console.log(req.params)
+  connection.query(rrhh.darBajaEmpleado(req.params), function (err, rows, fields) {
+    if (rows.length == 0){
+      return res.status(404).send("No existe ningún empleado con ese DNI.");
+    }
+    else {
+      if (err) {
+        console.log(err)
+        return res.status(412).send("No existe un empleado con ese dni");
+      }
+      console.log(rows);
+      connection.commit(function (err) {
+        if (err) {
+          connection.rollback(function () {
+            return res.sendStatus(500);
+          });
+        }
+        return res.sendStatus(200);
+    })
+    }
+  });
+})
+
+
 app.put('/api/empleado/:dni', (req, res) => {
   connection.beginTransaction(function (err) {
     connection.query(rrhh.modificarEmpleado({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
@@ -312,6 +366,26 @@ app.put('/api/empleado/:dni', (req, res) => {
       })
     })
   })
+})
+
+
+app.get('/api/empleado/:dni', (req, res) => {
+  console.log(req.params.dni)
+  connection.query(rrhh.consultarEmpleado({
+    dni: req.params.dni
+  }), function (err, rows, fields) {
+    if (rows.length == 0){
+      return res.status(404).send("No existe ningún empleado con ese DNI.");
+    }
+    else {
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404);
+      }
+      console.log(rows);
+      return res.send(rows[0]);
+    }
+  });
 })
 
 
@@ -348,18 +422,25 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
 })
 
 
-app.put('/api/ingreso/:codigo_tr', (req, res) => {
-  connection.query(contabilidad.modificarIngresoGasto({
-    codigo_tr: req.params.codigo_tr,
-    ...req.body
-  }), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404).send("No existe dicha transacción");
+app.put('/ingreso/:codigo_tr', (req, res) => {
+  connection.query(contabilidad.consultarIngresoGasto(req.params), function (err, rows, fields){
+    if (rows.length == 0){
+      return res.status(404).send("No existe dicha transacción");
     }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
+    else{
+      connection.query(contabilidad.modificarIngresoGasto({
+        codigo_tr: req.params.codigo_tr,
+        ...req.body
+      }), function (err, rows, fields) {
+        if (err) {
+          console.log(err)
+          return res.status(404).send("No existe dicha transacción");
+        }
+        console.log(rows);
+        return res.sendStatus(200);
+      });
+    }
+  })
 })
 
 app.get('/api/factura/:cod_factura', (req, res) => {
@@ -396,8 +477,8 @@ app.post('/api/logistica/recibir', (req, res) => {
       return res.status(500)
     }
 
-    connection.log(req.body)
-    EAN_generado = random_EAN()
+    console.log(req.body)
+    let EAN_generado = random_EAN()
 
     connection.query(logistica.insertarProducto_2_1({
       EAN_prod: EAN_generado,
@@ -556,12 +637,12 @@ app.put('/api/logistica/:ID_paquete', (req, res) => {
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(404).send("No se ha podido cambiar el transportista")
+      return res.status(404).send("No se ha podido cambiar el transportista")
       // FIXME             ^^^^^ ¿si falla es porque no lo encuentra?
     }
 
     console.log(rows)
-    return res.sendStatus(200).send("Transportista actualizado con éxito")
+    return res.status(200).send("Transportista actualizado con éxito")
   });
 })
 
@@ -677,15 +758,6 @@ app.post('/api/logistica/compra', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Backend funcionando en http://localhost:${port}`)
-})
-
-connection.on('error', function(err) {
-  console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-      connection = mysql.createConnection('mysql://b93f80375031dd:f53dce90@eu-cdbr-west-03.cleardb.net/heroku_1e1951efc954bab?reconnect=true');                         // lost due to either server restart, or a
-    } else {                                      // connnection idle timeout (the wait_timeout
-      throw err;                                  // server variable configures this)
-    }
 })
 
 process.on('error', function (err) {
