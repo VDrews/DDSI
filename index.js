@@ -286,7 +286,7 @@ app.get('/api/empleado/:dni', (req, res) => {
   connection.query(rrhh.consultarEmpleado({
     dni: req.params.dni
   }), function (err, rows, fields) {
-    if (rows.length() == 0){
+    if (rows.length == 0){
       return res.status(404).send("No existe ningún empleado con ese DNI.");
     }
     else {
