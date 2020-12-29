@@ -584,7 +584,7 @@ app.post('/logistica/compra', (req, res) => {
       return res.sendStatus(500)
     }
     //1.1
-{    connection.query(logistica.insertarPaquete({
+      connection.query(logistica.insertarPaquete({
       transportista: req.body.transportista
     }), function (err, rows, fields) {
       if (err) {
