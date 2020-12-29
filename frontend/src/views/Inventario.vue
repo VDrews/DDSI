@@ -99,7 +99,6 @@ export default {
       cantidad: null,
       codigo_alm: null,
       estado: null,
-      codigo_alm: null,
     },
     nuevoAlmacen: {
       direccion: "",
@@ -175,7 +174,7 @@ export default {
       this.error.cambiarEstado = false
       console.log(this.cambioEstado)
       try {
-        await axios.put(`${url}/api/producto/${this.cambioEstado.ean}`, this.cambioEstado)
+        await axios.put(`${url}/api/producto/${this.cambioEstado.ean}/${this.cambioEstado.estado}`, this.cambioEstado)
         this.success.cambiarEstado = true
 
       } catch (err) {

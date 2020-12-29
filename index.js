@@ -210,7 +210,7 @@ app.post('/api/producto/:ean', (req, res) => {
   });
 })
 
-app.put('/api/producto/:ean', (req, res) => {
+app.put('/api/producto/:ean/:estado', (req, res) => {
   connection.query(inventario.defineEstado(req.body), function (err, rows, fields) {
     if (err) {
       console.log(err)

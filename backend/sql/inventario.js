@@ -17,7 +17,10 @@ let newInventario = function({codigo_alm, ean, cantidad}) {
 }
 
 let dropProducto = function({ean}){
-  return `delete from Producto where ean_producto=${ean};`
+  return `delete from Anuncio where ean_producto=${ean};
+          delete from Inventario where ean_producto=${ean};
+          delete from Contenido where ean_producto=${ean};
+          delete from Producto where ean_producto=${ean};`
 }
 
 let eliminarStock = function({ean, almacen}){
