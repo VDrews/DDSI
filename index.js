@@ -452,12 +452,17 @@ app.put('/api/ingreso/:codigo_tr', (req, res) => {
 
 app.get('/api/factura/:cod_factura', (req, res) => {
   connection.query(contabilidad.obtenerDatosFactura(req.params), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404);
+    if (rows.length == 0){
+      return res.status(404).send("No existe dicho código de factura");
     }
-    console.log(rows);
-    return res.send(rows[0]);
+    else{
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404);
+      }
+      console.log(rows);
+      return res.send(rows[0]);
+    }
   });
 })
 
