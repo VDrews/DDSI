@@ -232,6 +232,47 @@ app.post('/api/almacen', (req, res) => {
   });
 })
 
+app.delete('/api/producto', (req, res)=>{
+  connection.query(inventario.dropProducto(req.body), function(err, rows, fields){
+    if (err) {
+      console.log(err)
+      return res.status(412).send("No existe ese producto");
+    }
+    console.log(rows);
+    connection.commit(function (err) {
+      if (err) {
+        connection.rollback(function () {
+          return res.sendStatus(500);
+        });
+      }
+      return res.sendStatus(200);
+    });
+  });
+})
+
+
+app.delete('/api/producto/:ean', (req, res)=>{
+  connection.query(inventario.eliminarStock({
+    ean: req.params.ean,
+    ...req.body
+    }), function(err, rows, fields){
+    if (err) {
+      console.log(err)
+      return res.status(412).send("No existe ese producto");
+    }
+    console.log(rows);
+    connection.commit(function (err) {
+      if (err) {
+        connection.rollback(function () {
+          return res.sendStatus(500);
+        });
+      }
+      return res.sendStatus(200);
+    });
+  });
+})
+
+
 //
 // ──────────────────────────────────────────────────────────────────────── III ──────────
 //   :::::: R E C U R S O S   H U M A N O S : :  :   :    :     :        :          :
