@@ -182,7 +182,7 @@ app.get('/api/analitica/:id', (req, res) => {
 // ────────────────────────────────────────────────────────────────────
 //
 
-app.put('/api/producto/:ean', (req, res) => {
+/*app.put('/api/producto/:ean', (req, res) => {
   connection.query(inventario.actualizarInventario({
     ean: req.params.ean,
     ...req.body
@@ -194,7 +194,7 @@ app.put('/api/producto/:ean', (req, res) => {
     console.log(rows);
     return res.sendStatus(200);
   });
-})
+})*/
 
 app.post('/api/producto/:ean', (req, res) => {
   console.log(req.body)
@@ -204,7 +204,7 @@ app.post('/api/producto/:ean', (req, res) => {
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.status(412).send("Ya existe producto. Actualizar");
+      return res.status(412).send("No se puede crear/actualizar");
     }
     return res.sendStatus(200);
   });
