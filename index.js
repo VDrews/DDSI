@@ -199,8 +199,9 @@ app.get('/api/analitica/:id', (req, res) => {
 app.post('/api/producto/:ean', (req, res) => {
   console.log(req.body)
   connection.query(inventario.newInventario({
+    codigo_alm: req.body.codigo_alm,
     ean: req.params.ean,
-    ...req.body
+    cantidad: req.body.cantidad
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)

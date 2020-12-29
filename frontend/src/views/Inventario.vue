@@ -241,7 +241,7 @@ export default {
       this.success.addCantidad = false
       this.error.addCantidad = false
       try {
-        await axios.post(`${url}/api/producto/${this.nuevoCantidad.ean}`, this.addCantidad)
+        await axios.post(`${url}/api/producto/${this.nuevoCantidad.ean}`, this.nuevoCantidad)
         this.success.addCantidad = true
 
       } catch (err) {
