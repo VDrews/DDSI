@@ -414,7 +414,7 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(404);
+      return res.status(404).send("No existe el usuario");
     }
     
     console.log(rows);
