@@ -21,7 +21,7 @@
     <v-alert v-if="error.crearAlmacen" text type="error">No se ha podido añadir el almacén</v-alert>
     <v-btn @click="crearAlmacen" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
 
-    <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar cantidad en almacén</div>
+    <!-- <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar cantidad en almacén</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="cambioCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
       <v-text-field v-model="cambioCantidad.cantidad" placeholder="Cantidad" type="number" outlined suffix="unidades">></v-text-field>
@@ -29,7 +29,7 @@
     </div>
     <v-alert v-if="success.cambiarCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
     <v-alert v-if="error.cambiarCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
-    <v-btn @click="cambiarCantidad" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn>
+    <v-btn @click="cambiarCantidad" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn> -->
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Nuevo producto en almacén</div>
     <div style="max-width: 900px; margin: 0 auto">
@@ -100,11 +100,11 @@ export default {
       fabricante: "",
       precio: null
     },
-    cambioCantidad: {
+    /*cambioCantidad: {
       ean: null,
       cantidad: null,
       codigo_alm: null,
-    },
+    },*/
     nuevoCantidad: {
       ean: null,
       cantidad: null,
@@ -125,7 +125,7 @@ export default {
     success: {
       crearProducto: false,
       crearAlmacen: false,
-      cambiarCantidad: false,
+      //cambiarCantidad: false,
       cambiarEstado: false,
       eliminarProducto: false,
       eliminarInventario: false,
@@ -135,7 +135,7 @@ export default {
     error: {
       crearProducto: false,
       crearAlmacen: false,
-      cambiarCantidad: false,
+      //cambiarCantidad: false,
       cambiarEstado: false,
       eliminarProducto: false,
       consultarProducto: false,
@@ -171,7 +171,7 @@ export default {
       }
 
     },
-    async cambiarCantidad() {
+    /* async cambiarCantidad() {
       this.success.cambiarCantidad = false
       this.error.cambiarCantidad = false
       console.log(this.cambioCantidad)
@@ -183,7 +183,7 @@ export default {
         this.error.cambiarCantidad = true
       }
 
-    },
+    }, */
 
     async cambiarEstado() {
       this.success.cambiarEstado = false
