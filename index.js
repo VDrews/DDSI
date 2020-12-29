@@ -679,6 +679,15 @@ app.listen(port, () => {
   console.log(`Backend funcionando en http://localhost:${port}`)
 })
 
+connection.on('error', function(err) {
+  console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      connection = mysql.createConnection('mysql://b93f80375031dd:f53dce90@eu-cdbr-west-03.cleardb.net/heroku_1e1951efc954bab?reconnect=true');                         // lost due to either server restart, or a
+    } else {                                      // connnection idle timeout (the wait_timeout
+      throw err;                                  // server variable configures this)
+    }
+})
+
 process.on('error', function (err) {
   console.log(err);
 });
