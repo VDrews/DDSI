@@ -127,6 +127,7 @@ export default {
 
     },
     async consultarIngreso() {
+      this.ingresos = [];
       this.error.consultarIngreso = false
       try {
         this.ingresos = (await axios.get(`${url}/api/ingreso/${this.codigoIngreso}`)).data
