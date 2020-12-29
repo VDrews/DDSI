@@ -289,28 +289,37 @@ app.post('/api/empleado', (req, res) => {
       return res.sendStatus(500)
     }
     connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
-      if (err) {
-        console.log(err)
-        connection.rollback(function () {
-          return res.sendStatus(412);
-        });
+
+      if (req.params.dni != 8) {
+        return res.status(404).send("El DNI introducido no es válido");
       }
-      connection.query(rrhh.crearContrato(req.body), function (err, rows, fields) {
+      else {
         if (err) {
+          console.log(err)
           connection.rollback(function () {
             return res.sendStatus(412);
           });
         }
-        connection.commit(function (err) {
+        connection.query(rrhh.crearContrato(req.body), function (err, rows, fields) {
           if (err) {
             connection.rollback(function () {
-              return res.sendStatus(500);
+              return res.sendStatus(412);
             });
           }
-          return res.sendStatus(200);
-        });
-      })
+          connection.commit(function (err) {
+            if (err) {
+              connection.rollback(function () {
+                return res.sendStatus(500);
+              });
+            }
+            return res.sendStatus(200);
+          });
+        })
+      }
+      
     })
+
+
   })
 })
 
