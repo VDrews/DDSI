@@ -288,11 +288,12 @@ app.post('/api/empleado', (req, res) => {
     if (err) {
       return res.sendStatus(500)
     }
-    if (req.params.dni != 8) {
-      return res.status(404).send("El DNI introducido no es válido");
-    }
-    else {
-      connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
+    connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
+
+      if (req.params.dni != 8) {
+        return res.status(404).send("El DNI introducido no es válido");
+      }
+      else {
         if (err) {
           console.log(err)
           connection.rollback(function () {
@@ -314,8 +315,11 @@ app.post('/api/empleado', (req, res) => {
             return res.sendStatus(200);
           });
         })
-      })
-    }
+      }
+      
+    })
+
+
   })
 })
 
