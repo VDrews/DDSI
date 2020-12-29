@@ -20,7 +20,6 @@
     <v-text-field v-model="empleadoModificar.nombre" placeholder="Nombre" outlined></v-text-field>
     <v-text-field v-model="empleadoModificar.apellidos" placeholder="Apellidos" outlined></v-text-field>
     <v-text-field v-model="empleadoModificar.numero" placeholder="Numero de Contrato" outlined></v-text-field>
-    <v-text-field v-model="empleadoModificar.turno" placeholder="Turno" outlined></v-text-field>
     <v-text-field v-model="empleadoModificar.sueldo" placeholder="Sueldo" type="number" outlined></v-text-field>
     <v-alert v-if="success.modificarEmpleado" text type="success">Empleado modificado con éxito</v-alert>
     <v-alert v-if="error.modificarEmpleado" text type="error">No existe un empleado con este DNI</v-alert>
