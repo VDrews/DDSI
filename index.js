@@ -235,7 +235,7 @@ app.post('/api/almacen', (req, res) => {
 
 app.delete('/api/producto/:ean', (req, res)=>{
   console.log(req.body)
-  connection.query(inventario.dropProducto(req.params), function(err, rows, fields){
+  connection.query(inventario.dropProducto(req.body), function(err, rows, fields){
     if (err) {
       console.log(err)
       return res.status(412).send("No existe ese producto");
