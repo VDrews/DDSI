@@ -233,6 +233,7 @@ app.post('/api/almacen', (req, res) => {
 })
 
 app.delete('/api/producto', (req, res)=>{
+  console.log(req.body)
   connection.query(inventario.dropProducto(req.body), function(err, rows, fields){
     if (err) {
       console.log(err)
@@ -252,6 +253,7 @@ app.delete('/api/producto', (req, res)=>{
 
 
 app.delete('/api/producto/:ean', (req, res)=>{
+  console.log(req.params)
   connection.query(inventario.eliminarStock({
     ean: req.params.ean,
     ...req.body
