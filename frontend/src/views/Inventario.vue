@@ -1,55 +1,77 @@
 <template>
   <div id="inventario">
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear un producto</div>
-    <v-text-field v-model="nuevoProducto.ean" placeholder="EAN" type="number" outlined></v-text-field>
-    <v-text-field v-model="nuevoProducto.nombre" placeholder="Nombre" outlined></v-text-field>
-    <v-text-field v-model="nuevoProducto.fabricante" placeholder="Fabricante" outlined></v-text-field>
-    <v-text-field v-model="nuevoProducto.precio" placeholder="Precio" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="nuevoProducto.ean" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="nuevoProducto.nombre" placeholder="Nombre" outlined></v-text-field>
+      <v-text-field v-model="nuevoProducto.fabricante" placeholder="Fabricante" outlined></v-text-field>
+      <v-text-field v-model="nuevoProducto.precio" placeholder="Precio" type="number" outlined suffix="€">></v-text-field>
+    </div>
     <v-alert v-if="success.crearProducto" text type="success">El producto se ha creado con éxito</v-alert>
     <v-alert v-if="error.crearProducto" text type="error">Ya existe un producto con este EAN</v-alert>
-    <v-btn @click="crearProducto" color="primary" dark block>Crear</v-btn>
+    <v-btn @click="crearProducto" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
+
+
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear un almacén</div>
-    <v-text-field v-model="nuevoAlmacen.direccion" placeholder="Dirección" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="nuevoAlmacen.direccion" placeholder="Dirección" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.crearAlmacen" text type="success">El almacén se ha añadido con éxito</v-alert>
     <v-alert v-if="error.crearAlmacen" text type="error">No se ha podido añadir el almacén</v-alert>
     <v-btn @click="crearAlmacen" color="primary" dark block>Crear</v-btn>
 
-    
+
+
     <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar cantidad en almacén</div>
-    <v-text-field v-model="cambioCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
-    <v-text-field v-model="cambioCantidad.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
-    <v-text-field v-model="cambioCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="cambioCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="cambioCantidad.cantidad" placeholder="Cantidad" type="number" outlined suffix="unidades">></v-text-field>
+      <v-text-field v-model="cambioCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.cambiarCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
     <v-alert v-if="error.cambiarCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
-    <v-btn @click="cambiarCantidad" color="primary" dark block>Cambiar</v-btn>
+    <v-btn @click="cambiarCantidad" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn>
+
+    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar producto</div>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
+    </div>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Nuevo producto en almacén</div>
-    <v-text-field v-model="nuevoCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
-    <v-text-field v-model="nuevoCantidad.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
-    <v-text-field v-model="nuevoCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="nuevoCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="nuevoCantidad.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
+      <v-text-field v-model="nuevoCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.addCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
     <v-alert v-if="error.addCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
     <v-btn @click="addCantidad" color="primary" dark block>Cambiar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar estado de producto</div>
-    <v-text-field v-model="cambioEstado.ean" placeholder="EAN" type="number" outlined></v-text-field>
-    <v-text-field v-model="cambioEstado.estado" placeholder="Estado" outlined></v-text-field>
-    <v-text-field v-model="cambioEstado.cantidad" placeholder="Cantidad afectada" type="number" outlined></v-text-field>
-    <v-text-field v-model="cambioEstado.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="cambioEstado.ean" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="cambioEstado.estado" placeholder="Estado" outlined></v-text-field>
+      <v-text-field v-model="cambioEstado.cantidad" placeholder="Cantidad afectada" type="number" outlined></v-text-field>
+      <v-text-field v-model="cambioEstado.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.cambiarEstado" text type="success">El estado se ha modificado con éxito</v-alert>
     <v-alert v-if="error.cambiarEstado" text type="error">No se ha podido modificar el estado</v-alert>
     <v-btn @click="cambiarEstado" color="primary" dark block>Cambiar</v-btn>
 
     <div class="display-1 font-wei:wq!ght-bold mt-6 mb-2">Eliminar producto</div>
-    <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.eliminarProducto" text type="success">El producto se ha eliminado con éxito</v-alert>
     <v-alert v-if="error.eliminarProducto" text type="error">No se ha podido eliminar el producto</v-alert>
-    <v-btn @click="eliminarProducto" color="primary" dark block>Eliminar</v-btn>
+    <v-btn @click="eliminarProducto" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Eliminar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar un producto</div>
-    <v-text-field v-model="eanProductoConsultado" placeholder="EAN" type="number" outlined></v-text-field>
-    <v-btn @click="consultarProducto" color="primary" dark block>Consultar</v-btn>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="eanProductoConsultado" placeholder="EAN" type="number" outlined></v-text-field>
+    </div>
+    <v-btn @click="consultarProducto" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarProducto" text type="error">No existe un producto con este EAN</v-alert>
     <v-list>
       <v-list-item v-for="(producto, i) in productos" :key="i" two-line>
@@ -71,7 +93,7 @@
 
 <script>
 import axios from 'axios'
-const url = `https://apeteporica.herokuapp.com`  
+const url = `https://apeteporica.herokuapp.com`
 
 export default {
   data: () => ({
