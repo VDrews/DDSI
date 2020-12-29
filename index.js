@@ -423,7 +423,7 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
 })
 
 
-app.put('/ingreso/:codigo_tr', (req, res) => {
+app.put('/api/ingreso/:codigo_tr', (req, res) => {
   connection.query(contabilidad.comprobarIngresoGasto(req.params.codigo_tr), function (err, rows, fields){
     console.log(rows[0]);
     if (rows.length == 0){
