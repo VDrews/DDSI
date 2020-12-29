@@ -41,7 +41,7 @@
     <v-alert v-if="error.cambiarEstado" text type="error">No se ha podido modificar el estado</v-alert>
     <v-btn @click="cambiarEstado" color="primary" dark block>Cambiar</v-btn>
 
-    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar producto</div>
+    <div class="display-1 font-wei:wq!ght-bold mt-6 mb-2">Eliminar producto</div>
     <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
     <v-alert v-if="success.eliminarProducto" text type="success">El producto se ha eliminado con éxito</v-alert>
     <v-alert v-if="error.eliminarProducto" text type="error">No se ha podido eliminar el producto</v-alert>
@@ -186,8 +186,9 @@ export default {
     async eliminarProducto() {
       this.success.eliminarProducto = false
       this.error.eliminarProducto = false
+      console.log(this.eanProductoEliminado)
       try {
-        await axios.delete(`${url}/api/producto/`, this.eanProductoEliminado)
+        await axios.delete(`${url}/api/producto`, {ean: this.eanProductoEliminado})
         this.success.eliminarProducto = true
 
       } catch (err) {
@@ -199,8 +200,9 @@ export default {
     async eliminarInventario() {
       this.success.eliminarInventario = false
       this.error.eliminarInventario = false
+
       try {
-        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`, this.eanProductoEliminado)
+        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`, {almacen: this.almacenProductoEliminado})
         this.success.eliminarInventario = true
 
       } catch (err) {
