@@ -36,7 +36,7 @@
     <div class="display-1 font-weight-bold mt-6 mb-2">Nuevo producto en almacén</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="nuevoCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
-      <v-text-field v-model="nuevoCantidad.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
+      <v-text-field v-model="nuevoCantidad.cantidad" placeholder="Cantidad" type="number" outlined suffix="unidades">></v-text-field>
       <v-text-field v-model="nuevoCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
     </div>
     <v-alert v-if="success.addCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
@@ -47,7 +47,7 @@
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="cambioEstado.ean" placeholder="EAN" type="number" outlined></v-text-field>
       <v-text-field v-model="cambioEstado.estado" placeholder="Estado" outlined></v-text-field>
-      <v-text-field v-model="cambioEstado.cantidad" placeholder="Cantidad afectada" type="number" outlined></v-text-field>
+      <v-text-field v-model="cambioEstado.cantidad" placeholder="Cantidad afectada" type="number" outlined suffix="unidades">></v-text-field>
       <v-text-field v-model="cambioEstado.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
     </div>
     <v-alert v-if="success.cambiarEstado" text type="success">El estado se ha modificado con éxito</v-alert>
