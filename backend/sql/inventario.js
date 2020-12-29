@@ -8,7 +8,7 @@ let addAlmacen = function ({direccion}) {
 
 let defineEstado = function ({ean, codigo_alm, estado, cantidad}){
   return `update Inventario set estado='${estado}' set cant_afectada=${cantidad}
-          where ean_producto=${ean} and cod_almacen=${codigo_alm};`
+          where ean_producto=${ean} and codigo_alm=${codigo_alm};`
 }
 
 let newInventario = function({codigo_alm, ean, cantidad}) {
