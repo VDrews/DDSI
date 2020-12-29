@@ -13,7 +13,7 @@
     <v-select v-model="ingresoModificado.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
     <v-alert v-if="success.modificarIngreso" text type="success">El ingreso ha sido modificado con éxito</v-alert>
     <v-alert v-if="error.modificarIngreso" text type="error">No existe el ingreso con el código indicado</v-alert>
-    <v-btn @click="modificarIngreso" color="primary" dark block>Crear</v-btn>
+    <v-btn @click="modificarIngreso" color="primary" dark block>Modificar</v-btn>
 
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Factura</div>

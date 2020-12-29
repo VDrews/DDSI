@@ -44,9 +44,27 @@ var mysql = require('mysql');
 //   password: 'f53dce90',
 //   database: 'heroku_1e1951efc954bab'
 // });
-var connection = mysql.createConnection('mysql://b93f80375031dd:f53dce90@eu-cdbr-west-03.cleardb.net/heroku_1e1951efc954bab?reconnect=true');
+var connection
+function handleDisconnect() {
+  connection = mysql.createConnection('mysql://b93f80375031dd:f53dce90@eu-cdbr-west-03.cleardb.net/heroku_1e1951efc954bab?reconnect=true');
+  connection.connect(function(err) {              // The server is either down
+    if(err) {                                     // or restarting (takes a while sometimes).
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+    }                                     // to avoid a hot loop, and to allow our node script to
+  });                                     // process asynchronous requests in the meantime.
+                                          // If you're also serving http, display a 503 error.
+  connection.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect();                         // lost due to either server restart, or a
+    } else {                                      // connnection idle timeout (the wait_timeout
+      throw err;                                  // server variable configures this)
+    }
+  });
+}
 
-connection.connect();
+handleDisconnect();
 
 const random_EAN = () => {
   min = 0
@@ -389,18 +407,25 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
 })
 
 
-app.put('/api/ingreso/:codigo_tr', (req, res) => {
-  connection.query(contabilidad.modificarIngresoGasto({
-    codigo_tr: req.params.codigo_tr,
-    ...req.body
-  }), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404).send("No existe dicha transacción");
+app.put('/ingreso/:codigo_tr', (req, res) => {
+  connection.query(contabilidad.consultarIngresoGasto(req.params), function (err, rows, fields){
+    if (rows.length() == 0){
+      return res.status(404).send("No existe dicha transacción");
     }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
+    else{
+      connection.query(contabilidad.modificarIngresoGasto({
+        codigo_tr: req.params.codigo_tr,
+        ...req.body
+      }), function (err, rows, fields) {
+        if (err) {
+          console.log(err)
+          return res.status(404).send("No existe dicha transacción");
+        }
+        console.log(rows);
+        return res.sendStatus(200);
+      });
+    }
+  })
 })
 
 app.get('/api/factura/:cod_factura', (req, res) => {
@@ -597,12 +622,12 @@ app.put('/api/logistica/:ID_paquete', (req, res) => {
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(404).send("No se ha podido cambiar el transportista")
+      return res.status(404).send("No se ha podido cambiar el transportista")
       // FIXME             ^^^^^ ¿si falla es porque no lo encuentra?
     }
 
     console.log(rows)
-    return res.sendStatus(200).send("Transportista actualizado con éxito")
+    return res.status(200).send("Transportista actualizado con éxito")
   });
 })
 
