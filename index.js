@@ -67,9 +67,9 @@ function handleDisconnect() {
 handleDisconnect();
 
 const random_EAN = () => {
-  min = 0
-  max = 2147000000
-  let num = Math.random() * (max - min) + min;
+  const min = 0
+  const max = 2147000000
+  const num = Math.random() * (max - min) + min;
 
   return Math.round(num);
 };
@@ -232,32 +232,12 @@ app.post('/api/almacen', (req, res) => {
   });
 })
 
-//
-// ──────────────────────────────────────────────────────────────────────── III ──────────
-//   :::::: R E C U R S O S   H U M A N O S : :  :   :    :     :        :          :
-// ──────────────────────────────────────────────────────────────────────────────────
-//
-
-app.get('/api/empleado/:dni', (req, res) => {
-  console.log(req.params.dni)
-  connection.query(rrhh.consultarEmpleado({
-    dni: req.params.dni
-  }), function (err, rows, fields) {
+app.delete('/api/producto', (req, res)=>{
+  console.log(req.body)
+  connection.query(inventario.dropProducto(req.body), function(err, rows, fields){
     if (err) {
       console.log(err)
-      return res.sendStatus(404);
-    }
-    console.log(rows);
-    return res.send(rows[0]);
-  });
-})
-
-app.delete('/api/empleado/:dni', (req, res) => {
-  console.log(req.params)
-  connection.query(rrhh.darBajaEmpleado(req.params), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.status(412).send("No existe un empleado con ese dni");
+      return res.status(412).send("No existe ese producto");
     }
     console.log(rows);
     connection.commit(function (err) {
@@ -270,6 +250,36 @@ app.delete('/api/empleado/:dni', (req, res) => {
     });
   });
 })
+
+
+app.delete('/api/producto/:ean', (req, res)=>{
+  console.log(req.params)
+  connection.query(inventario.eliminarStock({
+    ean: req.params.ean,
+    ...req.body
+    }), function(err, rows, fields){
+    if (err) {
+      console.log(err)
+      return res.status(412).send("No existe ese producto");
+    }
+    console.log(rows);
+    connection.commit(function (err) {
+      if (err) {
+        connection.rollback(function () {
+          return res.sendStatus(500);
+        });
+      }
+      return res.sendStatus(200);
+    });
+  });
+})
+
+
+//
+// ──────────────────────────────────────────────────────────────────────── III ──────────
+//   :::::: R E C U R S O S   H U M A N O S : :  :   :    :     :        :          :
+// ──────────────────────────────────────────────────────────────────────────────────
+//
 
 app.post('/api/empleado', (req, res) => {
   console.log(req.body)
@@ -303,6 +313,32 @@ app.post('/api/empleado', (req, res) => {
   })
 })
 
+
+app.delete('/api/empleado/:dni', (req, res) => {
+  console.log(req.params)
+  connection.query(rrhh.darBajaEmpleado(req.params), function (err, rows, fields) {
+    if (rows.length == 0){
+      return res.status(404).send("No existe ningún empleado con ese DNI.");
+    }
+    else {
+      if (err) {
+        console.log(err)
+        return res.status(412).send("No existe un empleado con ese dni");
+      }
+      console.log(rows);
+      connection.commit(function (err) {
+        if (err) {
+          connection.rollback(function () {
+            return res.sendStatus(500);
+          });
+        }
+        return res.sendStatus(200);
+    }
+    });
+  });
+})
+
+
 app.put('/api/empleado/:dni', (req, res) => {
   connection.beginTransaction(function (err) {
     connection.query(rrhh.modificarEmpleado({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
@@ -330,6 +366,26 @@ app.put('/api/empleado/:dni', (req, res) => {
       })
     })
   })
+})
+
+
+app.get('/api/empleado/:dni', (req, res) => {
+  console.log(req.params.dni)
+  connection.query(rrhh.consultarEmpleado({
+    dni: req.params.dni
+  }), function (err, rows, fields) {
+    if (rows.length == 0){
+      return res.status(404).send("No existe ningún empleado con ese DNI.");
+    }
+    else {
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404);
+      }
+      console.log(rows);
+      return res.send(rows[0]);
+    }
+  });
 })
 
 
@@ -368,7 +424,7 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
 
 app.put('/ingreso/:codigo_tr', (req, res) => {
   connection.query(contabilidad.comprobarIngresoGasto(req.params), function (err, rows, fields){
-    if (rows.length() == 0){
+    if (rows.length == 0){
       return res.status(404).send("No existe dicha transacción");
     }
     else{
@@ -421,8 +477,8 @@ app.post('/api/logistica/recibir', (req, res) => {
       return res.status(500)
     }
 
-    connection.log(req.body)
-    EAN_generado = random_EAN()
+    console.log(req.body)
+    let EAN_generado = random_EAN()
 
     connection.query(logistica.insertarProducto_2_1({
       EAN_prod: EAN_generado,

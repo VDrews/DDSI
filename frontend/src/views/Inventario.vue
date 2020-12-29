@@ -1,5 +1,5 @@
 <template>
-  <div id="marketing">
+  <div id="inventario">
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear un producto</div>
     <v-text-field v-model="nuevoProducto.ean" placeholder="EAN" type="number" outlined></v-text-field>
     <v-text-field v-model="nuevoProducto.nombre" placeholder="Nombre" outlined></v-text-field>
@@ -8,6 +8,13 @@
     <v-alert v-if="success.crearProducto" text type="success">El producto se ha creado con éxito</v-alert>
     <v-alert v-if="error.crearProducto" text type="error">Ya existe un producto con este EAN</v-alert>
     <v-btn @click="crearProducto" color="primary" dark block>Crear</v-btn>
+
+    <div class="display-1 font-weight-bold mt-6 mb-2">Crear un almacén</div>
+    <v-text-field v-model="nuevoAlmacen.direccion" placeholder="Dirección" outlined></v-text-field>
+    <v-alert v-if="success.crearAlmacen" text type="success">El almacén se ha añadido con éxito</v-alert>
+    <v-alert v-if="error.crearAlmacen" text type="error">No se ha podido añadir el almacén</v-alert>
+    <v-btn @click="crearAlmacen" color="primary" dark block>Crear</v-btn>
+
     
     <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar cantidad en almacén</div>
     <v-text-field v-model="cambioCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
@@ -17,7 +24,24 @@
     <v-alert v-if="error.cambiarCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
     <v-btn @click="cambiarCantidad" color="primary" dark block>Cambiar</v-btn>
 
-    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar producto</div>
+    <div class="display-1 font-weight-bold mt-6 mb-2">Nuevo producto en almacén</div>
+    <v-text-field v-model="nuevoCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
+    <v-text-field v-model="nuevoCantidad.cantidad" placeholder="Cantidad" type="number" outlined></v-text-field>
+    <v-text-field v-model="nuevoCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    <v-alert v-if="success.addCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
+    <v-alert v-if="error.addCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
+    <v-btn @click="addCantidad" color="primary" dark block>Cambiar</v-btn>
+
+    <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar estado de producto</div>
+    <v-text-field v-model="cambioEstado.ean" placeholder="EAN" type="number" outlined></v-text-field>
+    <v-text-field v-model="cambioEstado.estado" placeholder="Estado" outlined></v-text-field>
+    <v-text-field v-model="cambioEstado.cantidad" placeholder="Cantidad afectada" type="number" outlined></v-text-field>
+    <v-text-field v-model="cambioEstado.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
+    <v-alert v-if="success.cambiarEstado" text type="success">El estado se ha modificado con éxito</v-alert>
+    <v-alert v-if="error.cambiarEstado" text type="error">No se ha podido modificar el estado</v-alert>
+    <v-btn @click="cambiarEstado" color="primary" dark block>Cambiar</v-btn>
+
+    <div class="display-1 font-wei:wq!ght-bold mt-6 mb-2">Eliminar producto</div>
     <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
     <v-alert v-if="success.eliminarProducto" text type="success">El producto se ha eliminado con éxito</v-alert>
     <v-alert v-if="error.eliminarProducto" text type="error">No se ha podido eliminar el producto</v-alert>
@@ -35,6 +59,13 @@
       </v-list-item>
     </v-list>
 
+    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar inventario</div>
+    <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
+    <v-text-field v-model="almacenProductoEliminado" placeholder="Cód. almacén" type="number" outlined></v-text-field>
+    <v-alert v-if="success.eliminarInventario" text type="success">El producto se ha eliminado con éxito del almacén</v-alert>
+    <v-alert v-if="error.eliminarInventario" text type="error">No se ha podido eliminar el producto</v-alert>
+    <v-btn @click="eliminarInventario" color="primary" dark block>Eliminar</v-btn>
+
   </div>
 </template>
 
@@ -46,6 +77,7 @@ export default {
   data: () => ({
     eanProductoEliminado: null,
     eanProductoConsultado: null,
+    almacenProductoEliminado: null,
     nuevoProducto: {
       ean: "",
       nombre: "",
@@ -57,20 +89,43 @@ export default {
       cantidad: null,
       codigo_alm: null,
     },
+    nuevoCantidad: {
+      ean: null,
+      cantidad: null,
+      codigo_alm: null,
+    },
+    cambioEstado: {
+      ean: null,
+      cantidad: null,
+      codigo_alm: null,
+      estado: null,
+      codigo_alm: null,
+    },
+    nuevoAlmacen: {
+      direccion: "",
+    },
     productos: null,
 
 
     success: {
       crearProducto: false,
+      crearAlmacen: false,
       cambiarCantidad: false,
+      cambiarEstado: false,
       eliminarProducto: false,
+      eliminarInventario: false,
+      addCantidad: false,
     },
 
     error: {
       crearProducto: false,
+      crearAlmacen: false,
       cambiarCantidad: false,
+      cambiarEstado: false,
       eliminarProducto: false,
       consultarProducto: false,
+      eliminarInventario: false,
+      addCantidad: false,
     }
   }),
 
@@ -88,6 +143,19 @@ export default {
       }
 
     },
+
+      async crearAlmacen() {
+      this.success.crearAlmacen = false
+      this.error.crearAlmacen = false
+      try {
+        await axios.post(`${url}/api/almacen`, this.nuevoAlmacen)
+        this.success.crearAlmacen = true
+
+      } catch (err) {
+        this.error.crearAlmacen = true
+      }
+
+    },
     async cambiarCantidad() {
       this.success.cambiarCantidad = false
       this.error.cambiarCantidad = false
@@ -101,15 +169,44 @@ export default {
       }
 
     },
+
+    async cambiarEstado() {
+      this.success.cambiarEstado = false
+      this.error.cambiarEstado = false
+      console.log(this.cambioEstado)
+      try {
+        await axios.put(`${url}/api/producto/${this.cambioEstado.ean}`, this.cambioEstado)
+        this.success.cambiarEstado = true
+
+      } catch (err) {
+        this.error.cambiarEstado = true
+      }
+
+    },
     async eliminarProducto() {
       this.success.eliminarProducto = false
       this.error.eliminarProducto = false
+      console.log(this.eanProductoEliminado)
       try {
-        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`)
+        await axios.delete(`${url}/api/producto`, {ean: this.eanProductoEliminado})
         this.success.eliminarProducto = true
 
       } catch (err) {
         this.error.eliminarProducto = true
+      }
+
+    },
+
+    async eliminarInventario() {
+      this.success.eliminarInventario = false
+      this.error.eliminarInventario = false
+
+      try {
+        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`, {almacen: this.almacenProductoEliminado})
+        this.success.eliminarInventario = true
+
+      } catch (err) {
+        this.error.eliminarInventario = true
       }
 
     },
@@ -121,6 +218,19 @@ export default {
       } catch(err) {
         this.error.consultarProducto = true
 
+      }
+
+    },
+
+    async addCantidad() {
+      this.success.addCantidad = false
+      this.error.addCantidad = false
+      try {
+        await axios.post(`${url}/api/producto/${this.nuevoCantidad.ean}`, this.addCantidad)
+        this.success.addCantidad = true
+
+      } catch (err) {
+        this.error.addCantidad = true
       }
 
     },
