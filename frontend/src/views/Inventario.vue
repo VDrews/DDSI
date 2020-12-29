@@ -19,7 +19,7 @@
     </div>
     <v-alert v-if="success.crearAlmacen" text type="success">El almacén se ha añadido con éxito</v-alert>
     <v-alert v-if="error.crearAlmacen" text type="error">No se ha podido añadir el almacén</v-alert>
-    <v-btn @click="crearAlmacen" color="primary" dark block>Crear</v-btn>
+   <v-btn @click="crearAlmacen" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
 
 
 
@@ -33,11 +33,6 @@
     <v-alert v-if="error.cambiarCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
     <v-btn @click="cambiarCantidad" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn>
 
-    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar producto</div>
-    <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
-    </div>
-
     <div class="display-1 font-weight-bold mt-6 mb-2">Nuevo producto en almacén</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="nuevoCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
@@ -46,7 +41,7 @@
     </div>
     <v-alert v-if="success.addCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
     <v-alert v-if="error.addCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
-    <v-btn @click="addCantidad" color="primary" dark block>Cambiar</v-btn>
+    <v-btn @click="addCantidad" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Añadir</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar estado de producto</div>
     <div style="max-width: 900px; margin: 0 auto">
@@ -57,7 +52,7 @@
     </div>
     <v-alert v-if="success.cambiarEstado" text type="success">El estado se ha modificado con éxito</v-alert>
     <v-alert v-if="error.cambiarEstado" text type="error">No se ha podido modificar el estado</v-alert>
-    <v-btn @click="cambiarEstado" color="primary" dark block>Cambiar</v-btn>
+    <v-btn @click="cambiarEstado" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn>
 
     <div class="display-1 font-wei:wq!ght-bold mt-6 mb-2">Eliminar producto</div>
     <div style="max-width: 900px; margin: 0 auto">
@@ -86,7 +81,7 @@
     <v-text-field v-model="almacenProductoEliminado" placeholder="Cód. almacén" type="number" outlined></v-text-field>
     <v-alert v-if="success.eliminarInventario" text type="success">El producto se ha eliminado con éxito del almacén</v-alert>
     <v-alert v-if="error.eliminarInventario" text type="error">No se ha podido eliminar el producto</v-alert>
-    <v-btn @click="eliminarInventario" color="primary" dark block>Eliminar</v-btn>
+    <v-btn @click="eliminarInventario" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Eliminar</v-btn>
 
   </div>
 </template>
