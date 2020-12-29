@@ -54,7 +54,7 @@
     <v-alert v-if="error.cambiarEstado" text type="error">No se ha podido modificar el estado</v-alert>
     <v-btn @click="cambiarEstado" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn>
 
-    <div class="display-1 font-wei:wq!ght-bold mt-6 mb-2">Eliminar producto</div>
+    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar producto</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
     </div>
