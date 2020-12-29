@@ -636,10 +636,16 @@ app.post('/api/logistica/almacenes', (req, res) => {
 app.put('/api/logistica/:ID_paquete', (req, res) => {
   /*
     Actualizar el parámetro transportista de la instancia pertinente de Paquete.
+
+    ET_2_5: {
+      ID_paquete: "",
+      transportista: ""
+    },
   */
+  console.log(req.body)
   connection.query(logistica.elegirTransportista_2_5({
-    transportista: req.params.transportista,
-    ID_paquete: req.params.ID_paquete
+    transportista: req.body.transportista,
+    ID_paquete: req.body.ID_paquete
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
