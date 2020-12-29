@@ -1,6 +1,6 @@
-let actualizarInventario = function({ean, codigo_alm, cantidad}) {
+/*let actualizarInventario = function({ean, codigo_alm, cantidad}) {
   return `update Inventario set cantidad=cantidad+${cantidad} where ean_producto=${ean} and codigo_alm=${codigo_alm};`
-}
+}*/
 
 let addAlmacen = function ({direccion}) {
   return `insert into Almacen (direccion) values ('${direccion}');`
@@ -31,4 +31,4 @@ let eliminarStock = function({ean, almacen}){
 
 
 
-module.exports = {actualizarInventario, addAlmacen, defineEstado, newInventario, dropProducto, eliminarStock}
+module.exports = {addAlmacen, defineEstado, newInventario, dropProducto, eliminarStock}

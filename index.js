@@ -182,7 +182,7 @@ app.get('/api/analitica/:id', (req, res) => {
 // ────────────────────────────────────────────────────────────────────
 //
 
-app.put('/api/producto/:ean', (req, res) => {
+/*app.put('/api/producto/:ean', (req, res) => {
   connection.query(inventario.actualizarInventario({
     ean: req.params.ean,
     ...req.body
@@ -194,7 +194,7 @@ app.put('/api/producto/:ean', (req, res) => {
     console.log(rows);
     return res.sendStatus(200);
   });
-})
+})*/
 
 app.post('/api/producto/:ean', (req, res) => {
   console.log(req.body)
@@ -204,7 +204,7 @@ app.post('/api/producto/:ean', (req, res) => {
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.status(412).send("Ya existe producto. Actualizar");
+      return res.status(412).send("No se puede crear/actualizar");
     }
     return res.sendStatus(200);
   });
@@ -417,20 +417,25 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
   connection.query(contabilidad.consultarIngresoGasto({
     nombre_usuario: req.params.nombre_usuario
   }), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404);
+    if (rows.length == 0){
+      return res.status(404).send("No existe dicho nombre de usuario");
     }
-    
-    console.log(rows);
-    return res.send(rows);
+    else{
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404);
+      }
+
+      console.log(rows);
+      return res.send(rows);
+    }
   });
 })
 
 
-app.put('/ingreso/:codigo_tr', (req, res) => {
-  connection.query(contabilidad.comprobarIngresoGasto(req.params.codigo_tr), function (err, rows, fields){
-    console.log(rows[0]);
+app.put('/api/ingreso/:codigo_tr', (req, res) => {
+  connection.query(contabilidad.comprobarIngresoGasto(req.params), function (err, rows, fields){
+    console.log(rows);
     if (rows.length == 0){
       return res.status(404).send("No existe dicha transacción");
     }
@@ -452,12 +457,17 @@ app.put('/ingreso/:codigo_tr', (req, res) => {
 
 app.get('/api/factura/:cod_factura', (req, res) => {
   connection.query(contabilidad.obtenerDatosFactura(req.params), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404);
+    if (rows.length == 0){
+      return res.status(404).send("No existe dicho código de factura");
     }
-    console.log(rows);
-    return res.send(rows[0]);
+    else{
+      if (err) {
+        console.log(err)
+        return res.sendStatus(404);
+      }
+      console.log(rows);
+      return res.send(rows[0]);
+    }
   });
 })
 
@@ -637,15 +647,19 @@ app.post('/api/logistica/almacenes', (req, res) => {
 app.put('/api/logistica/:ID_paquete', (req, res) => {
   /*
     Actualizar el parámetro transportista de la instancia pertinente de Paquete.
+
+    ET_2_5: {
+      ID_paquete: "",
+      transportista: ""
+    },
   */
   connection.query(logistica.elegirTransportista_2_5({
-    transportista: req.params.transportista,
-    ID_paquete: req.params.ID_paquete
+    transportista: req.body.transportista,
+    ID_paquete: req.body.ID_paquete
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.status(404).send("No se ha podido cambiar el transportista")
-      // FIXME             ^^^^^ ¿si falla es porque no lo encuentra?
+      return res.status(404).send("No se ha encontrado el paquete")
     }
 
     console.log(rows)
