@@ -337,17 +337,24 @@ app.get('/ingreso/:nombre_usuario', (req, res) => {
 
 
 app.put('/ingreso/:codigo_tr', (req, res) => {
-  connection.query(contabilidad.modificarIngresoGasto({
-    codigo_tr: req.params.codigo_tr,
-    ...req.body
-  }), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.sendStatus(404).send("No existe dicha transacción");
+  connection.query(contabilidad.consultarIngresoGasto(req.params), function (err, rows, fields){
+    if (rows.length() == 0){
+      return return res.sendStatus(404).send("No existe dicha transacción");
     }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
+    else{
+      connection.query(contabilidad.modificarIngresoGasto({
+        codigo_tr: req.params.codigo_tr,
+        ...req.body
+      }), function (err, rows, fields) {
+        if (err) {
+          console.log(err)
+          return res.sendStatus(404).send("No existe dicha transacción");
+        }
+        console.log(rows);
+        return res.sendStatus(200);
+      });
+    }
+  }
 })
 
 app.get('/factura/:cod_factura', (req, res) => {
