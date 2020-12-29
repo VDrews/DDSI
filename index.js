@@ -416,7 +416,7 @@ app.get('/api/ingreso/:nombre_usuario', (req, res) => {
       console.log(err)
       return res.status(404).send("No existe el usuario");
     }
-    
+
     console.log(rows);
     return res.send(rows);
   });
@@ -638,15 +638,13 @@ app.put('/api/logistica/:ID_paquete', (req, res) => {
       transportista: ""
     },
   */
-  console.log(req.body)
   connection.query(logistica.elegirTransportista_2_5({
     transportista: req.body.transportista,
     ID_paquete: req.body.ID_paquete
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.status(404).send("No se ha podido cambiar el transportista")
-      // FIXME             ^^^^^ ¿si falla es porque no lo encuentra?
+      return res.status(404).send("No se ha encontrado el paquete")
     }
 
     console.log(rows)
