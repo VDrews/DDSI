@@ -13,7 +13,9 @@ let defineEstado = function ({ean, codigo_alm, estado, cantafectada}){
 
 let newInventario = function({codigo_alm, ean, cantidad}) {
   return `insert into Inventario (codigo_alm, ean_producto, cantidad) values
-          (${codigo_alm}, ${ean}, ${cantidad});`
+            (${codigo_alm}, ${ean}, ${cantidad});
+          on duplicate key update
+            cantidad = cantidad + ${cantidad}`
 }
 
 let dropProducto = function({ean}){
