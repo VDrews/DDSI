@@ -187,7 +187,7 @@ export default {
       this.success.eliminarProducto = false
       this.error.eliminarProducto = false
       try {
-        await axios.delete(`${url}/api/producto/`)
+        await axios.delete(`${url}/api/producto/`, this.eanProductoEliminado)
         this.success.eliminarProducto = true
 
       } catch (err) {
@@ -200,7 +200,7 @@ export default {
       this.success.eliminarInventario = false
       this.error.eliminarInventario = false
       try {
-        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`)
+        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`, this.eanProductoEliminado)
         this.success.eliminarInventario = true
 
       } catch (err) {
