@@ -38,14 +38,15 @@ var mysql = require('mysql');
 //   password: 'DDSI2020',
 //   database: 'DDSI'
 // });
-var connection = mysql.createPool({
-  host: 'eu-cdbr-west-03.cleardb.net',
-  user: 'b93f80375031dd',
-  password: 'f53dce90',
-  database: 'heroku_1e1951efc954bab'
-});
+// var connection = mysql.createConnection({
+//   host: 'eu-cdbr-west-03.cleardb.net',
+//   user: 'b93f80375031dd',
+//   password: 'f53dce90',
+//   database: 'heroku_1e1951efc954bab'
+// });
+var connection = mysql.createConnection('mysql://b93f80375031dd:f53dce90@eu-cdbr-west-03.cleardb.net/heroku_1e1951efc954bab?reconnect=true');
 
-// connection.connect();
+connection.connect();
 
 const random_EAN = () => {
   min = 0
@@ -382,7 +383,7 @@ app.get('/api/factura/:cod_factura', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.1 ─────
 //
 
-app.post('/logistica/recibir', (req, res) => {
+app.post('/api/logistica/recibir', (req, res) => {
   /*
     Pasos:
       1. Insertar el nuevo producto en la base de datos. Hacerlo mediante insertarProducto_2_1.
@@ -449,7 +450,7 @@ app.post('/logistica/recibir', (req, res) => {
   },
 */
 
-app.post('/logistica/almacenes', (req, res) => {
+app.post('/api/logistica/almacenes', (req, res) => {
   /*
     Pasos:
       1. Restar `cantidad` en la relación inventario con el almacen_partida. Usar las funciones de Chema.
@@ -545,7 +546,7 @@ app.post('/logistica/almacenes', (req, res) => {
 // ────────────────────────────────────────────────────────────────────── 2.5 ─────
 //
 
-app.put('/logistica/:ID_paquete', (req, res) => {
+app.put('/api/logistica/:ID_paquete', (req, res) => {
   /*
     Actualizar el parámetro transportista de la instancia pertinente de Paquete.
   */
@@ -579,7 +580,7 @@ app.put('/logistica/:ID_paquete', (req, res) => {
 
 */
 
-app.post('/logistica/compra', (req, res) => {
+app.post('/api/logistica/compra', (req, res) => {
   /*
     Pasos:
       1. Gestionar el envío
@@ -682,6 +683,6 @@ process.on('error', function (err) {
   console.log(err);
 });
 
-// process.on('exit', function () {
-//   connection.end();
-// });
+process.on('exit', function () {
+  connection.end();
+});
