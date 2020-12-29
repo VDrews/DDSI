@@ -76,12 +76,12 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar inventario</div>
     <div style="max-width: 900px; margin: 0 auto">
-    <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
-    <v-text-field v-model="almacenProductoEliminado" placeholder="Cód. almacén" type="number" outlined></v-text-field>
+      <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="almacenProductoEliminado" placeholder="Cód. almacén" type="number" outlined></v-text-field>
+    </div>
     <v-alert v-if="success.eliminarInventario" text type="success">El producto se ha eliminado con éxito del almacén</v-alert>
     <v-alert v-if="error.eliminarInventario" text type="error">No se ha podido eliminar el producto</v-alert>
     <v-btn @click="eliminarInventario" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Eliminar</v-btn>
-
   </div>
 </template>
 
