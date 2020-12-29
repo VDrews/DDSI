@@ -187,7 +187,7 @@ export default {
       this.success.eliminarProducto = false
       this.error.eliminarProducto = false
       try {
-        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`)
+        await axios.delete(`${url}/api/producto/`)
         this.success.eliminarProducto = true
 
       } catch (err) {
