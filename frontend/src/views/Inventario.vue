@@ -19,9 +19,7 @@
     </div>
     <v-alert v-if="success.crearAlmacen" text type="success">El almacén se ha añadido con éxito</v-alert>
     <v-alert v-if="error.crearAlmacen" text type="error">No se ha podido añadir el almacén</v-alert>
-   <v-btn @click="crearAlmacen" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
-
-
+    <v-btn @click="crearAlmacen" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar cantidad en almacén</div>
     <div style="max-width: 900px; margin: 0 auto">

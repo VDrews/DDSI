@@ -470,7 +470,8 @@ app.post('/logistica/almacenes', (req, res) => {
     }
 
     // 2
-    connection.query(inventario.actualizarInventario({
+    // FIXME: si existe, usar actualizarInventario. Si no existe, usar newInventario.
+    connection.query(inventario.newInventario({
       ean       : req.body.EAN,
       codigo_alm: req.body.almacen_llegada,
       cantidad  : req.body.cantidad
@@ -484,7 +485,7 @@ app.post('/logistica/almacenes', (req, res) => {
 
       //3.1
       connection.query(logistica.insertarPaquete({
-        transportista: "Envíos internos"
+        transportista: "Envíos internos entre almacenes"
       }), function (err, rows, fields) {
         if (err) {
           console.log(err)
