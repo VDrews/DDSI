@@ -1,10 +1,9 @@
 <template>
-  <div id="marketing">
+  <div id="rrhh">
     <div class="display-1 font-weight-bold mt-6 mb-2">Contratar Empleado</div>
     <v-text-field v-model="nuevoEmpleado.dni" placeholder="DNI" outlined></v-text-field>
     <v-text-field v-model="nuevoEmpleado.nombre" placeholder="Nombre" outlined></v-text-field>
     <v-text-field v-model="nuevoEmpleado.apellidos" placeholder="Apellidos" outlined></v-text-field>
-    <v-text-field v-model="nuevoEmpleado.turno" placeholder="Turno" outlined></v-text-field>
     <v-text-field v-model="nuevoEmpleado.sueldo" placeholder="Sueldo" type="number" outlined></v-text-field>
     <v-alert v-if="success.contratarEmpleado" text type="success">Empleado creado con éxito</v-alert>
     <v-alert v-if="error.contratarEmpleado" text type="error">Ya existe un empleado con este DNI</v-alert>
@@ -23,8 +22,8 @@
     <v-text-field v-model="empleadoModificar.numero" placeholder="Numero de Contrato" outlined></v-text-field>
     <v-text-field v-model="empleadoModificar.turno" placeholder="Turno" outlined></v-text-field>
     <v-text-field v-model="empleadoModificar.sueldo" placeholder="Sueldo" type="number" outlined></v-text-field>
-    <v-alert v-if="success.modificarEmpleado" text type="success">Empleado creado con éxito</v-alert>
-    <v-alert v-if="error.modificarEmpleado" text type="error">Ya existe un empleado con este DNI</v-alert>
+    <v-alert v-if="success.modificarEmpleado" text type="success">Empleado modificado con éxito</v-alert>
+    <v-alert v-if="error.modificarEmpleado" text type="error">No existe un empleado con este DNI</v-alert>
     <v-btn @click="modificar" color="primary" dark block>Modificar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar un empleado</div>
