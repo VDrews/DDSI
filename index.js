@@ -384,7 +384,7 @@ app.put('/ingreso/:codigo_tr', (req, res) => {
         return res.sendStatus(200);
       });
     }
-  }
+  })
 })
 
 app.get('/api/factura/:cod_factura', (req, res) => {
@@ -581,12 +581,12 @@ app.put('/api/logistica/:ID_paquete', (req, res) => {
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.sendStatus(404).send("No se ha podido cambiar el transportista")
+      return res.status(404).send("No se ha podido cambiar el transportista")
       // FIXME             ^^^^^ ¿si falla es porque no lo encuentra?
     }
 
     console.log(rows)
-    return res.sendStatus(200).send("Transportista actualizado con éxito")
+    return res.status(200).send("Transportista actualizado con éxito")
   });
 })
 
