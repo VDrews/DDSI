@@ -67,9 +67,9 @@ function handleDisconnect() {
 handleDisconnect();
 
 const random_EAN = () => {
-  min = 0
-  max = 2147000000
-  let num = Math.random() * (max - min) + min;
+  const min = 0
+  const max = 2147000000
+  const num = Math.random() * (max - min) + min;
 
   return Math.round(num);
 };
@@ -421,8 +421,8 @@ app.post('/api/logistica/recibir', (req, res) => {
       return res.status(500)
     }
 
-    connection.log(req.body)
-    EAN_generado = random_EAN()
+    console.log(req.body)
+    let EAN_generado = random_EAN()
 
     connection.query(logistica.insertarProducto_2_1({
       EAN_prod: EAN_generado,
