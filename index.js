@@ -201,7 +201,7 @@ app.post('/api/producto/:ean', (req, res) => {
 app.post('/api/producto/:ean/:almacen', (req, res) => {
   connection.query(inventario.defineEstado({
     ean: req.params.ean,
-    almacen: req.params.almacen,
+    codigo_alm: req.params.almacen,
     estado: req.body.estado,
     cantidad: req.body.cantidad
   }), function (err, rows, fields) {
