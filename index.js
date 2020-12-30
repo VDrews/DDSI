@@ -198,10 +198,10 @@ app.post('/api/producto/:ean', (req, res) => {
   });
 })
 
-app.post('/api/producto/:ean/:almacen', (req, res) => {
+app.post('/api/producto/:ean/:codigo_alm', (req, res) => {
   connection.query(inventario.defineEstado({
     ean: req.params.ean,
-    codigo_alm: req.params.almacen,
+    codigo_alm: req.params.codigo_alm,
     estado: req.body.estado,
     cantidad: req.body.cantidad
   }), function (err, rows, fields) {
