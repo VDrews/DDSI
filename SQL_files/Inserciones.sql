@@ -97,6 +97,8 @@ insert into Paquete (transportista) values
     ('Seur otra vez'),
     ('Correos de nuevo porque no se me ocurre nada');
 
+update Inventario set estado='Un estado cualquiera', cant_afectada=1
+          where EAN_producto=82151 and codigo_alm=1;
 
 insert into Contenido (ID_paquete, EAN_producto, cantidad) values
     (

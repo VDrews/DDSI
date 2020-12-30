@@ -199,6 +199,7 @@ app.post('/api/producto/:ean', (req, res) => {
 })
 
 app.post('/api/producto/:ean/:codigo_alm', (req, res) => {
+  console.log(req.body)
   connection.query(inventario.defineEstado({
     ean: req.params.ean,
     codigo_alm: req.params.codigo_alm,
