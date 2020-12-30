@@ -207,7 +207,7 @@ app.post('/api/producto/:ean/:codigo_alm', (req, res) => {
   }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.status(404).send("No existe producto en el almacen");
+      return res.status(405).send("No existe producto en el almacen");
     }
     console.log(rows);
     return res.sendStatus(200);
