@@ -182,19 +182,6 @@ app.get('/api/analitica/:id', (req, res) => {
 // ────────────────────────────────────────────────────────────────────
 //
 
-/*app.put('/api/producto/:ean', (req, res) => {
-  connection.query(inventario.actualizarInventario({
-    ean: req.params.ean,
-    ...req.body
-  }), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.status(404).send("No existe producto en el almacen. Crealo antes");
-    }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
-})*/
 
 app.post('/api/producto/:ean', (req, res) => {
   console.log(req.body)
@@ -211,11 +198,11 @@ app.post('/api/producto/:ean', (req, res) => {
   });
 })
 
-app.put('/api/producto/:ean/:estado', (req, res) => {
+app.put('/api/producto/:ean/:almacen', (req, res) => {
   connection.query(inventario.defineEstado({
     ean: req.params.ean,
-    codigo_alm: req.body.codigo_alm,
-    estado: req.params.estado,
+    almacen: req.params.almacen,
+    estado: req.body.estado,
     cantidad: req.body.cantidad
   }), function (err, rows, fields) {
     if (err) {
@@ -235,25 +222,6 @@ app.post('/api/almacen', (req, res) => {
     }
     console.log(rows);
     return res.sendStatus(200);
-  });
-})
-
-app.delete('/api/producto/:ean', (req, res)=>{
-  console.log(req.body)
-  connection.query(inventario.dropProducto(req.params.ean), function(err, rows, fields){
-    if (err) {
-      console.log(err)
-      return res.status(412).send("No existe ese producto");
-    }
-    console.log(rows);
-    connection.commit(function (err) {
-      if (err) {
-        connection.rollback(function () {
-          return res.sendStatus(500);
-        });
-      }
-      return res.sendStatus(200);
-    });
   });
 })
 

@@ -21,16 +21,6 @@
     <v-alert v-if="error.crearAlmacen" text type="error">No se ha podido añadir el almacén</v-alert>
     <v-btn @click="crearAlmacen" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Crear</v-btn>
 
-    <!-- <div class="display-1 font-weight-bold mt-6 mb-2">Cambiar cantidad en almacén</div>
-    <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="cambioCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
-      <v-text-field v-model="cambioCantidad.cantidad" placeholder="Cantidad" type="number" outlined suffix="unidades">></v-text-field>
-      <v-text-field v-model="cambioCantidad.codigo_alm" placeholder="Código de Almacen" type="number" outlined></v-text-field>
-    </div>
-    <v-alert v-if="success.cambiarCantidad" text type="success">La cantidad se ha modificado con éxito</v-alert>
-    <v-alert v-if="error.cambiarCantidad" text type="error">No se ha podido modificar la cantidad</v-alert>
-    <v-btn @click="cambiarCantidad" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn> -->
-
     <div class="display-1 font-weight-bold mt-6 mb-2">Nuevo producto en almacén</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="nuevoCantidad.ean" placeholder="EAN" type="number" outlined></v-text-field>
@@ -51,14 +41,6 @@
     <v-alert v-if="success.cambiarEstado" text type="success">El estado se ha modificado con éxito</v-alert>
     <v-alert v-if="error.cambiarEstado" text type="error">No se ha podido modificar el estado</v-alert>
     <v-btn @click="cambiarEstado" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Cambiar</v-btn>
-
-    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar producto</div>
-    <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
-    </div>
-    <v-alert v-if="success.eliminarProducto" text type="success">El producto se ha eliminado con éxito</v-alert>
-    <v-alert v-if="error.eliminarProducto" text type="error">No se ha podido eliminar el producto</v-alert>
-    <v-btn @click="eliminarProducto" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Eliminar</v-btn>
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar un producto</div>
     <div style="max-width: 900px; margin: 0 auto">
@@ -100,11 +82,6 @@ export default {
       fabricante: "",
       precio: null
     },
-    /*cambioCantidad: {
-      ean: null,
-      cantidad: null,
-      codigo_alm: null,
-    },*/
     nuevoCantidad: {
       ean: null,
       cantidad: null,
@@ -125,9 +102,7 @@ export default {
     success: {
       crearProducto: false,
       crearAlmacen: false,
-      //cambiarCantidad: false,
       cambiarEstado: false,
-      eliminarProducto: false,
       eliminarInventario: false,
       addCantidad: false,
     },
@@ -135,9 +110,7 @@ export default {
     error: {
       crearProducto: false,
       crearAlmacen: false,
-      //cambiarCantidad: false,
       cambiarEstado: false,
-      eliminarProducto: false,
       consultarProducto: false,
       eliminarInventario: false,
       addCantidad: false,
@@ -171,43 +144,17 @@ export default {
       }
 
     },
-    /* async cambiarCantidad() {
-      this.success.cambiarCantidad = false
-      this.error.cambiarCantidad = false
-      console.log(this.cambioCantidad)
-      try {
-        await axios.put(`${url}/api/producto/${this.cambioCantidad.ean}`, this.cambioCantidad)
-        this.success.cambiarCantidad = true
-
-      } catch (err) {
-        this.error.cambiarCantidad = true
-      }
-
-    }, */
-
+    
     async cambiarEstado() {
       this.success.cambiarEstado = false
       this.error.cambiarEstado = false
       console.log(this.cambioEstado)
       try {
-        await axios.put(`${url}/api/producto/${this.cambioEstado.ean}/${this.cambioEstado.estado}`, this.cambioEstado)
+        await axios.put(`${url}/api/producto/${this.cambioEstado.ean}/${this.cambioEstado.codigo_alm}`, this.cambioEstado)
         this.success.cambiarEstado = true
 
       } catch (err) {
         this.error.cambiarEstado = true
-      }
-
-    },
-    async eliminarProducto() {
-      this.success.eliminarProducto = false
-      this.error.eliminarProducto = false
-      console.log(this.eanProductoEliminado)
-      try {
-        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`)
-        this.success.eliminarProducto = true
-
-      } catch (err) {
-        this.error.eliminarProducto = true
       }
 
     },
