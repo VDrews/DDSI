@@ -182,19 +182,6 @@ app.get('/api/analitica/:id', (req, res) => {
 // ────────────────────────────────────────────────────────────────────
 //
 
-/*app.put('/api/producto/:ean', (req, res) => {
-  connection.query(inventario.actualizarInventario({
-    ean: req.params.ean,
-    ...req.body
-  }), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.status(404).send("No existe producto en el almacen. Crealo antes");
-    }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
-})*/
 
 app.post('/api/producto/:ean', (req, res) => {
   console.log(req.body)
@@ -211,11 +198,16 @@ app.post('/api/producto/:ean', (req, res) => {
   });
 })
 
-app.put('/api/producto/:ean/:estado', (req, res) => {
-  connection.query(inventario.defineEstado(req.body), function (err, rows, fields) {
+app.post('/api/producto/:ean/:codigo_alm', (req, res) => {
+  connection.query(inventario.defineEstado({
+    ean: req.params.ean,
+    codigo_alm: req.params.codigo_alm,
+    estado: req.body.estado,
+    cantidad: req.body.cantidad
+  }), function (err, rows, fields) {
     if (err) {
       console.log(err)
-      return res.status(404).send("No existe producto en el almacen");
+      return res.status(405).send("No existe producto en el almacen");
     }
     console.log(rows);
     return res.sendStatus(200);
@@ -230,25 +222,6 @@ app.post('/api/almacen', (req, res) => {
     }
     console.log(rows);
     return res.sendStatus(200);
-  });
-})
-
-app.delete('/api/producto/:ean', (req, res)=>{
-  console.log(req.body)
-  connection.query(inventario.dropProducto(req.params), function(err, rows, fields){
-    if (err) {
-      console.log(err)
-      return res.status(412).send("No existe ese producto");
-    }
-    console.log(rows);
-    connection.commit(function (err) {
-      if (err) {
-        connection.rollback(function () {
-          return res.sendStatus(500);
-        });
-      }
-      return res.sendStatus(200);
-    });
   });
 })
 
@@ -288,34 +261,30 @@ app.post('/api/empleado', (req, res) => {
     if (err) {
       return res.sendStatus(500)
     }
-    if (req.params.dni != 8) {
-      return res.status(404).send("El DNI introducido no es válido");
-    }
-    else {
-      connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
+    connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
+      if (err) {
+        console.log(err)
+        connection.rollback(function () {
+          return res.sendStatus(412);
+        });
+      }
+      connection.query(rrhh.crearContrato(req.body), function (err, rows, fields) {
         if (err) {
-          console.log(err)
           connection.rollback(function () {
             return res.sendStatus(412);
           });
         }
-        connection.query(rrhh.crearContrato(req.body), function (err, rows, fields) {
+        connection.commit(function (err) {
           if (err) {
             connection.rollback(function () {
-              return res.sendStatus(412);
+              return res.sendStatus(500);
             });
           }
-          connection.commit(function (err) {
-            if (err) {
-              connection.rollback(function () {
-                return res.sendStatus(500);
-              });
-            }
-            return res.sendStatus(200);
-          });
-        })
+          return res.sendStatus(200);
+        });
       })
-    }
+    })
+  
   })
 })
 
