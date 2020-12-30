@@ -150,7 +150,7 @@ export default {
       this.error.cambiarEstado = false
       console.log(this.cambioEstado)
       try {
-        await axios.put(`${url}/api/producto/${this.cambioEstado.ean}/${this.cambioEstado.codigo_alm}`, this.cambioEstado)
+        await axios.post(`${url}/api/producto/${this.cambioEstado.ean}/${this.cambioEstado.codigo_alm}`, this.cambioEstado)
         this.success.cambiarEstado = true
 
       } catch (err) {
