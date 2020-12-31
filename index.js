@@ -249,6 +249,27 @@ app.delete('/api/producto/:ean/:almacen', (req, res)=>{
   });
 })
 
+app.delete('/api/producto/:ean', (req, res)=>{
+  console.log(req.params)
+  connection.query(inventario.eliminarProducto({
+    ean: req.params.ean
+    }), function(err, rows, fields){
+    if (err) {
+      console.log(err)
+      return res.status(412).send("No existe ese producto");
+    }
+    console.log(rows);
+    connection.commit(function (err) {
+      if (err) {
+        connection.rollback(function () {
+          return res.sendStatus(500);
+        });
+      }
+      return res.sendStatus(200);
+    });
+  });
+})
+
 
 //
 // ──────────────────────────────────────────────────────────────────────── III ──────────

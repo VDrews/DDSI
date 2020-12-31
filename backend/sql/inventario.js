@@ -17,6 +17,10 @@ let eliminarStock = function({ean, almacen}){
   return `delete from Inventario where ean_producto=${ean} and codigo_alm=${almacen};`
 }
 
+let eliminarProducto = function({ean}){
+  return `delete from Inventario where ean_producto=${ean};`
+}
 
 
-module.exports = {addAlmacen, defineEstado, newInventario, eliminarStock}
+
+module.exports = {addAlmacen, defineEstado, newInventario, eliminarStock, eliminarProducto}

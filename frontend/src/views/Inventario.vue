@@ -58,12 +58,20 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar inventario</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="eanInventEliminado" placeholder="EAN" type="number" outlined></v-text-field>
       <v-text-field v-model="almacenProductoEliminado" placeholder="Cód. almacén" type="number" outlined></v-text-field>
     </div>
     <v-alert v-if="success.eliminarInventario" text type="success">El producto se ha eliminado con éxito del almacén</v-alert>
     <v-alert v-if="error.eliminarInventario" text type="error">No se ha podido eliminar el producto</v-alert>
     <v-btn @click="eliminarInventario" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Eliminar</v-btn>
+
+    <div class="display-1 font-weight-bold mt-6 mb-2">Eliminar producto</div>
+    <div style="max-width: 900px; margin: 0 auto">
+      <v-text-field v-model="eanProductoEliminado" placeholder="EAN" type="number" outlined></v-text-field>
+    </div>
+    <v-alert v-if="success.eliminarProducto" text type="success">El producto se ha eliminado con éxito de todos los almacenes</v-alert>
+    <v-alert v-if="error.eliminarProducto" text type="error">No se ha podido eliminar el producto</v-alert>
+    <v-btn @click="eliminarProducto" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Eliminar</v-btn>
   </div>
 </template>
 
@@ -73,6 +81,7 @@ const url = `https://apeteporica.herokuapp.com`
 
 export default {
   data: () => ({
+    eanInventEliminado: null,
     eanProductoEliminado: null,
     eanProductoConsultado: null,
     almacenProductoEliminado: null,
@@ -105,6 +114,7 @@ export default {
       cambiarEstado: false,
       eliminarInventario: false,
       addCantidad: false,
+      eliminarProducto: false,
     },
 
     error: {
@@ -114,6 +124,7 @@ export default {
       consultarProducto: false,
       eliminarInventario: false,
       addCantidad: false,
+      eliminarProducto: false,
     }
   }),
 
@@ -164,11 +175,25 @@ export default {
       this.error.eliminarInventario = false
 
       try {
-        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}/${this.almacenProductoEliminado}`)
+        await axios.delete(`${url}/api/producto/${this.eanInventEliminado}/${this.almacenProductoEliminado}`)
         this.success.eliminarInventario = true
 
       } catch (err) {
         this.error.eliminarInventario = true
+      }
+
+    },
+
+    async eliminarProducto() {
+      this.success.eliminarProducto = false
+      this.error.eliminarProducto = false
+
+      try {
+        await axios.delete(`${url}/api/producto/${this.eanProductoEliminado}`)
+        this.success.eliminarProducto = true
+
+      } catch (err) {
+        this.error.eliminarProducto = true
       }
 
     },
