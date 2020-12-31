@@ -168,7 +168,7 @@ En Mongo, las modificaciones usan el comando `updateMany()`. La sintaxis es muy 
 
 #### Borrados (Delete)
 
-En Mongo, los documents se borran mediante `deleteOne()` y `deleteMany()`. La sintaxis es similar a los comandos antes vistos.
+En Mongo, los documents se borran mediante `deleteMany()`. La sintaxis es similar a los comandos antes vistos.
 
 
 ## Ejemplo de uso de sentencias
@@ -542,6 +542,23 @@ update Almacen set direccion  = "Camino DDSI 1, 18000 Graná" where codigo_alm =
 db.Almacen.updateMany(
     {codigo_id: 1},
     {$set: {direccion: "Camino DDSI 1, 18000 Graná"}}
+)
+```
+</td>
+</tr>
+
+<td>
+
+```sql
+delete from Almacen where codigo_alm = 1;
+```
+</td>
+
+<td>
+
+```js
+db.Almacen.deleteMany(
+    {codigo_id: 1}
 )
 ```
 </td>
