@@ -1,6 +1,6 @@
 # Trabajo tema 4
 
-> Autores: Andrés García, Andrés Millán, Carlota Valdivia, Adrián Rodríguez, José María Poblador.
+> Autores: Andrés García, Andrés Millán, Carlota Valdivia, Adrián Rodríguez, José Mª Poblador.
 
 ## Objetivos
 
@@ -10,9 +10,389 @@
 - Breve descripción del mecanismo de conexión al SGBD desde una aplicación (1-2 páginas).
 - Breve discusión sobre si sería adecuado para implementar el SI de la práctica (1/2 - 1 página).
 
-
 ## Motivación del trabajo
 
-Hemos elegido MongoDB por su sencillez de uso y por su gran potencial, ya que es un modelo de base de datos hoy día ampliamente utilizado, sobre todo en el mundo de la programación Web como base subyacente de aplicaciones tipo API en JS. MongoDB es un sistema de base de datos NoSQL, de código abierto y orientado a documentos. Además, varios miembros del equipo tienen experiencia en el uso de esta aplicación, con lo que esperamos que ello aporte un valor añadido a este trabajo.
+Hemos elegido MongoDB por su sencillez de uso y por su gran potencial, ya que es un modelo de base de datos hoy día ampliamente utilizado, sobre todo en el mundo de la programación Web. Además, varios miembros del equipo tienen experiencia en el uso de esta aplicación, con lo que esperamos que ello aporte un valor añadido a este trabajo.
+
+
+## ¿Qué es MongoDB?
+
+MongoDB es un sistema de gestión de bases de datos NoSQL, de código abierto y orientado a documentos. El término "NoSQL" significa que la base de datos no utiliza tablas para almecenar entradas o relacionar entre si las distintas entradas almacenadas. Las entradas se almacenan como objetos independientes en formato BSON, que significa *binary JSON*. Esta estructura codifica tipo e información de la longitud de la información, lo que permite recuperar los datos mucho más rápido.
+
+### Equivalencia de términos en MongoDB
+
+MongoDB utiliza unos términos algo distintos a los tradicionales de SQL. Sin embargo, existe una clara equivalencia entre unos y otros. Estos son:
+
+| Base de datos relacional | MongoDB                                                         |
+|--------------------------|-----------------------------------------------------------------|
+| Base de datos            | Base de datos                                                   |
+| Tabla                    | Colección                                                       |
+| Tupla/fila               | Documento                                                       |
+| Columna                  | Campo (*field*)                                                 |
+| Clave primaria           | Clave primaria (proporcionada por defecto como `_id` por Mongo) |
+
+### Ventajas y desventajas
+La diferencia principal de Mongo.db frente a otros sistemas de gestión de bases de datos es su sistema de documentos y colecciones.
+Cómo ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo tener dos tuplas del mismo tipo y con datos totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
+
+Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos
+- Al no seguir estructuras es más facil de dividir en diferentes servidores (Estructuras distribuidas y de caracter descentralizado)
+- Tienen mayor facilidad a la hora de escalar horizontalmente, es decir, de poder correr la base de datos desde varios ordenadores distintos
+- Se pueden hacer cambios en la estructura sin detener la base de datos
+- No suelen requerir tantos recursos como en el caso de las relacionales
+
+Desventajas
+- No está tan estandarizado como SQL, por tanto puede llegar a ser complicado realizar peticiones complejas
+- Su flexibilidad puede ser peligroso si no se gestiona con buenas prácticas y llegar a producir inconsistencias
+- En bases de datos con muchas relaciones y con muchas dependencias entre ellas, es muy complicado utilizar bases de datos NoSQL
+
 
 ## Descarga e instalación del SGBD
+
+Para utlizar Mongo, hemos decidido que uno de los integrantes instale en su máquina el SGBD mientras que el resto nos conectamos a esta. Para ello, hemos usado la función de Live Share de VSCode sobre la máquina de José Mª Poblador, la cual utiliza Manjaro. Manjaro es una distribución basada en Arch Linux.
+
+Para instalarlo, hemos seguido el siguiente proceso:
+
+```bash
+$ pamac build mongodb-bin           # Instala el binario de mongodb. Utilizamos esta versión y no el paquete
+                                    # `mongodb` puesto que ésta requiere 180GB de espacio en disco y
+                                    # un largo tiempo de compilación. `mongodb-bin` se salta parte de este proceso.
+
+$ systemctl start mongodb.service   # Iniciamos el servicio
+$ systemctl enable mongodb.service  # Lo activamos
+```
+
+Con esto, el SGBD queda instalado. Para iniciarlo, escribimos `mongo`. La base de datos corre por defecto en la IP 127.0.0.1 sobre el puerto 27017.
+
+### GUI oficial
+
+[Mongo Compass](https://www.mongodb.com/products/compass) es la GUI oficial de Mongo. Permite conectarse a una base de datos, hacer peticiones, visualizar datos, así como ver y optimizar las peticiones. El cliente está disponible para Windows, Linux y Mac. Las características que proporciona son muy variadas y potentes.
+
+## Conexiones al SGBD desde una aplicación
+
+Una vez se ha instalado el cliente, necesitaremos conectarnos a MongoDB. Para ello, necesitaremos un string URI (*Uniform Resource Identifier*). Es similar a una URL, y es un parámetro de la shell de mongo, Mongo Compass y el driver de MongoDB.
+El string URI usado asume que se ha configurado el sistema de autenticación; es decir, se ha creado un usuario y contraseña con los permisos correspondientes para la conexión.
+
+### Conexión desde terminal
+Para conectarse desde la shell, se sigue el siguiente formato:
+
+```
+mongo mongodb://$[hostlist]/$[database]?authSource=$[authSource] --username $[username]
+```
+
+Por ejemplo, la URI del servidor local que estamos usando nosotros es `mongodb://127.0.0.1:27017/`. Corresponde a la IP junto al puerto de conexión.
+
+### Conexión desde el cliente Compass
+
+El funcionamiento es análogo al de la shell. La pantalla de conexión a host contiene la siguiente información:
+
+<p align="center">
+  <img src="./img/mongodb-compass.png" alt="Compass"/>
+</p>
+
+Como queremos conectarnos de forma local, en `Hostname` debemos poner `localhost` y en `port` `27017`.
+
+### Conexión desde un servidor Node
+
+Normalmente, cuando se realiza una aplicación, la conexión suele venir desde otros clientes; no desde Mongo Shell ni Compass.
+
+[Mongoose](https://mongoosejs.com/) es un cliente para mongodb de modelado de objetos para [node.js](https://nodejs.org/en/) muy conocido. Permite hacer todo tipo de operaciones sobre la base de datos. El funcionamiento es similar a la Mongo Shell.
+
+Para instalarlo, escribimos `npm install mongoose --save`. En nuestro fichero, importamos el paquete (`const mongoose = require('mongoose'`). Finalmente, para conectarnos:
+```js
+const url = 'mongodb://127.0.0.1:27017/[base_de_datos]'
+mongoose.connect(${url})
+```
+
+## Descripción del DDL y DML utilizado
+
+### Lenguaje de Definición de Datos (DDL)
+El DDL (*Data Definition Language*), es un lenguaje de programación que define estructuras de datos, proporcionado por los sistemas gestores de base de datos. Los programadores de un sistema gestor de base de datos son los encargados de definir y modificar las estructuras que almacenarán los datos, los procedimientos o las funciones que permitan consultarlos.
+
+Repasemos las sentencias que se utilizan para definir las estructuras:
+
+#### Creación
+
+Para la creación de una tabla en MongoDB podemos usar los métodos implícitos `insertOne(<document>)` e `insertMany(<document1>, <document2>)`, que crean la colección si no existe previamente e insertan tantos documentos como especifiquen. Se emplean de la siguiente forma:
+
+```js
+db.nombreColeccion.insertOne(
+    {
+        ...
+    }
+)
+```
+
+También existe un método de creación que crea explícitamente una colección: `createCollection("nombreColeccion")`
+
+#### Alteración
+
+Para modificar la estructura en MongoDB, como añadir o borrar una columna, se utiliza el método `updateMany(<filter>,<update>)`.
+
+Como argumento recibe un filtro en que se basa la actualización, y recibe un operado`$set` o `$unset` que se encarga de añadir o borrar `fields`.
+
+En MongoDB la forma de alterar la información no se hace a nivel de colecciones puesto que no se trata de una modificación estructural, sino de documentos.
+
+#### Borrado (Drop)
+
+Para borrar los documentos de una colección en MongoDB, la cual no está asociada ni depende de ninguna ota se usa, `db.nombreColeccion.drop()`.
+
+### Lenguaje de Manipulación de Datos (DML)
+
+El DML (*Data Manipulation Language*) es el lenguaje proporcionado por los sistemas gestores de bases de datos que permite a los usuarios recuperar, almacenar, eliminar, modificar e insertar datos que se encuentran contenidos en la base de datos.
+
+Las sentencias que se utilizan para manipular los datos son
+
+####  Inserciones
+
+La inserción en MongoDB se puede usar también para definir los atributos de la colección, aunque a diferencia de SQL, no se exige que todos los documentos tengan los mismos atributos.
+
+Se usa `insertOne(<document>)` e `insertMany(<document1>, <document2>)`.
+
+#### Consultas
+
+La selección se vale del comando `find()`. Se aceptan diversos parámetros para ajustar la selección a aquello que precisemos.
+
+`db.<collection>.find()` mostraría todo el contenido de la colección `<collection>`. Al igual que en SQL, podemos especificar parámetros para hacer la búsqueda más precisa.
+
+```js
+db.<collection>.find(
+    {<Where>},
+    {<Select items>}
+).sort({<Sort by>})
+```
+
+#### Modificaciones
+
+En Mongo, las modificaciones usan el comando `updateOne()` y `updateMany()`. La sintaxis es muy similar a la selección, y como hemos visto, pueden usarse también para alterar los fields de la tabla
+
+#### Borrados (Delete)
+
+En Mongo, los documents se borran mediante `deleteOne()` y `deleteMany()`. La sintaxis es similar a los comandos antes vistos.
+
+
+## Ejemplo de uso de sentencias
+
+
+<table>
+<thead>
+<tr>
+<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Creación</td>
+</tr>
+</thead>
+<tr>
+<th>SQL</th>
+<th>Mongo</th>
+</tr>
+<tr>
+<td>
+
+(Deja una separación entre td y el bloque de código)
+</td>
+<td>
+
+Same aquí
+</td>
+</tr>
+</table>
+
+
+
+<table>
+<thead>
+<tr>
+<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Inserción</td>
+</tr>
+</thead>
+<tr>
+<th>SQL</th>
+<th>Mongo</th>
+</tr>
+<tr>
+<td>
+
+(Deja una separación entre td y el bloque de código)
+</td>
+<td>
+
+Same aquí
+</td>
+</tr>
+</table>
+
+
+<table>
+<thead>
+<tr>
+<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Búsqueda</td>
+</tr>
+</thead>
+<tr>
+<th>SQL</th>
+<th>Mongo</th>
+</tr>
+<tr>
+<td>
+
+(Deja una separación entre td y el bloque de código)
+</td>
+<td>
+
+Same aquí
+</td>
+</tr>
+</table>
+
+
+
+<table>
+<thead>
+<tr>
+<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Actualización</td>
+</tr>
+</thead>
+<tr>
+<th>SQL</th>
+<th>Mongo</th>
+</tr>
+<tr>
+<td>
+
+(Deja una separación entre td y el bloque de código)
+</td>
+<td>
+
+Same aquí
+</td>
+</tr>
+</table>
+
+
+```sql
+CREATE TABLE Inventario (
+  codigo_alm INT(13) NOT NULL,
+  EAN_producto INT(13) NOT NULL,
+  cantidad INT(4),
+  FOREIGN KEY (codigo_alm) REFERENCES Almacen(codigo),
+  FOREIGN KEY (EAN_producto) REFERENCES Producto(EAN_producto),
+  PRIMARY KEY (codigo_alm, EAN_producto)
+);
+```
+
+```js
+db.createCollection("Inventario")
+
+db.Inventario.insertMany(
+    {
+        codigo_alm_id: 1,
+        EAN_producto_id: 13012,
+        cantidad: 20
+    },
+    {
+        codigo_alm_id: 2,
+        EAN_producto_id: 56847,
+        cantidad: 5
+    },
+    {
+        codigo_alm_id: 3,
+        EAN_producto_id: 66391,
+        cantidad: 30
+    },
+    {
+        codigo_alm_id: 1,
+        EAN_producto_id: 67961,
+        cantidad: 50
+    }
+)
+
+db.Inventario.find()
+
+db.Inventario.find(
+    {EAN_producto_id: 82151}
+)
+
+db.Inventario.find(
+    {cantidad: {$gt: 10} }
+)
+
+db.Inventario.update(
+    {codigo_alm_id: 1, EAN_producto_id:82151},
+    {$set: {cantidad: 50} }
+)
+```
+
+```sql
+CREATE TABLE Producto (
+  EAN_producto INT(13) NOT NULL PRIMARY KEY,
+  nombre VARCHAR(50),
+  fabricante VARCHAR(255),
+  precio DECIMAL(10, 2) NOT NULL CHECK (precio > 0)
+);
+```
+
+
+```js
+db.createCollection("Producto")
+
+db.Producto.insertMany(
+    {
+        EAN_producto_id: 13012,
+        nombre: "XPS 13",
+        fabricante: "Dell",
+        precio: 1200.00
+    },
+    {
+        EAN_producto_id: 56847,
+        nombre: "3060 Ti",
+        fabricante: "Nvidia",
+        precio: 1099.00
+    },
+    {
+        EAN_producto_id: 66391,
+        nombre: "3080",
+        fabricante: "Nvidia",
+        precio: 1500.00
+    },
+    {
+        EAN_producto_id: 67961,
+        nombre: "3070",
+        fabricante: "Nvidia",
+        precio: 500.00
+    }
+)
+```
+
+```sql
+CREATE TABLE Almacen (
+  codigo INT(13) PRIMARY KEY,
+  direccion varchar(255)
+);
+```
+
+```js
+db.createCollection("Almacen")
+
+db.Almacen.insertMany(
+    {
+        codigo_id: 1,
+        direccion: "C/ Prueba 1, 28000 Madrí"
+    },
+    {
+        codigo_id: 2,
+        direccion: "C/ Prueba 2, 28000 Madrí"
+    },
+    {
+        codigo_id: 3,
+        direccion: "C/ Prueba 3, 28000 Madrí"
+    }
+)
+
+db.Almacen.find(
+    {codigo_id: 2}
+)
+
+db.Almacen.updateOne(
+    {codigo_id: 1},
+    {direccion: {$set "Camino DDSI 1, 18000 Graná"}}
+)
+```
