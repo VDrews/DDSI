@@ -173,7 +173,6 @@ En Mongo, los documents se borran mediante `deleteOne()` y `deleteMany()`. La si
 
 ## Ejemplo de uso de sentencias
 
-
 <table style="table-layout: fixed">
 <thead>
 <tr>
@@ -262,12 +261,12 @@ db.createCollection("Almacen")
 <td>
 
 ```sql
-insert into Inventario 
-    (codigo_alm, EAN_producto, cantidad) 
-values 
-    (1, 13012, 20), 
-    (2, 56847, 5), 
-    (3, 66391, 30), 
+insert into Inventario
+    (codigo_alm, EAN_producto, cantidad)
+values
+    (1, 13012, 20),
+    (2, 56847, 5),
+    (3, 66391, 30),
     (1, 67961, 50);
 ```
 </td>
@@ -303,9 +302,9 @@ db.Inventario.insertMany([
 <td>
 
 ```sql
-insert into Producto 
+insert into Producto
     (EAN_producto, nombre, fabricante, precio)
-values 
+values
     (13012, "XPS 13",   "Dell",     1200.00),
     (56847, "3060 Ti",  "Nvidia",   1099.00),
     (66391, "3080",     "Nvidia",   1500.00),
@@ -424,7 +423,9 @@ db.Inventario.find(
 ```sql
 select nombre from Producto;
 
-select * from Producto where fabricante = "Nvidia" order by EAN_Producto asc;
+select * from Producto
+    where fabricante = "Nvidia"
+    order by EAN_Producto asc;
 
 select Ean_Producto, nombre from Producto where precio < 1050;
 ```
@@ -443,7 +444,7 @@ db.Producto.find(
 
 db.Producto.find(
     {precio: {$lt 1050}},
-    {EAN_producto:1, nombre:1}  
+    {EAN_producto:1, nombre:1}
 )
 ```
 </td>
@@ -553,19 +554,20 @@ db.Almacen.updateMany(
 
 <style>
     table {
-        width: 1000px;
+        min-width: 1200px;
+        max-width: 1200px;
         margin: 10px auto;
-        table-layout: fixed;
-        
     }
 
-    table, td, th {
+    table td th {
         border-collapse: collapse;
     }
-    
-    th, td {
+
+    td {
         padding: 10px;
-        width: 50%
+        min-width: 500px;
+        max-width: 500px;
+
     }
 
     thead {
@@ -573,4 +575,3 @@ db.Almacen.updateMany(
     }
 
 </style>
-
