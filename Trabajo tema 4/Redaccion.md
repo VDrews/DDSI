@@ -173,8 +173,16 @@ En Mongo, los documents se borran mediante `deleteMany()`. La sintaxis es simila
 
 ## Ejemplo de uso de sentencias
 
+<<<<<<< HEAD
+## Conclusión
+En el caso de un sistema de gestión de una tienda online, como podemos ver, hay demasiadas relaciones y no va a ser muy necesario escalar todo el sistema, por lo que en este caso sería mucho más útil usar una base de datos SQL.
 
+Quizás ciertas tablas podrían ser interesantes de llevar a un sistema más flexible como MongoDB, como es el caso de las analíticas que tienen un formato totalmente dependiente del tipo de analítica que sea, pero en el resto de casos, es necesario tener una base de datos estructurada para evitar posibles inconsistencias a la hora de borrar o modificar datos.
+
+<table>
+=======
 <table style="table-layout: fixed">
+>>>>>>> 63bec110ad389eac344b91ead3b4d4de53177579
 <thead>
 <tr>
 <td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Creación</td>
@@ -262,12 +270,12 @@ db.createCollection("Almacen")
 <td>
 
 ```sql
-insert into Inventario 
-    (codigo_alm, EAN_producto, cantidad) 
-values 
-    (1, 13012, 20), 
-    (2, 56847, 5), 
-    (3, 66391, 30), 
+insert into Inventario
+    (codigo_alm, EAN_producto, cantidad)
+values
+    (1, 13012, 20),
+    (2, 56847, 5),
+    (3, 66391, 30),
     (1, 67961, 50);
 ```
 </td>
@@ -303,9 +311,9 @@ db.Inventario.insertMany([
 <td>
 
 ```sql
-insert into Producto 
+insert into Producto
     (EAN_producto, nombre, fabricante, precio)
-values 
+values
     (13012, "XPS 13",   "Dell",     1200.00),
     (56847, "3060 Ti",  "Nvidia",   1099.00),
     (66391, "3080",     "Nvidia",   1500.00),
@@ -424,7 +432,9 @@ db.Inventario.find(
 ```sql
 select nombre from Producto;
 
-select * from Producto where fabricante = "Nvidia" order by EAN_Producto asc;
+select * from Producto
+    where fabricante = "Nvidia"
+    order by EAN_Producto asc;
 
 select Ean_Producto, nombre from Producto where precio < 1050;
 ```
@@ -443,7 +453,7 @@ db.Producto.find(
 
 db.Producto.find(
     {precio: {$lt 1050}},
-    {EAN_producto:1, nombre:1}  
+    {EAN_producto:1, nombre:1}
 )
 ```
 </td>
@@ -570,19 +580,20 @@ db.Almacen.deleteMany(
 
 <style>
     table {
-        width: 1000px;
+        min-width: 1200px;
+        max-width: 1200px;
         margin: 10px auto;
-        table-layout: fixed;
-        
     }
 
-    table, td, th {
+    table td th {
         border-collapse: collapse;
     }
-    
-    th, td {
+
+    td {
         padding: 10px;
-        width: 50%
+        min-width: 500px;
+        max-width: 500px;
+
     }
 
     thead {
@@ -590,4 +601,3 @@ db.Almacen.deleteMany(
     }
 
 </style>
-
