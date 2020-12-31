@@ -32,19 +32,17 @@ MongoDB utiliza unos términos algo distintos a los tradicionales de SQL. Sin em
 | Clave primaria           | Clave primaria (proporcionada por defecto como `_id` por Mongo) |
 
 ### Ventajas y desventajas
-La diferencia principal de Mongo.db frente a otros sistemas de gestión de bases de datos es su sistema de documentos y colecciones.
-Cómo ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo tener dos tuplas del mismo tipo y con datos totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
+La diferencia principal de MongoDB frente a otros sistemas de gestión de bases de datos es su sistema de documentos y colecciones.
 
-Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos
-- Al no seguir estructuras es más facil de dividir en diferentes servidores (Estructuras distribuidas y de caracter descentralizado)
-- Tienen mayor facilidad a la hora de escalar horizontalmente, es decir, de poder correr la base de datos desde varios ordenadores distintos
-- Se pueden hacer cambios en la estructura sin detener la base de datos
-- No suelen requerir tantos recursos como en el caso de las relacionales
+#### Ventajas
+Cómo ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo hacer modificaciones en la estructura sin detener o incluso tener dos tuplas del mismo tipo y con un formato totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
 
-Desventajas
-- No está tan estandarizado como SQL, por tanto puede llegar a ser complicado realizar peticiones complejas
-- Su flexibilidad puede ser peligroso si no se gestiona con buenas prácticas y llegar a producir inconsistencias
-- En bases de datos con muchas relaciones y con muchas dependencias entre ellas, es muy complicado utilizar bases de datos NoSQL
+Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos, al no seguir estructuras es mucho más facil escalar horizontalmente, es decir, de dividir la base de datos en diferentes servidores, lo que se conoce como estructuras distribuidas y de caracter descentralizado. Además este tipo de bases de datos no suelen requerir de grandes recursos a diferencia de las SQL.
+
+#### Desventajas
+Esta flexibilidad a su vez presenta también varias desventajas, ya que el exceso de flexibilidad junto a malas prácticas pueden crear inconsistencias importantes en la base de datos.
+Además en el caso de que tengamos modelos con muchas relaciones y dependencias, se hará mucho más dificil utilizar este tipo de bases de datos sin que haya inconsistencias y requerirán de un mayor control del desarrollador del sistema.
+Las NoSQL no están tan estandarizadas como SQL, haciendo que pueda ser complicado realizar ciertas peticiones más complejas, aunque en el caso de Mongo, al ser uno de los más populares se puede encontrar prácticamente cualquier duda resuelta.
 
 
 ## Descarga e instalación del SGBD
