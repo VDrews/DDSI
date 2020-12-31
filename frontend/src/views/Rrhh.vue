@@ -41,7 +41,7 @@
     </div>
     <v-btn @click="consultar" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarEmpleado" text type="error">No existe un empleado con este DNI</v-alert>
-    <v-simple-table v-if="empleado">
+    <v-data-table v-if="empleado">
       <template v-slot:default>
         <thead>
           <tr>
@@ -63,7 +63,7 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-data-table>
 
   </div>
 </template>
