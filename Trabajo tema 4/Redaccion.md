@@ -25,9 +25,9 @@ MongoDB utiliza unos términos algo distintos a los tradicionales de SQL. Sin em
 
 | Base de datos relacional | MongoDB                                                         |
 |--------------------------|-----------------------------------------------------------------|
-| Base de datos            | Base de datos                                                   |
-| Tabla                    | Colección                                                       |
-| Tupla/fila               | Documento                                                       |
+| Base de datos            | Base de datos (*database*)                                                   |
+| Tabla                    | Colección (*collection*)                                                      |
+| Tupla/fila               | Documento (*document*)                                                      |
 | Columna                  | Campo (*field*)                                                 |
 | Clave primaria           | Clave primaria (proporcionada por defecto como `_id` por Mongo) |
 
@@ -49,9 +49,9 @@ Desventajas
 
 ## Descarga e instalación del SGBD
 
-Para utlizar Mongo, hemos decidido que uno de los integrantes instale en su máquina el SGBD mientras que el resto nos conectamos a esta. Para ello, hemos usado la función de Live Share de VSCode sobre la máquina de José Mª Poblador, la cual utiliza Manjaro. Manjaro es una distribución basada en Arch Linux.
+Para utlizar Mongo, hemos decidido que uno de los integrantes instale en su máquina el SGBD mientras que el resto nos conectamos a esta. Para ello, hemos usado la función de Live Share de VSCode sobre la máquina de José Mª Poblador, la cual utiliza Manjaro, distribución basada en Arch Linux.
 
-Para instalarlo, hemos seguido el siguiente proceso:
+Para instalarlo en esta distro, hemos seguido el siguiente proceso:
 
 ```bash
 $ pamac build mongodb-bin           # Instala el binario de mongodb. Utilizamos esta versión y no el paquete
@@ -63,6 +63,8 @@ $ systemctl enable mongodb.service  # Lo activamos
 ```
 
 Con esto, el SGBD queda instalado. Para iniciarlo, escribimos `mongo`. La base de datos corre por defecto en la IP 127.0.0.1 sobre el puerto 27017.
+
+MongoDB es multiplataforma, pudiéndose instalar en cualquier Windows, Mac o Linux, aunque hay que remarcar que el proceso de instalación e inicio difiere en cada sistema operativo.
 
 ### GUI oficial
 
@@ -92,11 +94,11 @@ El funcionamiento es análogo al de la shell. La pantalla de conexión a host co
 
 Como queremos conectarnos de forma local, en `Hostname` debemos poner `localhost` y en `port` `27017`.
 
-### Conexión desde un servidor Node
+### Conexión desde un servidor Node.js
 
 Normalmente, cuando se realiza una aplicación, la conexión suele venir desde otros clientes; no desde Mongo Shell ni Compass.
 
-[Mongoose](https://mongoosejs.com/) es un cliente para mongodb de modelado de objetos para [node.js](https://nodejs.org/en/) muy conocido. Permite hacer todo tipo de operaciones sobre la base de datos. El funcionamiento es similar a la Mongo Shell.
+[Mongoose](https://mongoosejs.com/) es un cliente para mongodb de modelado de objetos para [Node.js](https://nodejs.org/en/) muy conocido. Permite hacer todo tipo de operaciones sobre la base de datos. El funcionamiento es similar a la Mongo Shell.
 
 Para instalarlo, escribimos `npm install mongoose --save`. En nuestro fichero, importamos el paquete (`const mongoose = require('mongoose'`). Finalmente, para conectarnos:
 ```js
@@ -113,7 +115,7 @@ Repasemos las sentencias que se utilizan para definir las estructuras:
 
 #### Creación
 
-Para la creación de una tabla en MongoDB podemos usar los métodos implícitos `insertOne(<document>)` e `insertMany(<document1>, <document2>)`, que crean la colección si no existe previamente e insertan tantos documentos como especifiquen. Se emplean de la siguiente forma:
+Para la creación de una tabla en MongoDB podemos usar los métodos implícitos `insertOne(<document>)` e `insertMany([<document1>, <document2>])`, que crean la colección si no existe previamente e insertan tantos documentos como especifiquen. Se emplean de la siguiente forma:
 
 ```js
 db.nombreColeccion.insertOne(
@@ -147,7 +149,7 @@ Las sentencias que se utilizan para manipular los datos son
 
 La inserción en MongoDB se puede usar también para definir los atributos de la colección, aunque a diferencia de SQL, no se exige que todos los documentos tengan los mismos atributos.
 
-Se usa `insertOne(<document>)` e `insertMany(<document1>, <document2>)`.
+Se usa `insertOne(<document>)` e `insertMany([<document1>, <document2>])`.
 
 #### Consultas
 
@@ -164,7 +166,7 @@ db.<collection>.find(
 
 #### Modificaciones
 
-En Mongo, las modificaciones usan el comando `updateOne()` y `updateMany()`. La sintaxis es muy similar a la selección, y como hemos visto, pueden usarse también para alterar los fields de la tabla
+En Mongo, las modificaciones usan el comando `updateMany()`. La sintaxis es muy similar a la selección, y como hemos visto, pueden usarse también para alterar los fields de la tabla
 
 #### Borrados (Delete)
 
@@ -174,7 +176,7 @@ En Mongo, los documents se borran mediante `deleteOne()` y `deleteMany()`. La si
 ## Ejemplo de uso de sentencias
 
 
-<table>
+<table style="table-layout: fixed">
 <thead>
 <tr>
 <td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Creación</td>
@@ -187,15 +189,65 @@ En Mongo, los documents se borran mediante `deleteOne()` y `deleteMany()`. La si
 <tr>
 <td>
 
-(Deja una separación entre td y el bloque de código)
+```sql
+CREATE TABLE Inventario (
+  codigo_alm INT(13) NOT NULL,
+  EAN_producto INT(13) NOT NULL,
+  cantidad INT(4),
+  FOREIGN KEY (codigo_alm) REFERENCES Almacen(codigo),
+  FOREIGN KEY (EAN_producto) REFERENCES Producto(EAN_producto),
+  PRIMARY KEY (codigo_alm, EAN_producto)
+);
+```
 </td>
 <td>
 
-Same aquí
+```js
+db.createCollection("Inventario")
+```
 </td>
 </tr>
-</table>
+<tr>
+<td>
 
+```sql
+CREATE TABLE Producto (
+  EAN_producto INT(13) NOT NULL PRIMARY KEY,
+  nombre VARCHAR(50),
+  fabricante VARCHAR(255),
+  precio DECIMAL(10, 2) NOT NULL CHECK (precio > 0)
+);
+```
+</td>
+<td>
+
+```js
+db.createCollection("Producto")
+```
+</td>
+</tr>
+
+<tr>
+
+<td>
+
+```sql
+CREATE TABLE Almacen (
+  codigo INT(13) PRIMARY KEY,
+  direccion varchar(255)
+);
+```
+</td>
+
+<td>
+
+```js
+db.createCollection("Almacen")
+```
+</td>
+
+</tr>
+</table>
 
 
 <table>
@@ -211,78 +263,20 @@ Same aquí
 <tr>
 <td>
 
-(Deja una separación entre td y el bloque de código)
-</td>
-<td>
-
-Same aquí
-</td>
-</tr>
-</table>
-
-
-<table>
-<thead>
-<tr>
-<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Búsqueda</td>
-</tr>
-</thead>
-<tr>
-<th>SQL</th>
-<th>Mongo</th>
-</tr>
-<tr>
-<td>
-
-(Deja una separación entre td y el bloque de código)
-</td>
-<td>
-
-Same aquí
-</td>
-</tr>
-</table>
-
-
-
-<table>
-<thead>
-<tr>
-<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Actualización</td>
-</tr>
-</thead>
-<tr>
-<th>SQL</th>
-<th>Mongo</th>
-</tr>
-<tr>
-<td>
-
-(Deja una separación entre td y el bloque de código)
-</td>
-<td>
-
-Same aquí
-</td>
-</tr>
-</table>
-
-
 ```sql
-CREATE TABLE Inventario (
-  codigo_alm INT(13) NOT NULL,
-  EAN_producto INT(13) NOT NULL,
-  cantidad INT(4),
-  FOREIGN KEY (codigo_alm) REFERENCES Almacen(codigo),
-  FOREIGN KEY (EAN_producto) REFERENCES Producto(EAN_producto),
-  PRIMARY KEY (codigo_alm, EAN_producto)
-);
+insert into Inventario 
+    (codigo_alm, EAN_producto, cantidad) 
+values 
+    (1, 13012, 20), 
+    (2, 56847, 5), 
+    (3, 66391, 30), 
+    (1, 67961, 50);
 ```
+</td>
+<td>
 
 ```js
-db.createCollection("Inventario")
-
-db.Inventario.insertMany(
+db.Inventario.insertMany([
     {
         codigo_alm_id: 1,
         EAN_producto_id: 13012,
@@ -303,38 +297,27 @@ db.Inventario.insertMany(
         EAN_producto_id: 67961,
         cantidad: 50
     }
-)
-
-db.Inventario.find()
-
-db.Inventario.find(
-    {EAN_producto_id: 82151}
-)
-
-db.Inventario.find(
-    {cantidad: {$gt: 10} }
-)
-
-db.Inventario.update(
-    {codigo_alm_id: 1, EAN_producto_id:82151},
-    {$set: {cantidad: 50} }
-)
+])
 ```
+</td>
+</tr>
+<tr>
+<td>
 
 ```sql
-CREATE TABLE Producto (
-  EAN_producto INT(13) NOT NULL PRIMARY KEY,
-  nombre VARCHAR(50),
-  fabricante VARCHAR(255),
-  precio DECIMAL(10, 2) NOT NULL CHECK (precio > 0)
-);
+insert into Producto 
+    (EAN_producto, nombre, fabricante, precio)
+values 
+    (13012, "XPS 13",   "Dell",     1200.00),
+    (56847, "3060 Ti",  "Nvidia",   1099.00),
+    (66391, "3080",     "Nvidia",   1500.00),
+    (67961, "3070",     "Nvidia",   500.00);
 ```
-
+</td>
+<td>
 
 ```js
-db.createCollection("Producto")
-
-db.Producto.insertMany(
+db.Producto.insertMany([
     {
         EAN_producto_id: 13012,
         nombre: "XPS 13",
@@ -359,40 +342,237 @@ db.Producto.insertMany(
         fabricante: "Nvidia",
         precio: 500.00
     }
-)
+])
 ```
+</td>
+</tr>
+
+<tr>
+
+<td>
 
 ```sql
-CREATE TABLE Almacen (
-  codigo INT(13) PRIMARY KEY,
-  direccion varchar(255)
-);
+insert into Almacen
+    (codigo, direccion)
+values
+    (1, "Calle Apetecán 3"),
+    (2, "Camino DDSI 10.0"),
+    (3, "Avenida de los horrores navideños");
 ```
+</td>
+
+<td>
 
 ```js
-db.createCollection("Almacen")
-
-db.Almacen.insertMany(
+db.Almacen.insertMany([
     {
         codigo_id: 1,
-        direccion: "C/ Prueba 1, 28000 Madrí"
+        direccion: "Calle Apetecán 3"
     },
     {
         codigo_id: 2,
-        direccion: "C/ Prueba 2, 28000 Madrí"
+        direccion: "Camino DDSI 10.0"
     },
     {
         codigo_id: 3,
-        direccion: "C/ Prueba 3, 28000 Madrí"
+        direccion: "Avenida de los horrores navideños"
     }
+])
+```
+</td>
+</tr>
+</table>
+
+
+<table>
+<thead>
+<tr>
+<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Búsqueda</td>
+</tr>
+</thead>
+<tr>
+<th>SQL</th>
+<th>Mongo</th>
+</tr>
+<tr>
+<td>
+
+```sql
+select * from Inventario;
+
+select * from Inventario where EAN_producto_id = 82151;
+
+select * from Inventario where cantidad > 10;
+```
+</td>
+<td>
+
+```js
+db.Inventario.find()
+
+db.Inventario.find(
+    {EAN_producto_id: 82151}
 )
 
+db.Inventario.find(
+    {cantidad: {$gt: 10} }
+)
+```
+</td>
+</tr>
+
+<td>
+
+```sql
+select nombre from Producto;
+
+select * from Producto where fabricante = "Nvidia" order by EAN_Producto asc;
+
+select Ean_Producto, nombre from Producto where precio < 1050;
+```
+</td>
+<td>
+
+```js
+db.Producto.find(
+    {},
+    {nombre: 1}
+)
+
+db.Producto.find(
+    { fabricante: "Nvidia" }
+).sort({ EAN_producto_id: 1})
+
+db.Producto.find(
+    {precio: {$lt 1050}},
+    {EAN_producto:1, nombre:1}  
+)
+```
+</td>
+</tr>
+
+<tr>
+
+<td>
+
+```sql
+select * from Almacen where codigo_id = 2;
+
+select * from Almacen where codigo_id != 2;
+```
+</td>
+
+<td>
+
+```js
 db.Almacen.find(
     {codigo_id: 2}
 )
 
-db.Almacen.updateOne(
-    {codigo_id: 1},
-    {direccion: {$set "Camino DDSI 1, 18000 Graná"}}
+db.Almacen.find(
+    {codigo_id: { $ne: 2 }}
 )
 ```
+</td>
+
+</tr>
+</table>
+
+
+
+<table>
+<thead>
+<tr>
+<td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Actualización</td>
+</tr>
+</thead>
+<tr>
+<th>SQL</th>
+<th>Mongo</th>
+</tr>
+<tr>
+<td>
+
+```sql
+update Inventario set Cantidad = 50 where codigo_alm = 1 and EAN_producto = 82151;
+```
+</td>
+<td>
+
+```js
+db.Inventario.updateMany(
+    {codigo_alm_id: 1, EAN_producto_id:82151},
+    {$set: {cantidad: 50} }
+)
+```
+</td>
+</tr>
+
+<tr>
+
+<td>
+
+```sql
+update Producto set precio = 420 where nombre = "3060 Ti";
+```
+</td>
+
+<td>
+
+```js
+db.Producto.updateMany(
+    {nombre: "3060 Ti"},
+    {$set: {precio: 420} }
+)
+```
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+```sql
+update Almacen set direccion  = "Camino DDSI 1, 18000 Graná" where codigo_alm = 1;
+```
+</td>
+
+<td>
+
+```js
+db.Almacen.updateMany(
+    {codigo_id: 1},
+    {$set: {direccion: "Camino DDSI 1, 18000 Graná"}}
+)
+```
+</td>
+</tr>
+</table>
+
+
+
+
+<style>
+    table {
+        width: 1000px;
+        margin: 10px auto;
+        table-layout: fixed;
+        
+    }
+
+    table, td, th {
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        padding: 10px;
+        width: 50%
+    }
+
+    thead {
+        border-bottom: solid 1px
+    }
+
+</style>
+
