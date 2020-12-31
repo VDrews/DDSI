@@ -182,7 +182,16 @@ En Mongo, los documents se borran mediante `deleteMany()`. La sintaxis es simila
 
 ## Ejemplo de uso de sentencias
 
+<<<<<<< HEAD
+## Conclusión
+En el caso de un sistema de gestión de una tienda online, como podemos ver, hay demasiadas relaciones y no va a ser muy necesario escalar todo el sistema, por lo que en este caso sería mucho más útil usar una base de datos SQL.
+
+Quizás ciertas tablas podrían ser interesantes de llevar a un sistema más flexible como MongoDB, como es el caso de las analíticas que tienen un formato totalmente dependiente del tipo de analítica que sea, pero en el resto de casos, es necesario tener una base de datos estructurada para evitar posibles inconsistencias a la hora de borrar o modificar datos.
+
+<table>
+=======
 <table style="table-layout: fixed">
+>>>>>>> 63bec110ad389eac344b91ead3b4d4de53177579
 <thead>
 <tr>
 <td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Creación</td>
