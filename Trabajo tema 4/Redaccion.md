@@ -35,7 +35,7 @@ MongoDB utiliza unos términos algo distintos a los tradicionales de SQL. Sin em
 La diferencia principal de MongoDB frente a otros sistemas de gestión de bases de datos es su sistema de documentos y colecciones.
 
 #### Ventajas
-Cómo ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo hacer modificaciones en la estructura sin detener o incluso tener dos tuplas del mismo tipo y con un formato totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
+Como ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo hacer modificaciones en la estructura sin detener o incluso tener dos tuplas del mismo tipo y con un formato totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
 
 Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos, al no seguir estructuras es mucho más fácil escalar horizontalmente, es decir, dividir la base de datos en diferentes servidores, lo que se conoce como estructuras distribuidas y de caracter descentralizado. Además este tipo de bases de datos no suelen requerir de grandes recursos a diferencia de las SQL.
 
@@ -53,7 +53,7 @@ Para instalarlo en esta distro, hemos seguido el siguiente proceso:
 
 ```bash
 $ pamac build mongodb-bin           # Instala el binario de mongodb. Utilizamos esta versión y no el paquete
-                                    # `mongodb` puesto que ésta requiere 180GB de espacio en disco y
+                                    # `mongodb` puesto que esta requiere 180GB de espacio en disco y
                                     # un largo tiempo de compilación. `mongodb-bin` se salta parte de este proceso.
 
 $ systemctl start mongodb.service   # Iniciamos el servicio
@@ -164,7 +164,7 @@ db.<collection>.find(
 
 #### Modificaciones
 
-En Mongo, las modificaciones usan el comando `updateMany()`. La sintaxis es muy similar a la selección, y como hemos visto, pueden usarse también para alterar los fields de la tabla
+En Mongo, las modificaciones usan el comando `updateMany()`. La sintaxis es muy similar a la selección, y como hemos visto, pueden usarse también para alterar los fields de la tabla.
 
 #### Borrados (Delete)
 
@@ -406,7 +406,7 @@ db.Almacen.insertMany([
 ```sql
 select * from Inventario;
 
-select * from Inventario where EAN_producto_id = 82151;
+select * from Inventario where EAN_producto_id = 56847;
 
 select * from Inventario where cantidad > 10;
 ```
@@ -417,7 +417,7 @@ select * from Inventario where cantidad > 10;
 db.Inventario.find()
 
 db.Inventario.find(
-    {EAN_producto_id: 82151}
+    {EAN_producto_id: 56847}
 )
 
 db.Inventario.find(
@@ -502,15 +502,15 @@ db.Almacen.find(
 <td>
 
 ```sql
-update Inventario set Cantidad = 50 where codigo_alm = 1 and EAN_producto = 82151;
+update Inventario set Cantidad = 70 where codigo_alm = 1 and EAN_producto = 67961;
 ```
 </td>
 <td>
 
 ```js
 db.Inventario.updateMany(
-    {codigo_alm_id: 1, EAN_producto_id:82151},
-    {$set: {cantidad: 50} }
+    {codigo_alm_id: 1, EAN_producto_id:67961},
+    {$set: {cantidad: 70} }
 )
 ```
 </td>
@@ -542,7 +542,7 @@ db.Producto.updateMany(
 <td>
 
 ```sql
-update Almacen set direccion  = "Camino DDSI 1, 18000 Graná" where codigo_alm = 1;
+update Almacen set direccion  = "Camino DDSI 1, 18000 Graná" where codigo = 1;
 ```
 </td>
 
@@ -560,7 +560,7 @@ db.Almacen.updateMany(
 <td>
 
 ```sql
-delete from Almacen where codigo_alm = 1;
+delete from Almacen where codigo = 1;
 ```
 </td>
 
