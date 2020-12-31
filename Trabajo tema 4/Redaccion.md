@@ -31,6 +31,8 @@ MongoDB utiliza unos términos algo distintos a los tradicionales de SQL. Sin em
 | Columna                  | Campo (*field*)                                                 |
 | Clave primaria           | Clave primaria (proporcionada por defecto como `_id` por Mongo) |
 
+<div style="page-break-after: always; break-after: page;"></div>
+
 ### Ventajas y desventajas
 La diferencia principal de MongoDB frente a otros sistemas de gestión de bases de datos es su sistema de documentos y colecciones.
 
@@ -44,6 +46,8 @@ Esta flexibilidad a su vez presenta también varias desventajas, ya que el exces
 Además en el caso de que tengamos modelos con muchas relaciones y dependencias, se hará mucho más dificil utilizar este tipo de bases de datos sin que haya inconsistencias y requerirán de un mayor control del desarrollador del sistema.
 Las NoSQL no están tan estandarizadas como SQL, haciendo que pueda ser complicado realizar ciertas peticiones más complejas, aunque en el caso de Mongo, al ser uno de los más populares se puede encontrar prácticamente cualquier duda resuelta.
 
+
+<div style="page-break-after: always; break-after: page;"></div>
 
 ## Descarga e instalación del SGBD
 
@@ -103,6 +107,9 @@ Para instalarlo, escribimos `npm install mongoose --save`. En nuestro fichero, i
 const url = 'mongodb://127.0.0.1:27017/[base_de_datos]'
 mongoose.connect(${url})
 ```
+
+
+<div style="page-break-after: always; break-after: page;"></div>
 
 ## Descripción del DDL y DML utilizado
 
@@ -171,18 +178,17 @@ En Mongo, las modificaciones usan el comando `updateMany()`. La sintaxis es muy 
 En Mongo, los documents se borran mediante `deleteMany()`. La sintaxis es similar a los comandos antes vistos.
 
 
+<div style="page-break-after: always; break-after: page;"></div>
+
 ## Ejemplo de uso de sentencias
 
-<<<<<<< HEAD
 ## Conclusión
 En el caso de un sistema de gestión de una tienda online, como podemos ver, hay demasiadas relaciones y no va a ser muy necesario escalar todo el sistema, por lo que en este caso sería mucho más útil usar una base de datos SQL.
 
 Quizás ciertas tablas podrían ser interesantes de llevar a un sistema más flexible como MongoDB, como es el caso de las analíticas que tienen un formato totalmente dependiente del tipo de analítica que sea, pero en el resto de casos, es necesario tener una base de datos estructurada para evitar posibles inconsistencias a la hora de borrar o modificar datos.
 
-<table>
-=======
+
 <table style="table-layout: fixed">
->>>>>>> 63bec110ad389eac344b91ead3b4d4de53177579
 <thead>
 <tr>
 <td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Creación</td>
@@ -502,7 +508,9 @@ db.Almacen.find(
 <td>
 
 ```sql
-update Inventario set Cantidad = 70 where codigo_alm = 1 and EAN_producto = 67961;
+update Inventario
+    set Cantidad = 50
+    where codigo_alm = 1 and EAN_producto = 82151;
 ```
 </td>
 <td>
@@ -542,7 +550,9 @@ db.Producto.updateMany(
 <td>
 
 ```sql
-update Almacen set direccion  = "Camino DDSI 1, 18000 Graná" where codigo = 1;
+update Almacen
+    set direccion  = "Camino DDSI 1, 18000 Graná"
+    where codigo_alm = 1;
 ```
 </td>
 
@@ -574,30 +584,3 @@ db.Almacen.deleteMany(
 </td>
 </tr>
 </table>
-
-
-
-
-<style>
-    table {
-        min-width: 1200px;
-        max-width: 1200px;
-        margin: 10px auto;
-    }
-
-    table td th {
-        border-collapse: collapse;
-    }
-
-    td {
-        padding: 10px;
-        min-width: 500px;
-        max-width: 500px;
-
-    }
-
-    thead {
-        border-bottom: solid 1px
-    }
-
-</style>
