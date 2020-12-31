@@ -37,7 +37,7 @@ La diferencia principal de MongoDB frente a otros sistemas de gestión de bases 
 #### Ventajas
 Cómo ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo hacer modificaciones en la estructura sin detener o incluso tener dos tuplas del mismo tipo y con un formato totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
 
-Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos, al no seguir estructuras es mucho más facil escalar horizontalmente, es decir, de dividir la base de datos en diferentes servidores, lo que se conoce como estructuras distribuidas y de caracter descentralizado. Además este tipo de bases de datos no suelen requerir de grandes recursos a diferencia de las SQL.
+Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos, al no seguir estructuras es mucho más fácil escalar horizontalmente, es decir, dividir la base de datos en diferentes servidores, lo que se conoce como estructuras distribuidas y de caracter descentralizado. Además este tipo de bases de datos no suelen requerir de grandes recursos a diferencia de las SQL.
 
 #### Desventajas
 Esta flexibilidad a su vez presenta también varias desventajas, ya que el exceso de flexibilidad junto a malas prácticas pueden crear inconsistencias importantes en la base de datos.
@@ -129,13 +129,13 @@ También existe un método de creación que crea explícitamente una colección:
 
 Para modificar la estructura en MongoDB, como añadir o borrar una columna, se utiliza el método `updateMany(<filter>,<update>)`.
 
-Como argumento recibe un filtro en que se basa la actualización, y recibe un operado`$set` o `$unset` que se encarga de añadir o borrar `fields`.
+Como argumento recibe un filtro en que se basa la actualización, y recibe un operador `$set` o `$unset` que se encarga de añadir o borrar `fields`.
 
 En MongoDB la forma de alterar la información no se hace a nivel de colecciones puesto que no se trata de una modificación estructural, sino de documentos.
 
 #### Borrado (Drop)
 
-Para borrar los documentos de una colección en MongoDB, la cual no está asociada ni depende de ninguna ota se usa, `db.nombreColeccion.drop()`.
+Para borrar los documentos de una colección en MongoDB, la cual no está asociada ni depende de ninguna otra se usa, `db.nombreColeccion.drop()`.
 
 ### Lenguaje de Manipulación de Datos (DML)
 
