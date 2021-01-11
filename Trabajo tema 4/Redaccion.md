@@ -37,9 +37,9 @@ MongoDB utiliza unos términos algo distintos a los tradicionales de SQL. Sin em
 La diferencia principal de MongoDB frente a otros sistemas de gestión de bases de datos es su sistema de documentos y colecciones.
 
 #### Ventajas
-Cómo ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo hacer modificaciones en la estructura sin detener o incluso tener dos tuplas del mismo tipo y con un formato totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
+Como ventaja en este sistema, vemos que aporta una enorme flexibilidad a diferencia de otros sistemas, pudiendo hacer modificaciones en la estructura sin detener o incluso tener dos tuplas del mismo tipo y con un formato totalmente distinto, esto puede ser muy interesante en casos donde los datos no siguen una estructura definida o si el esquema va a sufrir muchos cambios.
 
-Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos, al no seguir estructuras es mucho más facil escalar horizontalmente, es decir, de dividir la base de datos en diferentes servidores, lo que se conoce como estructuras distribuidas y de caracter descentralizado. Además este tipo de bases de datos no suelen requerir de grandes recursos a diferencia de las SQL.
+Otra ventaja, sobre todo comprarandola con las bases de datos estructurados, es su facilidad a la hora de escalar los datos, al no seguir estructuras es mucho más fácil escalar horizontalmente, es decir, dividir la base de datos en diferentes servidores, lo que se conoce como estructuras distribuidas y de caracter descentralizado. Además este tipo de bases de datos no suelen requerir de grandes recursos a diferencia de las SQL.
 
 #### Desventajas
 Esta flexibilidad a su vez presenta también varias desventajas, ya que el exceso de flexibilidad junto a malas prácticas pueden crear inconsistencias importantes en la base de datos.
@@ -57,7 +57,7 @@ Para instalarlo en esta distro, hemos seguido el siguiente proceso:
 
 ```bash
 $ pamac build mongodb-bin           # Instala el binario de mongodb. Utilizamos esta versión y no el paquete
-                                    # `mongodb` puesto que ésta requiere 180GB de espacio en disco y
+                                    # `mongodb` puesto que esta requiere 180GB de espacio en disco y
                                     # un largo tiempo de compilación. `mongodb-bin` se salta parte de este proceso.
 
 $ systemctl start mongodb.service   # Iniciamos el servicio
@@ -136,13 +136,13 @@ También existe un método de creación que crea explícitamente una colección:
 
 Para modificar la estructura en MongoDB, como añadir o borrar una columna, se utiliza el método `updateMany(<filter>,<update>)`.
 
-Como argumento recibe un filtro en que se basa la actualización, y recibe un operado`$set` o `$unset` que se encarga de añadir o borrar `fields`.
+Como argumento recibe un filtro en que se basa la actualización, y recibe un operador `$set` o `$unset` que se encarga de añadir o borrar `fields`.
 
 En MongoDB la forma de alterar la información no se hace a nivel de colecciones puesto que no se trata de una modificación estructural, sino de documentos.
 
 #### Borrado (Drop)
 
-Para borrar los documentos de una colección en MongoDB, la cual no está asociada ni depende de ninguna ota se usa, `db.nombreColeccion.drop()`.
+Para borrar los documentos de una colección en MongoDB, la cual no está asociada ni depende de ninguna otra se usa, `db.nombreColeccion.drop()`.
 
 ### Lenguaje de Manipulación de Datos (DML)
 
@@ -171,7 +171,7 @@ db.<collection>.find(
 
 #### Modificaciones
 
-En Mongo, las modificaciones usan el comando `updateMany()`. La sintaxis es muy similar a la selección, y como hemos visto, pueden usarse también para alterar los fields de la tabla
+En Mongo, las modificaciones usan el comando `updateMany()`. La sintaxis es muy similar a la selección, y como hemos visto, pueden usarse también para alterar los fields de la tabla.
 
 #### Borrados (Delete)
 
@@ -182,16 +182,13 @@ En Mongo, los documents se borran mediante `deleteMany()`. La sintaxis es simila
 
 ## Ejemplo de uso de sentencias
 
-<<<<<<< HEAD
 ## Conclusión
 En el caso de un sistema de gestión de una tienda online, como podemos ver, hay demasiadas relaciones y no va a ser muy necesario escalar todo el sistema, por lo que en este caso sería mucho más útil usar una base de datos SQL.
 
 Quizás ciertas tablas podrían ser interesantes de llevar a un sistema más flexible como MongoDB, como es el caso de las analíticas que tienen un formato totalmente dependiente del tipo de analítica que sea, pero en el resto de casos, es necesario tener una base de datos estructurada para evitar posibles inconsistencias a la hora de borrar o modificar datos.
 
-<table>
-=======
+
 <table style="table-layout: fixed">
->>>>>>> 63bec110ad389eac344b91ead3b4d4de53177579
 <thead>
 <tr>
 <td colspan = "2" style='text-align:center; vertical-align:middle; font-weight:bold; font-size:large'>Creación</td>
@@ -415,7 +412,7 @@ db.Almacen.insertMany([
 ```sql
 select * from Inventario;
 
-select * from Inventario where EAN_producto_id = 82151;
+select * from Inventario where EAN_producto_id = 56847;
 
 select * from Inventario where cantidad > 10;
 ```
@@ -426,7 +423,7 @@ select * from Inventario where cantidad > 10;
 db.Inventario.find()
 
 db.Inventario.find(
-    {EAN_producto_id: 82151}
+    {EAN_producto_id: 56847}
 )
 
 db.Inventario.find(
@@ -520,8 +517,8 @@ update Inventario
 
 ```js
 db.Inventario.updateMany(
-    {codigo_alm_id: 1, EAN_producto_id:82151},
-    {$set: {cantidad: 50} }
+    {codigo_alm_id: 1, EAN_producto_id:67961},
+    {$set: {cantidad: 70} }
 )
 ```
 </td>
@@ -573,7 +570,7 @@ db.Almacen.updateMany(
 <td>
 
 ```sql
-delete from Almacen where codigo_alm = 1;
+delete from Almacen where codigo = 1;
 ```
 </td>
 
