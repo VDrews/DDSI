@@ -48,9 +48,9 @@ CREATE TABLE Analitica (
 CREATE TABLE Inventario (
   codigo_alm INT(13) NOT NULL,
   EAN_producto INT(13) NOT NULL,
-  cantidad INT(4),
+  cantidad INT(4) CHECK (cantidad >= 0),
   estado VARCHAR(255),
-  cant_afectada INT (3),
+  cant_afectada INT (3) CHECK (cantidad >= 0),
   FOREIGN KEY (codigo_alm) REFERENCES Almacen(codigo),
   FOREIGN KEY (EAN_producto) REFERENCES Producto(EAN_producto),
   PRIMARY KEY (codigo_alm, EAN_producto)
