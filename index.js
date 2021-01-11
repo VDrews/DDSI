@@ -306,7 +306,7 @@ app.post('/api/empleado', (req, res) => {
         });
       })
     })
-  
+
   })
 })
 
@@ -483,7 +483,7 @@ app.post('/api/logistica/recibir', (req, res) => {
 
   connection.beginTransaction(function (err) {
     if (err) {
-      return res.status(500)
+      return res.status(500).send("No se ha podido iniciar la transacción")
     }
 
     console.log(req.body)
@@ -510,7 +510,7 @@ app.post('/api/logistica/recibir', (req, res) => {
       }), function (err, rows, field) {
         if (err) {
           connection.rollback(function () {
-            return res.status(500);
+            return res.status(500).send("No se ha podido insertar el nuevo proudcto en el inventario del almacén");
           })
         }
 
@@ -560,7 +560,7 @@ app.post('/api/logistica/almacenes', (req, res) => {
     if (err) {
       console.log(err)
       connection.rollback(function () {
-        return res.sendStatus(412);
+        return res.sendStatus(412).send("No se ha podido actualizar el inventario del almacén de partida");
       });
     }
 
@@ -573,7 +573,7 @@ app.post('/api/logistica/almacenes', (req, res) => {
       if (err) {
         console.log(err)
         connection.rollback(function () {
-          return res.sendStatus(412);
+          return res.sendStatus(412).send("No se ha podido actualizar el inventario del almacén de llegada");
         });
       }
 
@@ -584,7 +584,7 @@ app.post('/api/logistica/almacenes', (req, res) => {
         if (err) {
           console.log(err)
           connection.rollback(function () {
-            return res.sendSatus(412);
+            return res.sendSatus(412).send("No se ha podido actualizar el paquete");
           });
         }
 
@@ -599,7 +599,7 @@ app.post('/api/logistica/almacenes', (req, res) => {
             if (err) {
               console.log(err)
               connection.rollback(function () {
-                return res.sendSatus(412);
+                return res.sendSatus(412).send("No se ha podido insertar en la tabla distribución");
               });
             }
 
@@ -612,7 +612,7 @@ app.post('/api/logistica/almacenes', (req, res) => {
               if (err) {
                 console.log(err)
                 connection.rollback(function () {
-                  return res.sendSatus(412);
+                  return res.sendSatus(412).send("No se ha podido insertar en la tabla Contenido");
                 });
               }
 
@@ -696,7 +696,7 @@ app.post('/api/logistica/compra', (req, res) => {
       if (err) {
         console.log(err)
         connection.rollback(function () {
-          return res.sendStatus(412);
+          return res.sendStatus(412).send("No se ha podido crear el paquete");
         });
       }
 
@@ -711,7 +711,7 @@ app.post('/api/logistica/compra', (req, res) => {
           if (err) {
             console.log(err)
             connection.rollback(function () {
-              return res.sendStatus(412);
+              return res.sendStatus(412).send("No se ha podido insertar el envío");
             });
           }
           //1.3
@@ -723,7 +723,7 @@ app.post('/api/logistica/compra', (req, res) => {
             if (err) {
               console.log(err)
               connection.rollback(function () {
-                return res.sendStatus(412);
+                return res.sendStatus(412).send("No se ha podido insertar en la tabla contenido");
               });
             }
 
@@ -745,7 +745,7 @@ app.post('/api/logistica/compra', (req, res) => {
                   if (err) {
                     console.log(err)
                     connection.rollback(function () {
-                      return res.sendStatus(412);
+                      return res.sendStatus(412).send("No se ha podido insetar en la tabla compraventa");
                     });
                   }
                   connection.commit(function (err) {
