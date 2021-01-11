@@ -17,6 +17,11 @@ Hemos elegido MongoDB por su sencillez de uso y por su gran potencial, ya que es
 
 ## ¿Qué es MongoDB?
 
+<p align="center">
+  <img src="./img/mongo-logo.png" alt="Compass"/>
+</p>
+
+
 MongoDB es un sistema de gestión de bases de datos NoSQL, de código abierto y orientado a documentos. El término "NoSQL" significa que la base de datos no utiliza tablas para almecenar entradas o relacionar entre si las distintas entradas almacenadas. Las entradas se almacenan como objetos independientes en formato BSON, que significa *binary JSON*. Esta estructura codifica tipo e información de la longitud de la información, lo que permite recuperar los datos mucho más rápido.
 
 ### Equivalencia de términos en MongoDB
