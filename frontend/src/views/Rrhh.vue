@@ -12,7 +12,7 @@
     <v-alert v-if="error.contratarEmpleado" text type="error">Ya existe un empleado con este DNI</v-alert>
     <v-btn @click="contratar" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Contratar</v-btn>
 
-    <div class="display-1 font-weight-bold mt-6 mb-2">Dar de baja</div>
+    <div class="display-1 font-weight-bold mt-6 mb-2">Dar de baja Empleado</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="baja.dni" placeholder="DNI" outlined></v-text-field>
     </div>
@@ -32,7 +32,7 @@
     <v-alert v-if="error.modificarEmpleado" text type="error">No existe un empleado con este DNI</v-alert>
     <v-btn @click="modificar" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Modificar</v-btn>
 
-    <div class="display-1 font-weight-bold mt-6 mb-2">Consultar un empleado</div>
+    <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Empleado</div>
     <div style="max-width: 900px; margin: 0 auto">
     <v-text-field v-model="dniEmpleadoConsultar" placeholder="DNI del Empleado" outlined></v-text-field>
     </div>
