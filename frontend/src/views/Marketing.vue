@@ -3,7 +3,7 @@
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear campaña</div>
     <div style="max-width: 900px; margin: 0 auto">
       <v-text-field v-model="campanya.nombre" placeholder="Nombre" outlined></v-text-field>
-      <v-text-field v-model="campanya.coste" placeholder="Coste" type="number" outlined suffix="€">></v-text-field>
+      <v-text-field v-model="campanya.coste" :rules="[costeCorrecto]" placeholder="Coste" type="number" outlined suffix="€">></v-text-field>
       <v-text-field v-model="campanya.canales" placeholder="Canales" outlined></v-text-field>
       <v-text-field v-model="campanya.media_url" placeholder="Media URL" outlined></v-text-field>
     </div>
@@ -98,6 +98,8 @@ export default {
       asociarCampanya: false,
       crearAnalitica: false
     },
+
+    costeCorrecto: (value) => value > 0 ? true : "El precio debe ser mayor de 0",
 
     error: {
       crearCampanya: false,
