@@ -349,7 +349,6 @@ insert into Creacion (codigo_tr, codigo_inf) values
         (SELECT codigo FROM Informe ORDER BY RAND() LIMIT 1)
     );
 
-
 insert into Generacion (codigo_tr, codigo_fac) values
     (
         (SELECT codigo_tr FROM Transaccion ORDER BY RAND() LIMIT 1), 

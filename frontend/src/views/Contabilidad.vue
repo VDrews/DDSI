@@ -2,8 +2,8 @@
   <div id="contabilidad">
     <div class="display-1 font-weight-bold mt-6 mb-2">Anotar Ingreso</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="nuevoIngreso.cantidad" placeholder="Cantidad" type="number" outlined suffix="€">></v-text-field>
-      <v-select v-model="nuevoIngreso.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
+      <v-text-field v-model="nuevoIngreso.cantidad" :rules="[cantidadPos]" placeholder="Cantidad" type="number" outlined suffix="€">></v-text-field>
+      <v-select v-model="nuevoIngreso.tipo" :rules="[notEmpty]" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
     </div>
     <v-alert v-if="success.anotarIngreso" text type="success">Se ha anotado el ingreso con éxito</v-alert>
     <v-alert v-if="error.anotarIngreso" text type="error">No se ha podido anotar el ingreso</v-alert>
@@ -11,9 +11,9 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Modificar Ingreso</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="ingresoModificado.codigo" placeholder="Codigo" type="number" outlined></v-text-field>
-      <v-text-field v-model="ingresoModificado.cantidad" placeholder="Cantidad" outlined suffix="€">></v-text-field>
-      <v-select v-model="ingresoModificado.tipo" :items="tiposIngreso" placeholder="Tipo" outlined></v-select>
+      <v-text-field v-model="ingresoModificado.codigo" :rules="[notEmpty]" placeholder="Codigo" type="number" outlined></v-text-field>
+      <v-text-field v-model="ingresoModificado.cantidad" :rules="[cantidadPos, notEmpty]" placeholder="Cantidad" outlined suffix="€">></v-text-field>
+      <v-select v-model="ingresoModificado.tipo" :items="tiposIngreso" :rules="[notEmpty]" placeholder="Tipo" outlined></v-select>
     </div>
     <v-alert v-if="success.modificarIngreso" text type="success">El ingreso ha sido modificado con éxito</v-alert>
     <v-alert v-if="error.modificarIngreso" text type="error">No existe el ingreso con el código indicado</v-alert>
@@ -21,7 +21,7 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Factura</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="codigoFactura" placeholder="Codigo Factura" type="number" outlined></v-text-field>
+      <v-text-field v-model="codigoFactura" :rules="[notEmpty]" placeholder="Codigo Factura" type="number" outlined></v-text-field>
     </div>
     <v-btn @click="consultarFactura" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarFactura" text type="error">No existe una factura con este código</v-alert>
@@ -51,7 +51,7 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Consultar Ingreso</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="codigoIngreso" placeholder="Nombre de Usuario" outlined></v-text-field>
+      <v-text-field v-model="codigoIngreso" :rules="[notEmpty]" placeholder="Nombre de Usuario" outlined></v-text-field>
     </div>
     <v-btn @click="consultarIngreso" color="secondary" dark x-large outlined :style="{left: '50%', transform:'translateX(-50%)'}">Consultar</v-btn>
     <v-alert v-if="error.consultarIngreso" text type="error">No existen ingresos de ese usuario</v-alert>
@@ -91,6 +91,9 @@ export default {
       anotarIngreso: false,
       modificarIngreso: false,
     },
+
+    cantidadPos: (value) => value > 0 ? true : "La cantidad debe ser mayor que 0",
+    notEmpty: (value) => value.length != 0 ? true : "Este campo no puede estar vacío",
 
     error: {
       anotarIngreso: false,
