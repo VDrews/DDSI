@@ -2,10 +2,10 @@
   <div id="marketing">
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear campaña</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="campanya.nombre" placeholder="Nombre" outlined></v-text-field>
+      <v-text-field v-model="campanya.nombre" :rules="[notEmpty]" placeholder="Nombre" outlined></v-text-field>
       <v-text-field v-model="campanya.coste" :rules="[costeCorrecto]" placeholder="Coste" type="number" outlined suffix="€">></v-text-field>
-      <v-text-field v-model="campanya.canales" placeholder="Canales" outlined></v-text-field>
-      <v-text-field v-model="campanya.media_url" placeholder="Media URL" outlined></v-text-field>
+      <v-text-field v-model="campanya.canales" :rules="[notEmpty]" placeholder="Canales" outlined></v-text-field>
+      <v-text-field v-model="campanya.media_url" :rules="[notEmpty, isUrl]" placeholder="Media URL" outlined></v-text-field>
     </div>
     <v-alert v-if="success.crearCampanya" text type="success">La campaña se ha creado con éxito</v-alert>
     <v-alert v-if="error.crearCampanya" text type="error">Ya existe una campaña con este nombre</v-alert>
@@ -13,9 +13,9 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Asociar una campaña a un producto</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="anuncio.ean" placeholder="EAN" type="number" outlined></v-text-field>
-      <v-text-field v-model="anuncio.nombre" placeholder="Nombre" outlined></v-text-field>
-      <v-text-field v-model="anuncio.descuento" placeholder="Descuento" type="number" outlined suffix="%">></v-text-field>
+      <v-text-field v-model="anuncio.ean" :rules="[notEmpty]" placeholder="EAN" type="number" outlined></v-text-field>
+      <v-text-field v-model="anuncio.nombre" :rules="[notEmpty]" placeholder="Nombre" outlined></v-text-field>
+      <v-text-field v-model="anuncio.descuento" :rules="[notEmpty, isPercent]" placeholder="Descuento" type="number" outlined suffix="%">></v-text-field>
     </div>
     <v-alert v-if="success.asociarCampanya" text type="success">La campaña se ha asociado con éxito</v-alert>
     <v-alert v-if="error.asociarCampanya" text type="error">La campaña o el producto no existen</v-alert>
@@ -23,9 +23,9 @@
 
     <div class="display-1 font-weight-bold mt-6 mb-2">Crear un evento analítico</div>
     <div style="max-width: 900px; margin: 0 auto">
-      <v-text-field v-model="nuevaAnalitica.id" placeholder="ID" type="number" outlined></v-text-field>
-      <v-text-field v-model="nuevaAnalitica.nombre" placeholder="Nombre de Campaña" outlined></v-text-field>
-      <v-text-field v-model="nuevaAnalitica.tipo" placeholder="Tipo" outlined></v-text-field>
+      <v-text-field v-model="nuevaAnalitica.id" :rules="[notEmpty]" placeholder="ID" type="number" outlined></v-text-field>
+      <v-text-field v-model="nuevaAnalitica.nombre" :rules="[notEmpty]" placeholder="Nombre de Campaña" outlined></v-text-field>
+      <v-text-field v-model="nuevaAnalitica.tipo" :rules="[notEmpty]" placeholder="Tipo" outlined></v-text-field>
       <v-text-field v-model="nuevaAnalitica.payload" placeholder="Payload" outlined></v-text-field>
     </div>
     <v-alert v-if="success.crearAnalitica" text type="success">La analítica se ha creado con éxito</v-alert>
@@ -100,6 +100,9 @@ export default {
     },
 
     costeCorrecto: (value) => value > 0 ? true : "El precio debe ser mayor de 0",
+    notEmpty: (value) => value.length != 0 ? true : "Este campo no puede estar vacío",
+    isPercent: (value) => value >= 0 && value <= 100 ? true : "El valor debe estar entre 0 y 100",
+    isUrl: (value) => value.match(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi) ? true : "No es una URL válida",
 
     error: {
       crearCampanya: false,
