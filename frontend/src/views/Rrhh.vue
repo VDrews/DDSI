@@ -5,11 +5,8 @@
       <v-text-field v-model="nuevoEmpleado.dni" placeholder="DNI" outlined></v-text-field>
       <v-text-field v-model="nuevoEmpleado.nombre" placeholder="Nombre" outlined></v-text-field>
       <v-text-field v-model="nuevoEmpleado.apellidos" placeholder="Apellidos" outlined></v-text-field>
-      <v-text-field v-model="nuevoEmpleado.sueldo" placeholder="Sueldo" type="number" outlined suffix="€"></v-text-field>
+      <v-text-field v-model="nuevoEmpleado.sueldo" :rules="[sueldoCorrecto]" placeholder="Sueldo" type="number" outlined suffix="€"></v-text-field>
     </div>
-
-
-
 
     <v-alert v-if="success.contratarEmpleado" text type="success">Empleado creado con éxito</v-alert>
     <v-alert v-if="error.contratarEmpleado" text type="error">Ya existe un empleado con este DNI</v-alert>
@@ -29,7 +26,7 @@
       <v-text-field v-model="empleadoModificar.nombre" placeholder="Nombre" outlined></v-text-field>
       <v-text-field v-model="empleadoModificar.apellidos" placeholder="Apellidos" outlined></v-text-field>
       <v-text-field v-model="empleadoModificar.numero" placeholder="Numero de Contrato" outlined></v-text-field>
-      <v-text-field v-model="empleadoModificar.sueldo" placeholder="Sueldo" type="number" outlined suffix="€"></v-text-field>
+      <v-text-field v-model="empleadoModificar.sueldo" :rules="[sueldoCorrecto]" placeholder="Sueldo" type="number" outlined suffix="€"></v-text-field>
     </div>
     <v-alert v-if="success.modificarEmpleado" text type="success">Empleado modificado con éxito</v-alert>
     <v-alert v-if="error.modificarEmpleado" text type="error">No existe un empleado con este DNI</v-alert>
@@ -95,6 +92,8 @@ export default {
       baja: false,
       modificarEmpleado: false,
     },
+
+    sueldoCorrecto: (value) => value > 0 ? true : "El sueldo debe ser mayor de 0",
 
     error: {
       contratarEmpleado: false,
