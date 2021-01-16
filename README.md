@@ -32,7 +32,8 @@ Prácticas de la asignatura DDSI. Este repositorio albergará la página web req
    └── marketing.sql
 ```
 
-- El archivo `index.js` contiene las funciones del backend de cada subsistema. Se encuentran separadas por cabeceras bien distinguidas.
+- El archivo `index.js` contiene los disparadores del backend de cada subsistema. Se encuentran separadas por cabeceras bien distinguidas. También se configura la ruta '/' para que muestre el frontend.
+   - El backend está implementando con Node y Express, usando la arquitectura de cliente-servidor REST.
 - Los archivos de la carpeta `/frontend/src/views/` contienen la implementación de la parte del frontend correspondiente a cada parte.
 - En SQL_files  se encuentran los archivos del backend previos a la implementación de la web. Se pueden encontrar diferentes inserciones de ejemplo para popular las tablas, definidas en `definicion_tablas.sql`
 - Las consultas de SQL usadas en `index.js` se encuentran en `backend/sql/`.
