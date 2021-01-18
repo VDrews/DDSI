@@ -114,7 +114,7 @@ export default {
         this.success.contratarEmpleado = true
       }
       catch(err) {
-        this.error.contratarEmpleado = false
+        this.error.contratarEmpleado = true
       }
 
     },
