@@ -335,30 +335,39 @@ app.delete('/api/empleado/:dni', (req, res) => {
 
 app.put('/api/empleado/:dni', (req, res) => {
   connection.beginTransaction(function (err) {
-    connection.query(rrhh.modificarEmpleado({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
-      if (err) {
-        console.log(err)
-        connection.rollback(function () {
-          return res.sendStatus(412);
-        });
+
+    connection.query(rrhh.consultarEmpleado(req.params), function (err, rows, fields){
+      console.log(rows);
+      if (rows.length == 0){
+        return res.status(404).send("No existe ningún usuario con ese DNI");
       }
-      connection.query(rrhh.modificarContrato({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
-        if (err) {
-          console.log(err)
-          connection.rollback(function () {
-            return res.sendStatus(412);
-          });
-        }
-        connection.commit(function (err) {
+      else{
+        connection.query(rrhh.modificarEmpleado({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
           if (err) {
+            console.log(err)
             connection.rollback(function () {
-              return res.sendStatus(500);
+              return res.sendStatus(412);
             });
           }
-          return res.sendStatus(200);
-        });
-      })
-    })
+          connection.query(rrhh.modificarContrato({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
+            if (err) {
+              console.log(err)
+              connection.rollback(function () {
+                return res.sendStatus(412);
+              });
+            }
+            connection.commit(function (err) {
+              if (err) {
+                connection.rollback(function () {
+                  return res.sendStatus(500);
+                });
+              }
+              return res.sendStatus(200);
+            });
+          })
+        })
+      }
+    });  
   })
 })
 
