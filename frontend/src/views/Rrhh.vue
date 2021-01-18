@@ -94,6 +94,7 @@ export default {
     },
 
     sueldoCorrecto: (value) => value > 0 ? true : "El sueldo debe ser mayor de 0",
+    notEmpty: (value) => value.length != 0 ? true : "Este campo no puede estar vacío",
 
     error: {
       contratarEmpleado: false,

@@ -313,24 +313,21 @@ app.post('/api/empleado', (req, res) => {
 
 app.delete('/api/empleado/:dni', (req, res) => {
   console.log(req.params)
-  connection.query(rrhh.darBajaEmpleado(req.params), function (err, rows, fields) {
+
+  connection.query(rrhh.consultarEmpleado(req.params), function (err, rows, fields){
+    console.log(rows);
     if (rows.length == 0){
-      return res.status(404).send("No existe ningún empleado con ese DNI.");
+      return res.status(404).send("No existe ningún usuario con ese DNI");
     }
-    else {
-      if (err) {
-        console.log(err)
-        return res.status(412).send("No existe un empleado con ese dni");
-      }
-      console.log(rows);
-      connection.commit(function (err) {
+    else{
+      connection.query(rrhh.darBajaEmpleado({dni: req.dni}), function (err, rows, fields) {
         if (err) {
-          connection.rollback(function () {
-            return res.sendStatus(500);
-          });
+          console.log(err)
+          return res.status(404).send("No existe ningún usuario con ese DNI");
         }
+        console.log(rows);
         return res.sendStatus(200);
-    })
+      });
     }
   });
 })
