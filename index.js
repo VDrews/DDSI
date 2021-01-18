@@ -279,34 +279,40 @@ app.delete('/api/producto/:ean', (req, res)=>{
 
 app.post('/api/empleado', (req, res) => {
   console.log(req.body)
+
   connection.beginTransaction(function (err) {
-    if (err) {
-      return res.sendStatus(500)
-    }
-    connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
-      if (err) {
-        console.log(err)
-        connection.rollback(function () {
-          return res.sendStatus(412);
-        });
+
+    connection.query(rrhh.consultarEmpleado(req.body), function (err, rows, fields){
+      console.log(rows);
+      if (rows.length != 0){
+        return res.status(404).send("Ya existe un usuario con ese DNI");
       }
-      connection.query(rrhh.crearContrato(req.body), function (err, rows, fields) {
-        if (err) {
-          connection.rollback(function () {
-            return res.sendStatus(412);
-          });
-        }
-        connection.commit(function (err) {
+      else{
+        connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
           if (err) {
+            console.log(err)
             connection.rollback(function () {
-              return res.sendStatus(500);
+              return res.sendStatus(412);
             });
           }
-          return res.sendStatus(200);
-        });
-      })
-    })
-
+          connection.query(rrhh.crearContrato(req.body), function (err, rows, fields) {
+            if (err) {
+              connection.rollback(function () {
+                return res.sendStatus(412);
+              });
+            }
+            connection.commit(function (err) {
+              if (err) {
+                connection.rollback(function () {
+                  return res.sendStatus(500);
+                });
+              }
+              return res.sendStatus(200);
+            });
+          })
+        })
+      }
+    });  
   })
 })
 
