@@ -277,25 +277,24 @@ app.delete('/api/producto/:ean', (req, res)=>{
 // ──────────────────────────────────────────────────────────────────────────────────
 //
 
-app.post('/api/empleado/:dni', (req, res) => {
-  console.log(req.params)
+app.post('/api/empleado', (req, res) => {
 
   connection.beginTransaction(function (err) {
 
-    connection.query(rrhh.consultarEmpleado(req.params), function (err, rows, fields){
+    connection.query(rrhh.consultarEmpleado(req.body), function (err, rows, fields){
       console.log(rows);
       if (rows.length != 0){
         return res.status(404).send("Ya existe un usuario con ese DNI");
       }
       else{
-        connection.query(rrhh.contratarEmpleado({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
+        connection.query(rrhh.contratarEmpleado(req.body), function (err, rows, fields) {
           if (err) {
             console.log(err)
             connection.rollback(function () {
               return res.sendStatus(412);
             });
           }
-          connection.query(rrhh.crearContrato({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
+          connection.query(rrhh.crearContrato(req.body), function (err, rows, fields) {
             if (err) {
               connection.rollback(function () {
                 return res.sendStatus(412);
@@ -348,14 +347,14 @@ app.put('/api/empleado/:dni', (req, res) => {
         return res.status(404).send("No existe ningún usuario con ese DNI");
       }
       else{
-        connection.query(rrhh.modificarEmpleado({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
+        connection.query(rrhh.modificarEmpleado(req.body), function (err, rows, fields) {
           if (err) {
             console.log(err)
             connection.rollback(function () {
               return res.sendStatus(412);
             });
           }
-          connection.query(rrhh.modificarContrato({dni: req.params.dni, ...req.body}), function (err, rows, fields) {
+          connection.query(rrhh.modificarContrato(req.body), function (err, rows, fields) {
             if (err) {
               console.log(err)
               connection.rollback(function () {
