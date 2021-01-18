@@ -320,7 +320,7 @@ app.delete('/api/empleado/:dni', (req, res) => {
       return res.status(404).send("No existe ningún usuario con ese DNI");
     }
     else{
-      connection.query(rrhh.darBajaEmpleado({dni: req.dni}), function (err, rows, fields) {
+      connection.query(rrhh.darBajaEmpleado({dni: req.params.dni}), function (err, rows, fields) {
         if (err) {
           console.log(err)
           return res.status(404).send("No existe ningún usuario con ese DNI");
