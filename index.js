@@ -277,7 +277,7 @@ app.delete('/api/producto/:ean', (req, res)=>{
 // ──────────────────────────────────────────────────────────────────────────────────
 //
 
-app.post('/api/empleado:dni', (req, res) => {
+app.post('/api/empleado/:dni', (req, res) => {
   console.log(req.params)
 
   connection.beginTransaction(function (err) {
