@@ -282,7 +282,7 @@ app.post('/api/empleado', (req, res) => {
 
   connection.beginTransaction(function (err) {
 
-    connection.query(rrhh.consultarEmpleado(req.body), function (err, rows, fields){
+    connection.query(rrhh.consultarEmpleado(req.body.dni), function (err, rows, fields){
       console.log(rows);
       if (rows.length != 0){
         return res.status(404).send("Ya existe un usuario con ese DNI");
