@@ -153,13 +153,17 @@ app.get('/api/producto/:ean', (req, res) => {
 
 app.post('/api/analitica', (req, res) => {
   connection.query(marketing.crearAnalitica(req.body), function (err, rows, fields) {
-    if (err) {
-      console.log(err)
-      return res.status(412).send("Ya existe un producto con este ID");
+    if (rows.length != 0) {
+      return res.sendStatus(404);
     }
-    console.log(rows);
-    return res.sendStatus(200);
-  });
+    connection.query(marketing.crearAnalitica(req.body), function (err, rows, fields) {
+      if (err) {
+        console.log(err)
+        return res.status(412).send("Ya existe un producto con este ID");
+      }
+      return res.sendStatus(200);
+    });
+  })
 })
 
 app.get('/api/analitica/:id', (req, res) => {
