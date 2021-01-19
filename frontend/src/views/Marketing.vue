@@ -123,7 +123,7 @@ export default {
         this.success.crearCampanya = true
       }
       catch(err) {
-        this.error.crearCampanya = false
+        this.error.crearCampanya = true
       }
 
     },
