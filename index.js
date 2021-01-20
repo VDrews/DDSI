@@ -315,7 +315,7 @@ app.post('/api/empleado', (req, res) => {
           })
         })
       }
-    });  
+    });
   })
 })
 
@@ -376,7 +376,7 @@ app.put('/api/empleado/:dni', (req, res) => {
           })
         })
       }
-    });  
+    });
   })
 })
 
@@ -567,9 +567,9 @@ app.post('/api/logistica/almacenes', (req, res) => {
   */
 
   // 1
-  connection.query(inventario.actualizarInventario({
-    ean       : req.body.EAN,
+  connection.query(inventario.newInventario({
     codigo_alm: req.body.almacen_partida,
+    ean       : req.body.EAN,
     cantidad  : -req.body.cantidad
   }), function(err, rows, fields) {
     if (err) {
@@ -580,9 +580,9 @@ app.post('/api/logistica/almacenes', (req, res) => {
     }
 
     // 2
-    connection.query(inventario.actualizarInventario({
-      ean       : req.body.EAN,
+    connection.query(inventario.newInventario({
       codigo_alm: req.body.almacen_llegada,
+      ean       : req.body.EAN,
       cantidad  : req.body.cantidad
     }), function(err, rows, fields) {
       if (err) {

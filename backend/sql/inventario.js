@@ -21,8 +21,4 @@ let eliminarProducto = function({ean}){
   return `delete from Inventario where ean_producto=${ean};`
 }
 
-let actualizarInventario = function({ean, codigo_alm, cantidad}) {
-  return `update Inventario set cantidad=cantidad+${cantidad} where ean_producto=${ean} and codigo_alm=${codigo_alm};`
-}
-
-module.exports = {addAlmacen, defineEstado, newInventario, eliminarStock, eliminarProducto, actualizarInventario}
+module.exports = {addAlmacen, defineEstado, newInventario, eliminarStock, eliminarProducto}
