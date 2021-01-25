@@ -51,7 +51,7 @@
     <v-list>
       <v-list-item v-for="(producto, i) in productos" :key="i" two-line>
         <v-list-item-title>{{producto.EAN_producto}} (Almacén {{producto.codigo_alm}})</v-list-item-title>
-        <v-list-item-subtitle>{{producto.fabricante}} {{producto.nombre}} {{producto.estado_cant_afectada}}</v-list-item-subtitle>
+        <v-list-item-subtitle>{{producto.fabricante}} {{producto.nombre}} <b>{{producto.estado}} {{producto.cant_afectada}}</b></v-list-item-subtitle>
         <v-list-item-action>{{producto.precio}}€ <i>{{producto.cantidad}} en stock</i></v-list-item-action>
       </v-list-item>
     </v-list>
